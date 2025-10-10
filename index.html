@@ -67,16 +67,16 @@
   <div id="content"></div>
 
   <script>
-    const discordInvite = "https://discord.gg/mar4qT9XYn"; // ✅ 改成你自己的邀請連結
-    const apiUrl = "carrot-bot-production.up.railway.app"; // ✅ 你的 Render API
-    const userId = "657882539331158016"; // ✅ 改成實際 Discord user_id
-    const username = "湯姆瑞斗"; // ✅ 改成實際玩家名稱
+    // ✅ 修改這三個變數
+    const discordInvite = "https://discord.gg/mar4qT9XYn"; // 你的 Discord 邀請連結
+    const apiUrl = "https://carrot-bot-production.up.railway.app/api/fortune"; // ✅ 必須包含 https:// 與 /api/fortune
+    const userId = "657882539331158016"; // 你的 Discord 使用者 ID
+    const username = "湯姆瑞斗"; // 使用者名稱
 
     const params = new URLSearchParams(window.location.search);
     const joined = params.get("joined");
     const contentDiv = document.getElementById("content");
 
-    // 🔹 預設顯示 QRCode
     if (!joined) {
       const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(discordInvite)}`;
       contentDiv.innerHTML = `
@@ -84,9 +84,7 @@
         <img src="${qrUrl}" alt="Discord QR Code" />
         <p style="margin-top:15px;">加入後請回到這頁並加上 <b>?joined=true</b><br>（例如：<code>?joined=true</code>）</p>
       `;
-    } 
-    // 🔹 顯示抽籤按鈕
-    else {
+    } else {
       contentDiv.innerHTML = `
         <button id="drawBtn">抽出今日運勢</button>
         <div id="result"></div>
@@ -101,6 +99,7 @@
         resultDiv.innerHTML = "";
 
         try {
+          // ✅ 修正 fetch API 網址
           const res = await fetch(`${apiUrl}?user_id=${userId}&username=${encodeURIComponent(username)}`);
           const data = await res.json();
 
