@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>今日運勢抽獎</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: #f5f5f5;
+      font-family: "Noto Sans TC", sans-serif;
+    }
+    #qrcode { margin-bottom: 20px; }
+    button {
+      font-size: 1.2em;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background: #5865F2;
+      color: white;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 1.5em;
+    }
+  </style>
+</head>
+<body>
+  <h1>加入 Discord 後抽今日運勢 🍀</h1>
+  <div id="qrcode"></div>
+  <button id="drawButton" style="display:none;">抽運勢！</button>
+  <div id="result"></div>
+
+  <script>
+    const inviteUrl = "https://discord.gg/你的伺服器邀請碼"; // 🔹換成你的 Discord 邀請連結
+    const qrcode = new QRCode(document.getElementById("qrcode"), inviteUrl);
+
+    // 模擬使用者加入後（之後會改成 OAuth 驗證）
+    // 現在用 URL ?joined=true 來測試
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("joined") === "true") {
+      document.getElementById("qrcode").style.display = "none";
+      document.getElementById("drawButton").style.display = "block";
+    }
+
+    document.getElementById("drawButton").addEventListener("click", () => {
+      const fortunes = ["大吉 🍀", "中吉 😄", "小吉 🙂", "平平 😐", "小凶 😟", "大凶 💀"];
+      const result = fortunes[Math.floor(Math.random() * fortunes.length)];
+      document.getElementById("result").textContent = "你今日的運勢是：" + result;
+    });
+  </script>
+</body>
+</html>
