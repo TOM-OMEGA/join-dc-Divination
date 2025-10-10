@@ -2,84 +2,117 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>今日運勢抽獎</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🥕 胡蘿蔔今日運勢</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background: linear-gradient(135deg, #fff4e0, #ffd6a5);
+      color: #333;
+      text-align: center;
+      padding: 30px;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      height: 100vh;
-      background: #f5f5f5;
-      font-family: "Noto Sans TC", sans-serif;
+      align-items: center;
     }
-    #qrcode { margin-bottom: 20px; }
+    h1 {
+      color: #ff8b00;
+      margin-bottom: 20px;
+      font-size: 2rem;
+    }
+    img {
+      width: 220px;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+      margin: 20px 0;
+    }
     button {
-      font-size: 1.2em;
-      padding: 10px 20px;
+      background-color: #ff9f1c;
       border: none;
-      border-radius: 8px;
-      background: #5865F2;
-      color: white;
+      padding: 15px 35px;
+      border-radius: 12px;
+      font-size: 1.2rem;
+      font-weight: bold;
       cursor: pointer;
+      color: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: transform 0.2s, background 0.3s;
+    }
+    button:hover {
+      background-color: #ff8b00;
+      transform: scale(1.05);
     }
     #result {
-      margin-top: 20px;
-      font-size: 1.3em;
-      text-align: center;
-      white-space: pre-line;
+      margin-top: 30px;
+      font-size: 1.1rem;
+      background: rgba(255,255,255,0.7);
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 320px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    @media (max-width: 480px) {
+      body { padding: 20px; }
+      h1 { font-size: 1.5rem; }
+      button { font-size: 1rem; padding: 12px 25px; }
     }
   </style>
 </head>
 <body>
-  <h1>加入 Discord 後抽今日運勢 🍀</h1>
-  <div id="qrcode"></div>
-  <button id="drawButton" style="display:none;">抽運勢！</button>
-  <div id="result"></div>
+  <h1>🥕 胡蘿蔔今日運勢</h1>
+  <div id="content"></div>
 
   <script>
-    const inviteUrl = "https://discord.gg/你的伺服器邀請碼"; // 🔹請改成實際邀請連結
-    const apiUrl = "https://carrot-bot-1.onrender.com/api/fortune";
-
-    new QRCode(document.getElementById("qrcode"), inviteUrl);
-
     const params = new URLSearchParams(window.location.search);
-    const joined = params.get("joined") === "true";
+    const joined = params.get("joined");
+    const contentDiv = document.getElementById("content");
 
-    if (joined) {
-      document.getElementById("qrcode").style.display = "none";
-      document.getElementById("drawButton").style.display = "block";
-    }
+    if (!joined) {
+      contentDiv.innerHTML = `
+        <p>請掃描下方 QR Code 加入 Discord！</p>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https://discord.gg/YOUR_INVITE_LINK" alt="Discord QR Code" />
+      `;
+    } else {
+      contentDiv.innerHTML = `
+        <button id="drawBtn">抽出今日運勢</button>
+        <div id="result"></div>
+      `;
 
-    document.getElementById("drawButton").addEventListener("click", async () => {
-      const username = prompt("請輸入你的 Discord 名稱（顯示名稱）");
-      const userId = prompt("請輸入你的 Discord ID（右鍵點自己 → 複製 ID）");
+      const drawBtn = document.getElementById("drawBtn");
+      const resultDiv = document.getElementById("result");
 
-      if (!username || !userId) {
-        alert("請輸入完整資訊！");
-        return;
-      }
+      drawBtn.addEventListener("click", async () => {
+        drawBtn.disabled = true;
+        drawBtn.textContent = "抽籤中...";
+        resultDiv.textContent = "";
 
-      document.getElementById("result").textContent = "🎲 抽取中...";
-      try {
-        const res = await fetch(`${apiUrl}?user_id=${userId}&username=${encodeURIComponent(username)}`);
-        const data = await res.json();
+        const user_id = "657882539331158016"; // ⚠️ 改成真實的 Discord user_id
+        const username = "湯姆瑞斗";
 
-        if (data.status === "ok") {
-          document.getElementById("result").textContent =
-            `✨ ${data.user} 的今日運勢 ✨\n\n` +
-            `🎴 運勢：${data.fortune}\n` +
-            `💰 目前金幣：${data.coins}\n` +
-            `📅 日期：${data.date}`;
-        } else {
-          document.getElementById("result").textContent = "❌ 錯誤：" + data.message;
+        try {
+          const res = await fetch(`https://carrot-bot-1.onrender.com/api/fortune?user_id=${user_id}&username=${username}`);
+          const data = await res.json();
+
+          if (data.status === "ok") {
+            resultDiv.innerHTML = `
+              <p>📅 日期：${data.date}</p>
+              <p>🎴 今日運勢：<strong>${data.fortune}</strong></p>
+              <p>💰 目前金幣：${data.coins}</p>
+            `;
+          } else {
+            resultDiv.textContent = "⚠️ 發生錯誤：" + data.message;
+          }
+        } catch (err) {
+          resultDiv.textContent = "🚫 無法連線到伺服器。";
         }
-      } catch (err) {
-        document.getElementById("result").textContent = "⚠️ 無法連線到伺服器";
-      }
-    });
+
+        drawBtn.disabled = false;
+        drawBtn.textContent = "再抽一次";
+      });
+    }
   </script>
 </body>
 </html>
