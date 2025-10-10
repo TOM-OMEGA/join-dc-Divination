@@ -1,147 +1,411 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>🥕 胡蘿蔔今日運勢</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Noto Sans TC', sans-serif;
-      background: linear-gradient(135deg, #fff4e0, #ffd6a5);
-      color: #333;
-      text-align: center;
-      padding: 30px;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      transition: background 1s ease;
+    :root{
+      --orange:#ff9f1c;
+      --orange-dark:#ff8b00;
+      --card-bg: rgba(255,255,255,0.92);
     }
-    h1 {
-      color: #ff8b00;
-      margin-bottom: 20px;
-      font-size: 2rem;
+    html,body{height:100%;margin:0}
+    body{
+      font-family:'Noto Sans TC', sans-serif;
+      background: linear-gradient(135deg,#fff4e0,#ffd6a5);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      transition: background 600ms ease;
     }
-    img {
-      width: 220px;
-      border-radius: 10px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-      margin: 20px 0;
+    .wrap{
+      width:100%;
+      max-width:420px;
+      text-align:center;
     }
-    button {
-      background-color: #ff9f1c;
-      border: none;
-      padding: 15px 35px;
-      border-radius: 12px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      cursor: pointer;
-      color: white;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      transition: transform 0.2s, background 0.3s;
+    h1{
+      margin:0 0 18px 0;
+      color:var(--orange-dark);
+      font-size:1.8rem;
     }
-    button:hover {
-      background-color: #ff8b00;
-      transform: scale(1.05);
+
+    /* QR / content box */
+    .box{
+      background:var(--card-bg);
+      border-radius:16px;
+      padding:20px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.12);
     }
-    #result {
-      margin-top: 30px;
-      font-size: 1.1rem;
-      background: rgba(255,255,255,0.85);
-      border-radius: 15px;
-      padding: 25px;
-      max-width: 340px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      transition: all 0.4s ease;
+
+    .qr {
+      width:220px;
+      height:220px;
+      margin:12px auto;
+      border-radius:10px;
+      box-shadow:0 6px 18px rgba(0,0,0,0.08);
+      object-fit:cover;
     }
-    #fortune {
-      font-size: 1.4rem;
-      margin: 10px 0;
-      color: #ff6f00;
-      font-weight: bold;
+
+    /* button */
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      background:var(--orange);
+      color:#fff;
+      border:none;
+      padding:12px 22px;
+      border-radius:12px;
+      font-weight:700;
+      font-size:1.05rem;
+      cursor:pointer;
+      box-shadow:0 8px 18px rgba(0,0,0,0.12);
+      transform-origin:center;
+      transition:transform 180ms ease, box-shadow 180ms ease;
+      user-select:none;
     }
-    #advice {
-      font-style: italic;
-      color: #555;
-      margin-top: 10px;
+    .btn:active{ transform:scale(.98) }
+    .btn.bouncing { animation: btn-bounce 700ms cubic-bezier(.2,.9,.2,1); }
+    @keyframes btn-bounce {
+      0%{ transform: translateY(0) }
+      30%{ transform: translateY(-10px) scale(1.02) }
+      60%{ transform: translateY(-4px) }
+      100%{ transform: translateY(0) }
     }
-    #reward {
-      margin-top: 15px;
-      color: #008000;
-      font-weight: bold;
+
+    /* carrot animation area */
+    .stage{
+      height:160px;
+      position:relative;
+      margin-top:18px;
     }
-    @media (max-width: 480px) {
-      body { padding: 20px; }
-      h1 { font-size: 1.5rem; }
-      button { font-size: 1rem; padding: 12px 25px; }
+    .soil{
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:24px;
+      width:240px;
+      height:56px;
+      background:linear-gradient(180deg,#6b3 0%, #5a2 100%);
+      border-radius:12px 12px 8px 8px;
+      box-shadow: inset 0 -8px 14px rgba(0,0,0,0.08);
+      overflow:visible;
+    }
+    /* carrot SVG */
+    .carrot {
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%) translateY(30%);
+      bottom:40px;
+      width:96px;
+      transition: transform 600ms cubic-bezier(.2,.9,.2,1);
+      opacity:0;
+      will-change:transform,opacity;
+      filter:drop-shadow(0 10px 14px rgba(0,0,0,0.12));
+    }
+    .carrot.pull {
+      transform:translateX(-50%) translateY(-160px) rotate(-8deg) scale(1.02);
+      opacity:1;
+    }
+
+    /* result card */
+    #result{
+      margin-top:18px;
+      opacity:0;
+      transform: translateY(8px);
+      transition: opacity 480ms ease, transform 480ms ease;
+      text-align:left;
+      padding:18px;
+      border-radius:12px;
+    }
+    #result.show{
+      opacity:1;
+      transform: translateY(0);
+    }
+    #result .date{ font-size:.95rem; color:#666; margin-bottom:6px; }
+    #result .fortune{ font-size:1.25rem; font-weight:800; color:var(--orange-dark); margin:6px 0; display:flex; align-items:center; gap:10px; }
+    #result .advice{ color:#444; font-style:italic; margin-top:8px; }
+
+    /* small responsive */
+    @media (max-width:420px){
+      .carrot{ width:76px; }
+      .soil{ width:200px }
+    }
+
+    /* canvas covers stage */
+    canvas#confetti {
+      position:absolute;
+      left:0; top:0;
+      pointer-events:none;
+      width:100%;
+      height:100%;
+    }
+
+    /* subtle highlight when showing result */
+    .card-highlight {
+      background: linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,0.98));
     }
   </style>
 </head>
 <body>
-  <h1>🥕 胡蘿蔔今日運勢</h1>
-  <div id="content"></div>
+  <div class="wrap">
+    <h1>🥕 胡蘿蔔今日運勢</h1>
+
+    <div id="content"></div>
+  </div>
 
   <script>
-    // ✅ 設定變數
-    const discordInvite = "https://discord.gg/mar4qT9XYn"; 
-    const apiUrl = "https://carrot-bot-production.up.railway.app/api/fortune"; 
-    const userId = "657882539331158016"; 
-    const username = "湯姆瑞斗"; 
+    // ----- CONFIG: 改成你的值 -----
+    const discordInvite = "https://discord.gg/mar4qT9XYn";
+    const apiUrl = "https://carrot-bot-production.up.railway.app/api/fortune";
+    const userId = "657882539331158016";
+    const username = "湯姆瑞斗";
+    // -------------------------------
 
     const params = new URLSearchParams(window.location.search);
     const joined = params.get("joined");
     const contentDiv = document.getElementById("content");
 
-    if (!joined) {
-      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(discordInvite)}`;
+    // --- helper: create carrot SVG as data URL (inline small SVG) ---
+    function carrotDataUrl(){
+      const svg = `
+      <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' width='200' height='200'>
+        <defs>
+          <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0" stop-color="#ffb35c"/>
+            <stop offset="1" stop-color="#ff7f2a"/>
+          </linearGradient>
+        </defs>
+        <g transform="translate(0,0)">
+          <path d="M46 19c-2-6-8-9-8-9s0 4-3 6c1 0 6 5 6 9 0 0 2-1 5-6z" fill="#6bbf3a"/>
+          <path d="M10 42c0 0 8-12 11-15 2-2 7-6 14-3 7 3 16 8 14 16-2 8-18 20-30 20S6 58 10 42z" fill="url(#g)"/>
+          <path d="M32 46c1 0 2 1 1 2-1 1-3 1-4 0-1-1 1-2 3-2z" fill="#fff2d8" opacity=".12"/>
+        </g>
+      </svg>`;
+      return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+    }
+
+    // --- audio: WebAudio synths (no external files) ---
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    const audioCtx = new AudioCtx();
+
+    function playPullSound(){
+      const now = audioCtx.currentTime;
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = 'sawtooth';
+      o.frequency.setValueAtTime(220, now);
+      o.frequency.exponentialRampToValueAtTime(880, now + 0.18);
+      g.gain.setValueAtTime(0.001, now);
+      g.gain.exponentialRampToValueAtTime(0.08, now + 0.05);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
+      const b = audioCtx.createBiquadFilter();
+      b.type = "lowpass";
+      b.frequency.setValueAtTime(1200, now);
+      o.connect(b); b.connect(g); g.connect(audioCtx.destination);
+      o.start(now); o.stop(now + 0.7);
+
+      // small "rustle" noise
+      const bufferSize = audioCtx.sampleRate * 0.12;
+      const noiseBuf = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = noiseBuf.getChannelData(0);
+      for (let i=0;i<data.length;i++) data[i] = (Math.random()*2-1) * (1 - i/data.length) * 0.25;
+      const noise = audioCtx.createBufferSource();
+      const ng = audioCtx.createGain();
+      ng.gain.setValueAtTime(0.02, now);
+      ng.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+      noise.buffer = noiseBuf;
+      noise.connect(ng); ng.connect(audioCtx.destination);
+      noise.start(now); noise.stop(now + 0.12);
+    }
+
+    function playResultSound(kind){
+      const now = audioCtx.currentTime;
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      // choose tone by kind
+      if (kind.includes('大吉')) {
+        o.type = 'triangle'; o.frequency.setValueAtTime(660, now); g.gain.setValueAtTime(0.0001, now);
+        o.frequency.exponentialRampToValueAtTime(880, now+0.15);
+        g.gain.exponentialRampToValueAtTime(0.2, now+0.05);
+        g.gain.exponentialRampToValueAtTime(0.0001, now+1.2);
+      } else if (kind.includes('中吉')) {
+        o.type = 'sine'; o.frequency.setValueAtTime(440, now); g.gain.setValueAtTime(0.0001, now);
+        o.frequency.exponentialRampToValueAtTime(540, now+0.12);
+        g.gain.exponentialRampToValueAtTime(0.14, now+0.04);
+        g.gain.exponentialRampToValueAtTime(0.0001, now+0.9);
+      } else if (kind.includes('小吉')) {
+        o.type = 'sine'; o.frequency.setValueAtTime(320, now); g.gain.setValueAtTime(0.0001, now);
+        o.frequency.exponentialRampToValueAtTime(400, now+0.12);
+        g.gain.exponentialRampToValueAtTime(0.08, now+0.04);
+        g.gain.exponentialRampToValueAtTime(0.0001, now+0.8);
+      } else if (kind.includes('凶')) {
+        o.type = 'sawtooth'; o.frequency.setValueAtTime(150, now); g.gain.setValueAtTime(0.0001, now);
+        o.frequency.exponentialRampToValueAtTime(120, now+0.12);
+        g.gain.exponentialRampToValueAtTime(0.14, now+0.03);
+        g.gain.exponentialRampToValueAtTime(0.0001, now+0.9);
+      } else {
+        o.type='sine'; o.frequency.setValueAtTime(380, now); g.gain.setValueAtTime(0.02, now);
+        g.gain.exponentialRampToValueAtTime(0.0001, now+0.9);
+      }
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(now); o.stop(now+1.3);
+    }
+
+    // --- confetti: small canvas emitter ---
+    function createConfetti(container, count=40){
+      const rect = container.getBoundingClientRect();
+      const c = document.createElement('canvas');
+      c.id = 'confetti';
+      c.width = rect.width;
+      c.height = rect.height;
+      container.appendChild(c);
+      const ctx = c.getContext('2d');
+      const pieces = [];
+      const colors = ['#ff6b6b','#ffd93d','#6bd66b','#76a7ff','#d08bff'];
+      for (let i=0;i<count;i++){
+        pieces.push({
+          x: rect.width/2 + (Math.random()-0.5)*160,
+          y: rect.height*0.2 + (Math.random()-0.5)*40,
+          vx: (Math.random()-0.5)*6,
+          vy: Math.random()*6 + 2,
+          r: Math.random()*6+4,
+          color: colors[Math.floor(Math.random()*colors.length)],
+          rot: Math.random()*360,
+          vr: (Math.random()-0.5)*8,
+          life: Math.random()*80+60
+        });
+      }
+      let raf;
+      function draw(){
+        ctx.clearRect(0,0,c.width,c.height);
+        pieces.forEach(p=>{
+          p.x += p.vx; p.y += p.vy; p.vy += 0.15; p.rot += p.vr; p.life--;
+          ctx.save();
+          ctx.translate(p.x,p.y); ctx.rotate(p.rot * Math.PI/180);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r*0.6);
+          ctx.restore();
+        });
+        // remove dead
+        for (let i=pieces.length-1;i>=0;i--) if(pieces[i].life<=0) pieces.splice(i,1);
+        if(pieces.length>0) raf = requestAnimationFrame(draw); else {
+          c.remove();
+          cancelAnimationFrame(raf);
+        }
+      }
+      draw();
+    }
+
+    // --- main UI render ---
+    if (!joined){
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=${encodeURIComponent(discordInvite)}`;
       contentDiv.innerHTML = `
-        <p>請掃描下方 QR Code 加入 Discord！</p>
-        <img src="${qrUrl}" alt="Discord QR Code" />
-        <p style="margin-top:15px;">加入後請回到這頁並加上 <b>?joined=true</b><br>（例如：<code>?joined=true</code>）</p>
+        <div class="box">
+          <p>請掃描 QR Code 加入 Discord，加入後回到此頁並加上 <b>?joined=true</b></p>
+          <img class="qr" src="${qrUrl}" alt="QR code" />
+        </div>
       `;
     } else {
       contentDiv.innerHTML = `
-        <button id="drawBtn">抽出今日運勢</button>
-        <div id="result"></div>
+        <div class="box" id="boxRoot">
+          <div style="display:flex;justify-content:center;">
+            <button class="btn" id="drawBtn">抽出今日運勢</button>
+          </div>
+          <div class="stage" id="stage">
+            <div class="soil" aria-hidden="true"></div>
+            <img class="carrot" id="carrot" src="${carrotDataUrl()}" alt="carrot" />
+          </div>
+          <div id="result" role="status" aria-live="polite"></div>
+        </div>
       `;
 
-      const drawBtn = document.getElementById("drawBtn");
-      const resultDiv = document.getElementById("result");
+      const drawBtn = document.getElementById('drawBtn');
+      const carrot = document.getElementById('carrot');
+      const resultDiv = document.getElementById('result');
+      const boxRoot = document.getElementById('boxRoot');
+      const stage = document.getElementById('stage');
 
-      drawBtn.addEventListener("click", async () => {
-        drawBtn.disabled = true;
-        drawBtn.textContent = "抽籤中... 🌀";
-        resultDiv.innerHTML = "";
+      let pulling = false;
 
+      async function doDraw(){
+        if (pulling) return;
+        pulling = true;
+        // visual: button bounce + play pull sound + carrot pull animation
+        drawBtn.classList.add('bouncing');
+        playPullSound();
+        carrot.style.opacity = '1';
+        // show carrot popping from soil
+        requestAnimationFrame(()=> carrot.classList.add('pull'));
+
+        // small wait while anim plays
+        await new Promise(r=>setTimeout(r, 700));
+
+        // call API
+        let data;
         try {
           const res = await fetch(`${apiUrl}?user_id=${userId}&username=${encodeURIComponent(username)}`);
-          const data = await res.json();
-
-          if (data.status === "ok") {
-            // 🎨 動態背景根據運勢顏色改變
-            if (data.fortune.includes("大吉")) document.body.style.background = "linear-gradient(135deg, #fff3c4, #ffd700)";
-            else if (data.fortune.includes("中吉")) document.body.style.background = "linear-gradient(135deg, #e0ffe0, #b6ffb6)";
-            else if (data.fortune.includes("小吉")) document.body.style.background = "linear-gradient(135deg, #e3e8ff, #c5cfff)";
-            else if (data.fortune.includes("凶")) document.body.style.background = "linear-gradient(135deg, #f9dede, #ff9e9e)";
-            else document.body.style.background = "linear-gradient(135deg, #fff4e0, #ffd6a5)";
-
-            resultDiv.innerHTML = `
-              <p>📅 日期：${data.date}</p>
-              <p id="fortune">🎴 今日運勢：${data.fortune}</p>
-              <p id="advice">💡 小提醒：${data.advice}</p>
-              <p id="reward">💰 今日獎勵：+${data.reward} 金幣<br>目前總金幣：${data.coins}</p>
-            `;
-          } else {
-            resultDiv.textContent = "⚠️ 錯誤：" + (data.message || "伺服器未回應");
-          }
-        } catch (err) {
-          resultDiv.textContent = "🚫 無法連線到伺服器，請稍後再試。";
+          data = await res.json();
+        } catch (e){
+          resultDiv.classList.add('show'); resultDiv.classList.add('card-highlight');
+          resultDiv.innerHTML = `<div class="date">🚫 無法連線到伺服器，請稍後再試。</div>`;
+          pulling = false;
+          drawBtn.classList.remove('bouncing');
+          // reset carrot after little while
+          setTimeout(()=>{ carrot.classList.remove('pull'); carrot.style.opacity='0'; }, 600);
+          return;
         }
 
-        drawBtn.disabled = false;
-        drawBtn.textContent = "再抽一次";
+        // animate confetti & result
+        if (data.status === 'ok'){
+          // background color by fortune
+          const fortuneText = (data.fortune || '').toString();
+          if (fortuneText.includes('大吉')) document.body.style.background = 'linear-gradient(135deg,#fff3c4,#ffd700)';
+          else if (fortuneText.includes('中吉')) document.body.style.background = 'linear-gradient(135deg,#e6ffed,#a6f7b0)';
+          else if (fortuneText.includes('小吉')) document.body.style.background = 'linear-gradient(135deg,#e8f0ff,#c9dbff)';
+          else if (fortuneText.includes('凶')) document.body.style.background = 'linear-gradient(135deg,#ffecec,#ffb0b0)';
+          else document.body.style.background = 'linear-gradient(135deg,#fff4e0,#ffd6a5)';
+
+          // confetti
+          createConfetti(stage, 48);
+          // play result sound
+          playResultSound(fortuneText);
+
+          // show result (no reward/coins)
+          resultDiv.innerHTML = `
+            <div class="date">📅 日期：${data.date}</div>
+            <div class="fortune">🎴 今日運勢：${data.fortune}</div>
+            <div class="advice">💡 小提醒：${data.advice || ''}</div>
+          `;
+          resultDiv.classList.add('show');
+          resultDiv.classList.add('card-highlight');
+
+        } else {
+          resultDiv.innerHTML = `<div class="date">⚠️ 錯誤：${data.message || '伺服器未回應'}</div>`;
+          resultDiv.classList.add('show');
+        }
+
+        // cleanup animations
+        setTimeout(()=> {
+          drawBtn.classList.remove('bouncing');
+        }, 300);
+
+        // carrot retract after a little while
+        setTimeout(()=>{ carrot.classList.remove('pull'); }, 900);
+
+        // allow next
+        pulling = false;
+      }
+
+      drawBtn.addEventListener('click', async (e) => {
+        // ensure AudioContext resumed on user gesture (browsers require this)
+        if (audioCtx.state === 'suspended') {
+          await audioCtx.resume().catch(()=>{});
+        }
+        doDraw();
       });
     }
   </script>
