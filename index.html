@@ -104,7 +104,7 @@
 
     #result {
       position: absolute;
-      bottom: 180px;
+      bottom: 190px;
       left: 50%;
       transform: translateX(-50%) translateY(20px);
       font-size: 1.1rem;
@@ -117,7 +117,7 @@
       opacity: 0;
       transition: opacity 1s ease, transform 1s ease;
       z-index: 40;
-      line-height: 1.6;
+      line-height: 1.7;
     }
 
     #result.show {
@@ -126,15 +126,15 @@
     }
 
     #result p {
-      margin: 10px 0;
-      line-height: 1.6;
+      margin: 14px 0;
+      line-height: 1.7;
     }
 
     #fortune {
       font-size: 1.4rem;
       color: #ff6f00;
       font-weight: bold;
-      margin: 12px 0 14px 0;
+      margin: 18px 0 14px 0;
       display: block;
       opacity: 0;
       animation: fadeIn 1.2s ease forwards;
@@ -145,9 +145,7 @@
       font-style: italic;
       color: #555;
       margin-top: 18px;
-      margin-bottom: 12px;
       display: block;
-      line-height: 1.7;
       opacity: 0;
       animation: fadeIn 1.2s ease forwards;
       animation-delay: 0.8s;
@@ -175,9 +173,9 @@
         width: 92%;
         padding: 24px 18px;
         font-size: 1rem;
-        line-height: 1.7;
+        line-height: 1.8;
       }
-      #result p { margin: 12px 0; }
+      #result p { margin: 14px 0; }
       #fortune { font-size: 1.25rem; margin-top: 16px; }
       #advice { margin-top: 20px; }
     }
@@ -208,6 +206,15 @@
     const dirtCanvas = document.getElementById("dirtCanvas");
     const ctx = dirtCanvas.getContext("2d");
     const contentDiv = document.getElementById("content");
+
+    // 🥕 不同運勢圖片（可換成你自己的）
+    const carrotImages = {
+      "金": "https://i.imgur.com/HhRkz8y.png",
+      "紅": "https://i.imgur.com/W1J8FnU.png",
+      "白": "https://i.imgur.com/fX5vW1Y.png",
+      "紫": "https://i.imgur.com/xmFn8R1.png",
+      "黑": "https://i.imgur.com/BW6R7kT.png"
+    };
 
     document.body.addEventListener("click", () => {
       [pullSound, winSound, loseSound].forEach(s => {
@@ -283,11 +290,19 @@
           const data = await res.json();
 
           setTimeout(() => {
+            const fortune = data.fortune;
+            if (fortune.includes("金")) carrot.src = carrotImages["金"];
+            else if (fortune.includes("紅")) carrot.src = carrotImages["紅"];
+            else if (fortune.includes("白")) carrot.src = carrotImages["白"];
+            else if (fortune.includes("紫")) carrot.src = carrotImages["紫"];
+            else if (fortune.includes("黑")) carrot.src = carrotImages["黑"];
+            else carrot.src = "https://cdn-icons-png.flaticon.com/512/619/619043.png";
+
             carrot.classList.add("show-carrot");
             setTimeout(() => {
               carrot.classList.add("fly-away");
               confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
-              if (data.fortune.includes("凶")) loseSound.play();
+              if (fortune.includes("凶")) loseSound.play();
               else winSound.play();
 
               resultDiv.innerHTML = `
