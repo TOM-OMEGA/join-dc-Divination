@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>🥕 胡蘿蔔今日運勢</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -13,20 +13,19 @@
       color: #333;
       text-align: center;
       min-height: 100vh;
-      overflow: hidden;
       margin: 0;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
       align-items: center;
       transition: background 1s ease;
-      touch-action: manipulation;
     }
 
     h1 {
       color: #ff8b00;
       font-size: 2rem;
-      margin-top: 40px;
+      margin-top: 30px;
       position: absolute;
       top: 20px;
       z-index: 20;
@@ -37,34 +36,34 @@
       position: absolute;
       bottom: 0;
       width: 100%;
-      height: 150px;
+      height: 160px;
       background: linear-gradient(180deg, #b87938 0%, #704325 100%);
       box-shadow: inset 0 -10px 18px rgba(0,0,0,0.3);
-      z-index: 5;
+      z-index: 1;
     }
 
     /* 胡蘿蔔 */
     #carrot {
       position: absolute;
-      bottom: 70px;
+      bottom: 110px;
       width: 130px;
-      transform: translateY(200px) rotate(0deg);
+      transform: translateY(180px);
       opacity: 0;
-      transition: transform 1.2s cubic-bezier(0.25, 1.2, 0.5, 1), opacity 0.8s ease;
-      z-index: 10;
+      transition: transform 1s ease-in-out, opacity 0.8s ease;
+      z-index: 5;
     }
 
     .show-carrot {
       opacity: 1;
-      transform: translateY(-80px) rotate(-12deg);
-      animation: wiggle 1.4s ease-in-out;
+      transform: translateY(-30px);
+      animation: bounce 1.2s ease-out;
     }
 
-    @keyframes wiggle {
-      0% { transform: translateY(200px) rotate(0deg); }
-      50% { transform: translateY(-90px) rotate(-14deg); }
-      70% { transform: translateY(-75px) rotate(8deg); }
-      100% { transform: translateY(-80px) rotate(-12deg); }
+    @keyframes bounce {
+      0% { transform: translateY(180px); }
+      60% { transform: translateY(-40px); }
+      80% { transform: translateY(10px); }
+      100% { transform: translateY(-30px); }
     }
 
     /* 抽籤按鈕 */
@@ -79,8 +78,8 @@
       color: white;
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
       transition: transform 0.2s, background 0.3s;
-      z-index: 15;
-      margin-bottom: 250px;
+      z-index: 10;
+      margin-bottom: 280px;
     }
 
     button:hover {
@@ -100,22 +99,24 @@
     /* 結果卡片 */
     #result {
       position: absolute;
-      bottom: 220px;
+      bottom: 210px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
       font-size: 1.1rem;
       background: rgba(255,255,255,0.95);
       border-radius: 15px;
       padding: 25px;
+      width: 80%;
       max-width: 340px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
       opacity: 0;
-      transform: translateY(20px);
       transition: opacity 1s ease, transform 1s ease;
-      z-index: 12;
+      z-index: 8;
     }
 
     #result.show {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateX(-50%) translateY(0);
     }
 
     #fortune {
@@ -138,16 +139,14 @@
       left: 50%;
       transform: translateX(-50%);
       pointer-events: none;
-      z-index: 8;
+      z-index: 2;
     }
 
-    /* 手機專用調整 */
     @media (max-width: 600px) {
-      h1 { font-size: 1.5rem; }
-      button { font-size: 1rem; padding: 12px 25px; margin-bottom: 220px; }
-      #carrot { width: 100px; bottom: 60px; }
-      #result { bottom: 190px; padding: 20px; max-width: 300px; }
-      .soil { height: 120px; }
+      #carrot { width: 100px; bottom: 90px; }
+      button { font-size: 1rem; padding: 12px 25px; margin-bottom: 250px; }
+      #result { bottom: 180px; padding: 20px; max-width: 300px; }
+      .soil { height: 130px; }
     }
   </style>
 </head>
@@ -165,7 +164,6 @@
 
   <script>
     const apiUrl = "https://carrot-bot-production.up.railway.app/api/fortune";
-    const discordInvite = "https://discord.gg/mar4qT9XYn";
     const userId = "657882539331158016";
     const username = "湯姆瑞斗";
 
@@ -173,34 +171,10 @@
     const pullSound = document.getElementById("pullSound");
     const winSound = document.getElementById("winSound");
     const loseSound = document.getElementById("loseSound");
-
-    // 📱 音量自動調整（手機音量略低）
-    if (window.innerWidth < 600) {
-      pullSound.volume = 0.5;
-      winSound.volume = 0.4;
-      loseSound.volume = 0.4;
-    } else {
-      pullSound.volume = 0.8;
-      winSound.volume = 0.7;
-      loseSound.volume = 0.7;
-    }
-
     const dirtCanvas = document.getElementById("dirtCanvas");
     const ctx = dirtCanvas.getContext("2d");
 
-    const params = new URLSearchParams(window.location.search);
-    const joined = params.get("joined");
-    const contentDiv = document.getElementById("content");
-
-    const carrotImages = {
-      "紅": "https://cdn-icons-png.flaticon.com/512/590/590685.png",
-      "白": "https://cdn-icons-png.flaticon.com/512/3171/3171076.png",
-      "紫": "https://cdn-icons-png.flaticon.com/512/6207/6207568.png",
-      "金": "https://cdn-icons-png.flaticon.com/512/6207/6207582.png",
-      "黑": "https://cdn-icons-png.flaticon.com/512/6207/6207585.png"
-    };
-
-    // 泥土粒子動畫
+    // 土粒飛濺動畫
     function spawnDirt() {
       const particles = [];
       for (let i = 0; i < 25; i++) {
@@ -214,6 +188,7 @@
           life: 1
         });
       }
+
       function draw() {
         ctx.clearRect(0, 0, dirtCanvas.width, dirtCanvas.height);
         particles.forEach(p => {
@@ -228,89 +203,84 @@
           ctx.fill();
         });
         ctx.globalAlpha = 1;
-        for (let i = particles.length - 1; i >= 0; i--) {
-          if (particles[i].life <= 0) particles.splice(i, 1);
-        }
-        if (particles.length > 0) requestAnimationFrame(draw);
+        if (particles.some(p => p.life > 0)) requestAnimationFrame(draw);
       }
       draw();
     }
 
-    // 顯示內容
-    if (!joined) {
-      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(discordInvite)}`;
-      contentDiv.innerHTML = `
-        <p>請掃描下方 QR Code 加入 Discord！</p>
-        <img src="${qrUrl}" alt="Discord QR Code" />
-        <p style="margin-top:15px;">加入後請回到這頁並加上 <b>?joined=true</b></p>
-      `;
-    } else {
-      contentDiv.innerHTML = `
-        <button id="drawBtn">抽出今日運勢</button>
-        <div id="result"></div>
-      `;
+    // 胡蘿蔔顏色圖
+    const carrotImages = {
+      "紅": "https://cdn-icons-png.flaticon.com/512/590/590685.png",
+      "白": "https://cdn-icons-png.flaticon.com/512/3171/3171076.png",
+      "紫": "https://cdn-icons-png.flaticon.com/512/6207/6207568.png",
+      "金": "https://cdn-icons-png.flaticon.com/512/6207/6207582.png",
+      "黑": "https://cdn-icons-png.flaticon.com/512/6207/6207585.png"
+    };
 
-      const drawBtn = document.getElementById("drawBtn");
-      const resultDiv = document.getElementById("result");
+    const contentDiv = document.getElementById("content");
+    contentDiv.innerHTML = `
+      <button id="drawBtn">抽出今日運勢</button>
+      <div id="result"></div>
+    `;
 
-      // 手機也能啟用音效
-      ["touchstart", "click"].forEach(eventType => {
-        drawBtn.addEventListener(eventType, async () => {
-          drawBtn.disabled = true;
-          drawBtn.textContent = "抽籤中... 🌀";
-          drawBtn.classList.add("shake");
-          carrot.classList.remove("show-carrot");
-          resultDiv.classList.remove("show");
-          resultDiv.innerHTML = "";
+    const drawBtn = document.getElementById("drawBtn");
+    const resultDiv = document.getElementById("result");
 
-          pullSound.currentTime = 0;
-          pullSound.play().catch(() => {});
-          spawnDirt();
+    // 🔊 確保音效可播放（第一次互動時預載）
+    drawBtn.addEventListener("click", async () => {
+      pullSound.play().catch(()=>{}); pullSound.pause(); pullSound.currentTime=0;
+      winSound.play().catch(()=>{}); winSound.pause(); winSound.currentTime=0;
+      loseSound.play().catch(()=>{}); loseSound.pause(); loseSound.currentTime=0;
+    }, { once: true });
 
-          try {
-            const res = await fetch(`${apiUrl}?user_id=${userId}&username=${encodeURIComponent(username)}`);
-            const data = await res.json();
+    drawBtn.addEventListener("click", async () => {
+      drawBtn.disabled = true;
+      drawBtn.textContent = "抽籤中... 🌀";
+      drawBtn.classList.add("shake");
+      carrot.classList.remove("show-carrot");
+      resultDiv.classList.remove("show");
+      resultDiv.innerHTML = "";
 
-            setTimeout(() => {
-              const foundColor = Object.keys(carrotImages).find(c => data.fortune.includes(c)) || "紅";
-              carrot.src = carrotImages[foundColor];
-              carrot.classList.add("show-carrot");
+      pullSound.currentTime = 0;
+      pullSound.play().catch(()=>{});
+      spawnDirt();
 
-              // 🎨 改背景
-              if (data.fortune.includes("大吉"))
-                document.body.style.background = "linear-gradient(135deg, #fff3c4, #ffd700)";
-              else if (data.fortune.includes("中吉"))
-                document.body.style.background = "linear-gradient(135deg, #e0ffe0, #b6ffb6)";
-              else if (data.fortune.includes("小吉"))
-                document.body.style.background = "linear-gradient(135deg, #e3e8ff, #c5cfff)";
-              else if (data.fortune.includes("吉"))
-                document.body.style.background = "linear-gradient(135deg, #fff4e0, #ffd6a5)";
-              else if (data.fortune.includes("凶"))
-                document.body.style.background = "linear-gradient(135deg, #f9dede, #ff9e9e)";
+      try {
+        const res = await fetch(`${apiUrl}?user_id=${userId}&username=${encodeURIComponent(username)}`);
+        const data = await res.json();
 
-              setTimeout(() => {
-                resultDiv.innerHTML = `
-                  <p>📅 日期：${data.date}</p>
-                  <p id="fortune">🎴 今日運勢：${data.fortune}</p>
-                  <p id="advice">💡 小提醒：${data.advice}</p>
-                `;
-                resultDiv.classList.add("show");
-                confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
-                if (data.fortune.includes("凶")) loseSound.play();
-                else winSound.play();
-              }, 1000);
-            }, 500);
-          } catch {
-            resultDiv.textContent = "🚫 無法連線到伺服器，請稍後再試。";
+        setTimeout(() => {
+          const foundColor = Object.keys(carrotImages).find(c => data.fortune.includes(c)) || "紅";
+          carrot.src = carrotImages[foundColor];
+          carrot.classList.add("show-carrot");
+
+          if (data.fortune.includes("大吉")) document.body.style.background = "linear-gradient(135deg, #fff3c4, #ffd700)";
+          else if (data.fortune.includes("中吉")) document.body.style.background = "linear-gradient(135deg, #e0ffe0, #b6ffb6)";
+          else if (data.fortune.includes("小吉")) document.body.style.background = "linear-gradient(135deg, #e3e8ff, #c5cfff)";
+          else if (data.fortune.includes("吉")) document.body.style.background = "linear-gradient(135deg, #fff4e0, #ffd6a5)";
+          else if (data.fortune.includes("凶")) document.body.style.background = "linear-gradient(135deg, #f9dede, #ff9e9e)";
+
+          setTimeout(() => {
+            resultDiv.innerHTML = `
+              <p>📅 日期：${data.date}</p>
+              <p id="fortune">🎴 今日運勢：${data.fortune}</p>
+              <p id="advice">💡 小提醒：${data.advice}</p>
+            `;
             resultDiv.classList.add("show");
-          } finally {
-            drawBtn.disabled = false;
-            drawBtn.textContent = "再抽一次";
-            drawBtn.classList.remove("shake");
-          }
-        });
-      });
-    }
+            confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
+            if (data.fortune.includes("凶")) loseSound.play();
+            else winSound.play();
+          }, 1000);
+        }, 400);
+      } catch {
+        resultDiv.textContent = "🚫 無法連線到伺服器，請稍後再試。";
+        resultDiv.classList.add("show");
+      } finally {
+        drawBtn.disabled = false;
+        drawBtn.textContent = "再抽一次";
+        drawBtn.classList.remove("shake");
+      }
+    });
   </script>
 </body>
 </html>
