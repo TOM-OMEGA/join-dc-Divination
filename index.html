@@ -66,60 +66,62 @@
   <h1>🥕 胡蘿蔔今日運勢</h1>
   <div id="content"></div>
 
-  <script>
-    // ✅ 修改這三個變數
-    const discordInvite = "https://discord.gg/mar4qT9XYn"; // 你的 Discord 邀請連結
-    const apiUrl = "https://carrot-bot-production.up.railway.app/api/fortune"; // ✅ 必須包含 https:// 與 /api/fortune
-    const userId = "657882539331158016"; // 你的 Discord 使用者 ID
-    const username = "湯姆瑞斗"; // 使用者名稱
+<script>
+  const discordInvite = "https://discord.gg/mar4qT9XYn";
+  const apiUrl = "https://carrot-bot-production.up.railway.app/api/fortune/";
+  const userId = "657882539331158016";
+  const username = "湯姆瑞斗";
 
-    const params = new URLSearchParams(window.location.search);
-    const joined = params.get("joined");
-    const contentDiv = document.getElementById("content");
+  const params = new URLSearchParams(window.location.search);
+  const joined = params.get("joined");
+  const contentDiv = document.getElementById("content");
 
-    if (!joined) {
-      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(discordInvite)}`;
-      contentDiv.innerHTML = `
-        <p>請掃描下方 QR Code 加入 Discord！</p>
-        <img src="${qrUrl}" alt="Discord QR Code" />
-        <p style="margin-top:15px;">加入後請回到這頁並加上 <b>?joined=true</b><br>（例如：<code>?joined=true</code>）</p>
-      `;
-    } else {
-      contentDiv.innerHTML = `
-        <button id="drawBtn">抽出今日運勢</button>
-        <div id="result"></div>
-      `;
+  if (!joined) {
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(discordInvite)}`;
+    contentDiv.innerHTML = `
+      <p>請掃描下方 QR Code 加入 Discord！</p>
+      <img src="${qrUrl}" alt="Discord QR Code" />
+      <p style="margin-top:15px;">加入後請回到這頁並加上 <b>?joined=true</b><br>（例如：<code>?joined=true</code>）</p>
+    `;
+  } else {
+    contentDiv.innerHTML = `
+      <button id="drawBtn">抽出今日運勢</button>
+      <div id="result"></div>
+    `;
 
-      const drawBtn = document.getElementById("drawBtn");
-      const resultDiv = document.getElementById("result");
+    const drawBtn = document.getElementById("drawBtn");
+    const resultDiv = document.getElementById("result");
 
-      drawBtn.addEventListener("click", async () => {
-        drawBtn.disabled = true;
-        drawBtn.textContent = "抽籤中... 🌀";
-        resultDiv.innerHTML = "";
+    drawBtn.addEventListener("click", async () => {
+      drawBtn.disabled = true;
+      drawBtn.textContent = "抽籤中... 🌀";
+      resultDiv.innerHTML = "";
 
-        try {
-          // ✅ 修正 fetch API 網址
-          const res = await fetch(`${apiUrl}?user_id=${userId}&username=${encodeURIComponent(username)}`);
-          const data = await res.json();
+      try {
+        const res = await fetch(`${apiUrl}?user_id=${userId}&username=${encodeURIComponent(username)}`, {
+          method: "GET",
+          mode: "cors"
+        });
+        const data = await res.json();
 
-          if (data.status === "ok") {
-            resultDiv.innerHTML = `
-              <p>📅 日期：${data.date}</p>
-              <p>🎴 今日運勢：<strong>${data.fortune}</strong></p>
-              <p>💰 目前金幣：${data.coins}</p>
-            `;
-          } else {
-            resultDiv.textContent = "⚠️ 錯誤：" + (data.message || "伺服器未回應");
-          }
-        } catch (err) {
-          resultDiv.textContent = "🚫 無法連線到伺服器，請稍後再試。";
+        if (data.status === "ok") {
+          resultDiv.innerHTML = `
+            <p>📅 日期：${data.date}</p>
+            <p>🎴 今日運勢：<strong>${data.fortune}</strong></p>
+            <p>💰 目前金幣：${data.coins}</p>
+          `;
+        } else {
+          resultDiv.textContent = "⚠️ 錯誤：" + (data.message || "伺服器未回應");
         }
+      } catch (err) {
+        resultDiv.textContent = "🚫 無法連線到伺服器，請稍後再試。";
+      }
 
-        drawBtn.disabled = false;
-        drawBtn.textContent = "再抽一次";
-      });
-    }
-  </script>
+      drawBtn.disabled = false;
+      drawBtn.textContent = "再抽一次";
+    });
+  }
+</script>
+
 </body>
 </html>
