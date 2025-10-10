@@ -53,6 +53,7 @@
       padding: 20px;
       max-width: 320px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: all 0.4s ease;
     }
     @media (max-width: 480px) {
       body { padding: 20px; }
@@ -66,16 +67,26 @@
   <div id="content"></div>
 
   <script>
+    const discordInvite = "https://discord.gg/mar4qT9XYn"; // ✅ 改成你自己的邀請連結
+    const apiUrl = "https://carrot-bot-1.onrender.com/api/fortune"; // ✅ 你的 Render API
+    const userId = "657882539331158016"; // ✅ 改成實際 Discord user_id
+    const username = "湯姆瑞斗"; // ✅ 改成實際玩家名稱
+
     const params = new URLSearchParams(window.location.search);
     const joined = params.get("joined");
     const contentDiv = document.getElementById("content");
 
+    // 🔹 預設顯示 QRCode
     if (!joined) {
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(discordInvite)}`;
       contentDiv.innerHTML = `
         <p>請掃描下方 QR Code 加入 Discord！</p>
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https://discord.gg/YOUR_INVITE_LINK" alt="Discord QR Code" />
+        <img src="${qrUrl}" alt="Discord QR Code" />
+        <p style="margin-top:15px;">加入後請回到這頁並加上 <b>?joined=true</b><br>（例如：<code>?joined=true</code>）</p>
       `;
-    } else {
+    } 
+    // 🔹 顯示抽籤按鈕
+    else {
       contentDiv.innerHTML = `
         <button id="drawBtn">抽出今日運勢</button>
         <div id="result"></div>
@@ -86,14 +97,11 @@
 
       drawBtn.addEventListener("click", async () => {
         drawBtn.disabled = true;
-        drawBtn.textContent = "抽籤中...";
-        resultDiv.textContent = "";
-
-        const user_id = "657882539331158016"; // ⚠️ 改成真實的 Discord user_id
-        const username = "湯姆瑞斗";
+        drawBtn.textContent = "抽籤中... 🌀";
+        resultDiv.innerHTML = "";
 
         try {
-          const res = await fetch(`https://carrot-bot-1.onrender.com/api/fortune?user_id=${user_id}&username=${username}`);
+          const res = await fetch(`${apiUrl}?user_id=${userId}&username=${encodeURIComponent(username)}`);
           const data = await res.json();
 
           if (data.status === "ok") {
@@ -103,10 +111,10 @@
               <p>💰 目前金幣：${data.coins}</p>
             `;
           } else {
-            resultDiv.textContent = "⚠️ 發生錯誤：" + data.message;
+            resultDiv.textContent = "⚠️ 錯誤：" + (data.message || "伺服器未回應");
           }
         } catch (err) {
-          resultDiv.textContent = "🚫 無法連線到伺服器。";
+          resultDiv.textContent = "🚫 無法連線到伺服器，請稍後再試。";
         }
 
         drawBtn.disabled = false;
