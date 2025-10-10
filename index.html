@@ -14,44 +14,45 @@
       text-align: center;
       padding: 30px;
       min-height: 100vh;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-end;
       align-items: center;
-      overflow: hidden;
       transition: background 1s ease;
     }
 
     h1 {
       color: #ff8b00;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       font-size: 2rem;
+      position: absolute;
+      top: 40px;
     }
 
+    /* 胡蘿蔔動畫區域 */
     #carrot {
       position: absolute;
-      bottom: 80px;
-      width: 140px;
-      transform: translateY(60px);
+      bottom: 120px;
+      width: 130px;
+      transform: translateY(140px);
       opacity: 0;
-      transition: transform 1s ease-out, opacity 0.5s ease;
+      transition: transform 1s ease-out, opacity 0.6s ease;
     }
 
     .show-carrot {
       opacity: 1;
-      transform: translateY(-30px);
+      transform: translateY(-20px);
     }
 
     .soil {
       position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: 24px;
-      width: 240px;
-      height: 56px;
-      background: linear-gradient(180deg, #c58a50 0%, #8d5e2f 100%);
-      border-radius: 16px;
-      box-shadow: inset 0 -8px 18px rgba(0,0,0,0.15);
+      bottom: 60px;
+      width: 260px;
+      height: 70px;
+      background: linear-gradient(180deg, #b87938 0%, #704325 100%);
+      border-radius: 25px;
+      box-shadow: inset 0 -10px 18px rgba(0,0,0,0.2);
     }
 
     button {
@@ -65,6 +66,7 @@
       color: white;
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
       transition: transform 0.2s, background 0.3s;
+      margin-bottom: 180px;
       z-index: 10;
     }
 
@@ -83,7 +85,7 @@
     }
 
     #result {
-      margin-top: 280px;
+      margin-top: 20px;
       font-size: 1.1rem;
       background: rgba(255,255,255,0.9);
       border-radius: 15px;
@@ -114,9 +116,9 @@
     }
 
     @media (max-width: 480px) {
-      body { padding: 20px; }
-      h1 { font-size: 1.5rem; }
-      button { font-size: 1rem; padding: 12px 25px; }
+      h1 { font-size: 1.5rem; top: 20px; }
+      button { font-size: 1rem; padding: 12px 25px; margin-bottom: 140px; }
+      #carrot { width: 100px; bottom: 100px; }
     }
   </style>
 </head>
@@ -127,9 +129,9 @@
   <div id="content"></div>
 
   <!-- 音效 -->
-  <audio id="pullSound" src="https://assets.mixkit.co/active_storage/sfx/2592/2592-preview.mp3"></audio>
-  <audio id="winSound" src="https://assets.mixkit.co/active_storage/sfx/2014/2014-preview.mp3"></audio>
-  <audio id="loseSound" src="https://assets.mixkit.co/active_storage/sfx/2375/2375-preview.mp3"></audio>
+  <audio id="pullSound" src="https://cdn.pixabay.com/download/audio/2023/09/28/audio_66a5cc5e36.mp3?filename=pop-125111.mp3"></audio>
+  <audio id="winSound" src="https://cdn.pixabay.com/download/audio/2023/04/11/audio_b2cc4a5d80.mp3?filename=success-1-6297.mp3"></audio>
+  <audio id="loseSound" src="https://cdn.pixabay.com/download/audio/2023/06/30/audio_142ac9a2c2.mp3?filename=negative-beeps-116199.mp3"></audio>
 
   <script>
     const discordInvite = "https://discord.gg/mar4qT9XYn"; 
@@ -146,7 +148,10 @@
     const winSound = document.getElementById("winSound");
     const loseSound = document.getElementById("loseSound");
 
-    // 各顏色蘿蔔圖片對應表
+    pullSound.volume = 0.6;
+    winSound.volume = 0.7;
+    loseSound.volume = 0.7;
+
     const carrotImages = {
       "紅": "https://cdn-icons-png.flaticon.com/512/590/590685.png",
       "白": "https://cdn-icons-png.flaticon.com/512/3171/3171076.png",
@@ -178,22 +183,22 @@
         carrot.classList.remove("show-carrot");
         resultDiv.classList.remove("show");
         resultDiv.innerHTML = "";
+
+        // 播放拔蘿蔔音效
+        pullSound.currentTime = 0;
         pullSound.play();
 
         try {
           const res = await fetch(`${apiUrl}?user_id=${userId}&username=${encodeURIComponent(username)}`);
           const data = await res.json();
 
-          // 抽到後拔出動畫
+          // 延遲顯示動畫，模擬拔蘿蔔時間
           setTimeout(() => {
-            // 根據運勢決定蘿蔔顏色
             let foundColor = Object.keys(carrotImages).find(c => data.fortune.includes(c)) || "紅";
             carrot.src = carrotImages[foundColor];
             carrot.classList.add("show-carrot");
-          }, 700);
 
-          // 改變背景顏色
-          if (data.status === "ok") {
+            // 顏色主題背景
             if (data.fortune.includes("大吉")) document.body.style.background = "linear-gradient(135deg, #fff3c4, #ffd700)";
             else if (data.fortune.includes("中吉")) document.body.style.background = "linear-gradient(135deg, #e0ffe0, #b6ffb6)";
             else if (data.fortune.includes("小吉")) document.body.style.background = "linear-gradient(135deg, #e3e8ff, #c5cfff)";
@@ -208,22 +213,14 @@
               `;
               resultDiv.classList.add("show");
 
-              // 五彩紙屑特效
-              confetti({
-                particleCount: 120,
-                spread: 80,
-                origin: { y: 0.6 }
-              });
-
-              // 播放對應音效
+              // 彩帶動畫 + 音效
+              confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
               if (data.fortune.includes("凶")) loseSound.play();
               else winSound.play();
 
-            }, 1200);
-          } else {
-            resultDiv.textContent = "⚠️ 錯誤：" + (data.message || "伺服器未回應");
-            resultDiv.classList.add("show");
-          }
+            }, 1000);
+          }, 700);
+
         } catch (err) {
           resultDiv.textContent = "🚫 無法連線到伺服器，請稍後再試。";
           resultDiv.classList.add("show");
