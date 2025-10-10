@@ -24,7 +24,7 @@
 
     h1 {
       color: #ff8b00;
-      font-size: 1.8rem;
+      font-size: 2rem;
       margin-top: 30px;
       position: absolute;
       top: 20px;
@@ -76,9 +76,9 @@
     button {
       background-color: #ff9f1c;
       border: none;
-      padding: 14px 28px;
+      padding: 15px 35px;
       border-radius: 12px;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       font-weight: bold;
       cursor: pointer;
       color: white;
@@ -110,13 +110,14 @@
       font-size: 1.1rem;
       background: rgba(255,255,255,0.95);
       border-radius: 15px;
-      padding: 25px;
+      padding: 28px 25px;
       width: 85%;
       max-width: 360px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
       opacity: 0;
       transition: opacity 1s ease, transform 1s ease;
       z-index: 40;
+      line-height: 1.6;
     }
 
     #result.show {
@@ -124,25 +125,37 @@
       transform: translateX(-50%) translateY(0);
     }
 
+    #result p {
+      margin: 10px 0;
+      line-height: 1.6;
+    }
+
     #fortune {
       font-size: 1.4rem;
       color: #ff6f00;
       font-weight: bold;
-      margin: 15px 0 10px 0;
+      margin: 12px 0 14px 0;
+      display: block;
+      opacity: 0;
+      animation: fadeIn 1.2s ease forwards;
+      animation-delay: 0.4s;
     }
 
     #advice {
       font-style: italic;
       color: #555;
-      margin-top: 15px;
-      margin-bottom: 10px;
+      margin-top: 18px;
+      margin-bottom: 12px;
+      display: block;
+      line-height: 1.7;
+      opacity: 0;
+      animation: fadeIn 1.2s ease forwards;
+      animation-delay: 0.8s;
     }
 
-    #backBtn {
-      margin-top: 12px;
-      background-color: #777;
-      padding: 10px 25px;
-      font-size: 1rem;
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
 
     canvas#dirtCanvas {
@@ -157,16 +170,23 @@
     @media (max-width: 480px) {
       h1 { font-size: 1.5rem; }
       button { padding: 12px 24px; font-size: 1rem; margin-bottom: 220px; }
-      #result { bottom: 160px; width: 90%; padding: 20px; }
-      #fortune { font-size: 1.2rem; }
-      #advice { font-size: 1rem; }
+      #result {
+        bottom: 160px;
+        width: 92%;
+        padding: 24px 18px;
+        font-size: 1rem;
+        line-height: 1.7;
+      }
+      #result p { margin: 12px 0; }
+      #fortune { font-size: 1.25rem; margin-top: 16px; }
+      #advice { margin-top: 20px; }
     }
   </style>
 </head>
 <body>
   <h1>🥕 胡蘿蔔今日運勢</h1>
   <canvas id="dirtCanvas" width="400" height="200"></canvas>
-  <img id="carrot" src="./carrot_red.png" alt="carrot">
+  <img id="carrot" src="https://cdn-icons-png.flaticon.com/512/619/619043.png" alt="carrot">
   <div class="soil"></div>
   <div id="content"></div>
 
@@ -189,21 +209,12 @@
     const ctx = dirtCanvas.getContext("2d");
     const contentDiv = document.getElementById("content");
 
-    // 🎨 蘿蔔顏色與背景對應
-    const fortuneThemes = {
-      "大吉": { img: "./carrot_gold.png", bg: "linear-gradient(135deg, #fff3c4, #ffd700)" },
-      "中吉": { img: "./carrot_white.png", bg: "linear-gradient(135deg, #e0ffe0, #b6ffb6)" },
-      "小吉": { img: "./carrot_purple.png", bg: "linear-gradient(135deg, #e3e8ff, #c5cfff)" },
-      "吉": { img: "./carrot_red.png", bg: "linear-gradient(135deg, #fff4e0, #ffd6a5)" },
-      "凶": { img: "./carrot_black.png", bg: "linear-gradient(135deg, #f9dede, #ff9e9e)" }
-    };
-
-    // 🥕 解禁音效
     document.body.addEventListener("click", () => {
-      [pullSound, winSound, loseSound].forEach(s => s.play().then(() => s.pause()).catch(()=>{}));
+      [pullSound, winSound, loseSound].forEach(s => {
+        s.play().then(() => s.pause()).catch(()=>{});
+      });
     }, { once: true });
 
-    // 🟤 泥土動畫
     function spawnDirt() {
       const particles = [];
       for (let i = 0; i < 25; i++) {
@@ -235,19 +246,17 @@
       draw();
     }
 
-    // ===== 首頁（Discord QR Code）=====
     function showQRCode() {
       const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(discordInvite)}`;
       contentDiv.innerHTML = `
         <p>📱 請掃描下方 QR Code 加入 Discord！</p>
-        <img src="${qrUrl}" alt="Discord QR Code" style="margin-top:10px;width:200px;height:200px;">
+        <img src="${qrUrl}" alt="Discord QR Code" />
         <p style="margin-top:10px;">加入完成後請回到本頁</p>
         <button id="joinedBtn">✅ 我已加入 Discord</button>
       `;
       document.getElementById("joinedBtn").addEventListener("click", showFortunePage);
     }
 
-    // ===== 抽籤頁 =====
     function showFortunePage() {
       contentDiv.innerHTML = `
         <button id="drawBtn">抽出今日運勢</button>
@@ -274,24 +283,16 @@
           const data = await res.json();
 
           setTimeout(() => {
-            let fortuneText = data.fortune;
-            let theme = fortuneThemes["吉"];
-            for (const key in fortuneThemes) {
-              if (fortuneText.includes(key)) theme = fortuneThemes[key];
-            }
-            carrot.src = theme.img;
-            document.body.style.background = theme.bg;
-
             carrot.classList.add("show-carrot");
             setTimeout(() => {
               carrot.classList.add("fly-away");
               confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
-              if (fortuneText.includes("凶")) loseSound.play();
+              if (data.fortune.includes("凶")) loseSound.play();
               else winSound.play();
 
               resultDiv.innerHTML = `
                 <p>📅 日期：${data.date}</p>
-                <p id="fortune">🎴 今日運勢：${fortuneText}</p>
+                <p id="fortune">🎴 今日運勢：${data.fortune}</p>
                 <p id="advice">💡 小提醒：${data.advice}</p>
                 <button id="backBtn">🔙 回到 QR Code 畫面</button>
               `;
@@ -310,7 +311,6 @@
       });
     }
 
-    // 🏁 預設載入 QR Code 首頁
     showQRCode();
   </script>
 </body>
