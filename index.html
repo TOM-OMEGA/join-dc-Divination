@@ -17,6 +17,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      transition: background 1s ease;
     }
     h1 {
       color: #ff8b00;
@@ -48,12 +49,28 @@
     #result {
       margin-top: 30px;
       font-size: 1.1rem;
-      background: rgba(255,255,255,0.7);
-      border-radius: 12px;
-      padding: 20px;
-      max-width: 320px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      background: rgba(255,255,255,0.85);
+      border-radius: 15px;
+      padding: 25px;
+      max-width: 340px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
       transition: all 0.4s ease;
+    }
+    #fortune {
+      font-size: 1.4rem;
+      margin: 10px 0;
+      color: #ff6f00;
+      font-weight: bold;
+    }
+    #advice {
+      font-style: italic;
+      color: #555;
+      margin-top: 10px;
+    }
+    #reward {
+      margin-top: 15px;
+      color: #008000;
+      font-weight: bold;
     }
     @media (max-width: 480px) {
       body { padding: 20px; }
@@ -66,62 +83,67 @@
   <h1>🥕 胡蘿蔔今日運勢</h1>
   <div id="content"></div>
 
-<script>
-  const discordInvite = "https://discord.gg/mar4qT9XYn";
-  const apiUrl = "https://carrot-bot-production.up.railway.app/api/fortune/";
-  const userId = "657882539331158016";
-  const username = "湯姆瑞斗";
+  <script>
+    // ✅ 設定變數
+    const discordInvite = "https://discord.gg/mar4qT9XYn"; 
+    const apiUrl = "https://carrot-bot-production.up.railway.app/api/fortune"; 
+    const userId = "657882539331158016"; 
+    const username = "湯姆瑞斗"; 
 
-  const params = new URLSearchParams(window.location.search);
-  const joined = params.get("joined");
-  const contentDiv = document.getElementById("content");
+    const params = new URLSearchParams(window.location.search);
+    const joined = params.get("joined");
+    const contentDiv = document.getElementById("content");
 
-  if (!joined) {
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(discordInvite)}`;
-    contentDiv.innerHTML = `
-      <p>請掃描下方 QR Code 加入 Discord！</p>
-      <img src="${qrUrl}" alt="Discord QR Code" />
-      <p style="margin-top:15px;">加入後請回到這頁並加上 <b>?joined=true</b><br>（例如：<code>?joined=true</code>）</p>
-    `;
-  } else {
-    contentDiv.innerHTML = `
-      <button id="drawBtn">抽出今日運勢</button>
-      <div id="result"></div>
-    `;
+    if (!joined) {
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(discordInvite)}`;
+      contentDiv.innerHTML = `
+        <p>請掃描下方 QR Code 加入 Discord！</p>
+        <img src="${qrUrl}" alt="Discord QR Code" />
+        <p style="margin-top:15px;">加入後請回到這頁並加上 <b>?joined=true</b><br>（例如：<code>?joined=true</code>）</p>
+      `;
+    } else {
+      contentDiv.innerHTML = `
+        <button id="drawBtn">抽出今日運勢</button>
+        <div id="result"></div>
+      `;
 
-    const drawBtn = document.getElementById("drawBtn");
-    const resultDiv = document.getElementById("result");
+      const drawBtn = document.getElementById("drawBtn");
+      const resultDiv = document.getElementById("result");
 
-    drawBtn.addEventListener("click", async () => {
-      drawBtn.disabled = true;
-      drawBtn.textContent = "抽籤中... 🌀";
-      resultDiv.innerHTML = "";
+      drawBtn.addEventListener("click", async () => {
+        drawBtn.disabled = true;
+        drawBtn.textContent = "抽籤中... 🌀";
+        resultDiv.innerHTML = "";
 
-      try {
-        const res = await fetch(`${apiUrl}?user_id=${userId}&username=${encodeURIComponent(username)}`, {
-          method: "GET",
-          mode: "cors"
-        });
-        const data = await res.json();
+        try {
+          const res = await fetch(`${apiUrl}?user_id=${userId}&username=${encodeURIComponent(username)}`);
+          const data = await res.json();
 
-        if (data.status === "ok") {
-          resultDiv.innerHTML = `
-            <p>📅 日期：${data.date}</p>
-            <p>🎴 今日運勢：<strong>${data.fortune}</strong></p>
-            <p>💰 目前金幣：${data.coins}</p>
-          `;
-        } else {
-          resultDiv.textContent = "⚠️ 錯誤：" + (data.message || "伺服器未回應");
+          if (data.status === "ok") {
+            // 🎨 動態背景根據運勢顏色改變
+            if (data.fortune.includes("大吉")) document.body.style.background = "linear-gradient(135deg, #fff3c4, #ffd700)";
+            else if (data.fortune.includes("中吉")) document.body.style.background = "linear-gradient(135deg, #e0ffe0, #b6ffb6)";
+            else if (data.fortune.includes("小吉")) document.body.style.background = "linear-gradient(135deg, #e3e8ff, #c5cfff)";
+            else if (data.fortune.includes("凶")) document.body.style.background = "linear-gradient(135deg, #f9dede, #ff9e9e)";
+            else document.body.style.background = "linear-gradient(135deg, #fff4e0, #ffd6a5)";
+
+            resultDiv.innerHTML = `
+              <p>📅 日期：${data.date}</p>
+              <p id="fortune">🎴 今日運勢：${data.fortune}</p>
+              <p id="advice">💡 小提醒：${data.advice}</p>
+              <p id="reward">💰 今日獎勵：+${data.reward} 金幣<br>目前總金幣：${data.coins}</p>
+            `;
+          } else {
+            resultDiv.textContent = "⚠️ 錯誤：" + (data.message || "伺服器未回應");
+          }
+        } catch (err) {
+          resultDiv.textContent = "🚫 無法連線到伺服器，請稍後再試。";
         }
-      } catch (err) {
-        resultDiv.textContent = "🚫 無法連線到伺服器，請稍後再試。";
-      }
 
-      drawBtn.disabled = false;
-      drawBtn.textContent = "再抽一次";
-    });
-  }
-</script>
-
+        drawBtn.disabled = false;
+        drawBtn.textContent = "再抽一次";
+      });
+    }
+  </script>
 </body>
 </html>
