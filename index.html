@@ -14,6 +14,7 @@
       height: 100vh;
       background: #f5f5f5;
       font-family: "Noto Sans TC", sans-serif;
+      text-align: center;
     }
     #qrcode { margin-bottom: 20px; }
     button {
@@ -28,6 +29,7 @@
     #result {
       margin-top: 20px;
       font-size: 1.5em;
+      white-space: pre-line;
     }
   </style>
 </head>
@@ -38,21 +40,27 @@
   <div id="result"></div>
 
   <script>
-    const inviteUrl = "https://discord.gg/你的伺服器邀請碼"; // 🔹換成你的 Discord 邀請連結
+    const inviteUrl = "https://discord.gg/你的伺服器邀請碼"; // 🔹 換成你的 Discord 邀請連結
+    const botApiUrl = "https://carrot-bot-1.onrender.com"; // 🔹 換成你的 Bot API 位址
     const qrcode = new QRCode(document.getElementById("qrcode"), inviteUrl);
 
-    // 模擬使用者加入後（之後會改成 OAuth 驗證）
-    // 現在用 URL ?joined=true 來測試
+    // 模擬使用者加入後（可用 ?joined=true 測試）
     const params = new URLSearchParams(window.location.search);
     if (params.get("joined") === "true") {
       document.getElementById("qrcode").style.display = "none";
       document.getElementById("drawButton").style.display = "block";
     }
 
-    document.getElementById("drawButton").addEventListener("click", () => {
-      const fortunes = ["大吉 🍀", "中吉 😄", "小吉 🙂", "平平 😐", "小凶 😟", "大凶 💀"];
-      const result = fortunes[Math.floor(Math.random() * fortunes.length)];
-      document.getElementById("result").textContent = "你今日的運勢是：" + result;
+    document.getElementById("drawButton").addEventListener("click", async () => {
+      document.getElementById("result").textContent = "抽籤中，請稍候...";
+      try {
+        const res = await fetch(botApiUrl);
+        if (!res.ok) throw new Error("Bot 沒回應 😢");
+        const data = await res.json();
+        document.getElementById("result").textContent = data.message;
+      } catch (err) {
+        document.getElementById("result").textContent = "抽籤失敗：" + err.message;
+      }
     });
   </script>
 </body>
