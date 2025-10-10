@@ -42,20 +42,20 @@
       z-index: 1;
     }
 
-    /* 胡蘿蔔 */
+    /* 蘿蔔 */
     #carrot {
       position: absolute;
       bottom: 100px;
-      width: 130px;
+      width: 120px;
       transform: translateY(180px);
       opacity: 0;
       transition: transform 1.2s ease-in-out, opacity 0.8s ease;
-      z-index: 50; /* 🔺確保不被蓋住 */
+      z-index: 50;
     }
 
     .show-carrot {
       opacity: 1;
-      transform: translateY(-30px);
+      transform: translateY(-20px);
       animation: bounce 1.2s ease-out;
     }
 
@@ -63,7 +63,7 @@
       0% { transform: translateY(180px); }
       60% { transform: translateY(-40px); }
       80% { transform: translateY(10px); }
-      100% { transform: translateY(-30px); }
+      100% { transform: translateY(-20px); }
     }
 
     .fly-away {
@@ -71,11 +71,10 @@
     }
 
     @keyframes flyUp {
-      0% { transform: translateY(-30px) scale(1); opacity: 1; }
-      100% { transform: translateY(-300px) scale(0.5); opacity: 0; }
+      0% { transform: translateY(-20px) scale(1); opacity: 1; }
+      100% { transform: translateY(-280px) scale(0.6); opacity: 0; }
     }
 
-    /* 按鈕 */
     button {
       background-color: #ff9f1c;
       border: none;
@@ -88,7 +87,7 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
       transition: transform 0.2s, background 0.3s;
       z-index: 90;
-      margin-bottom: 260px;
+      margin-bottom: 240px;
     }
 
     button:hover {
@@ -105,10 +104,9 @@
       100% { transform: translateY(-8px); }
     }
 
-    /* 結果卡片 */
     #result {
       position: absolute;
-      bottom: 200px;
+      bottom: 180px;
       left: 50%;
       transform: translateX(-50%) translateY(20px);
       font-size: 1.1rem;
@@ -149,26 +147,19 @@
       pointer-events: none;
       z-index: 10;
     }
-
-    @media (max-width: 600px) {
-      #carrot { width: 100px; bottom: 80px; }
-      button { font-size: 1rem; margin-bottom: 240px; }
-      #result { bottom: 170px; max-width: 300px; }
-      .soil { height: 130px; }
-    }
   </style>
 </head>
 <body>
   <h1>🥕 胡蘿蔔今日運勢</h1>
   <canvas id="dirtCanvas" width="400" height="200"></canvas>
-  <img id="carrot" src="https://cdn-icons-png.flaticon.com/512/590/590685.png" alt="carrot">
+  <img id="carrot" src="https://cdn-icons-png.flaticon.com/512/619/619043.png" alt="carrot">
   <div class="soil"></div>
   <div id="content"></div>
 
   <!-- 音效 -->
-  <audio id="pullSound" preload="auto" src="https://cdn.pixabay.com/download/audio/2023/09/28/audio_66a5cc5e36.mp3?filename=pop-125111.mp3"></audio>
-  <audio id="winSound" preload="auto" src="https://cdn.pixabay.com/download/audio/2023/04/11/audio_b2cc4a5d80.mp3?filename=success-1-6297.mp3"></audio>
-  <audio id="loseSound" preload="auto" src="https://cdn.pixabay.com/download/audio/2023/06/30/audio_142ac9a2c2.mp3?filename=negative-beeps-116199.mp3"></audio>
+  <audio id="pullSound" preload="auto" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_9a20c41a3d.mp3?filename=cartoon-pop-6072.mp3"></audio>
+  <audio id="winSound" preload="auto" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_3c4e6cc2b1.mp3?filename=success-1-6297.mp3"></audio>
+  <audio id="loseSound" preload="auto" src="https://cdn.pixabay.com/download/audio/2023/03/17/audio_1f5da0f07c.mp3?filename=error-126627.mp3"></audio>
 
   <script>
     const apiUrl = "https://carrot-bot-production.up.railway.app/api/fortune";
@@ -182,45 +173,12 @@
     const dirtCanvas = document.getElementById("dirtCanvas");
     const ctx = dirtCanvas.getContext("2d");
 
-    function spawnDirt() {
-      const particles = [];
-      for (let i = 0; i < 25; i++) {
-        particles.push({
-          x: dirtCanvas.width / 2,
-          y: dirtCanvas.height,
-          radius: Math.random() * 3 + 2,
-          color: `rgb(${100 + Math.random() * 80}, ${60 + Math.random() * 40}, 30)`,
-          vx: (Math.random() - 0.5) * 6,
-          vy: -Math.random() * 6 - 2,
-          life: 1
-        });
-      }
-
-      function draw() {
-        ctx.clearRect(0, 0, dirtCanvas.width, dirtCanvas.height);
-        particles.forEach(p => {
-          p.x += p.vx;
-          p.y += p.vy;
-          p.vy += 0.15;
-          p.life -= 0.02;
-          ctx.globalAlpha = Math.max(p.life, 0);
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-          ctx.fillStyle = p.color;
-          ctx.fill();
-        });
-        ctx.globalAlpha = 1;
-        if (particles.some(p => p.life > 0)) requestAnimationFrame(draw);
-      }
-      draw();
-    }
-
     const carrotImages = {
-      "紅": "https://cdn-icons-png.flaticon.com/512/590/590685.png",
-      "白": "https://cdn-icons-png.flaticon.com/512/3171/3171076.png",
-      "紫": "https://cdn-icons-png.flaticon.com/512/6207/6207568.png",
-      "金": "https://cdn-icons-png.flaticon.com/512/6207/6207582.png",
-      "黑": "https://cdn-icons-png.flaticon.com/512/6207/6207585.png"
+      "紅": "https://cdn-icons-png.flaticon.com/512/619/619043.png",
+      "白": "https://cdn-icons-png.flaticon.com/512/619/619043.png",
+      "紫": "https://cdn-icons-png.flaticon.com/512/619/619043.png",
+      "金": "https://cdn-icons-png.flaticon.com/512/619/619043.png",
+      "黑": "https://cdn-icons-png.flaticon.com/512/619/619043.png"
     };
 
     const contentDiv = document.getElementById("content");
@@ -231,12 +189,44 @@
     const drawBtn = document.getElementById("drawBtn");
     const resultDiv = document.getElementById("result");
 
-    // 音效預啟動
-    drawBtn.addEventListener("click", () => {
-      pullSound.play().catch(()=>{}); pullSound.pause(); pullSound.currentTime=0;
-      winSound.play().catch(()=>{}); winSound.pause(); winSound.currentTime=0;
-      loseSound.play().catch(()=>{}); loseSound.pause(); loseSound.currentTime=0;
+    // 🔊 預啟動音效（解決 Chrome 禁止）
+    document.body.addEventListener("click", () => {
+      [pullSound, winSound, loseSound].forEach(s => {
+        s.play().then(() => s.pause()).catch(()=>{});
+      });
     }, { once: true });
+
+    // 🟤 泥土飛濺
+    function spawnDirt() {
+      const particles = [];
+      for (let i = 0; i < 25; i++) {
+        particles.push({
+          x: dirtCanvas.width / 2,
+          y: dirtCanvas.height,
+          r: Math.random() * 3 + 2,
+          vx: (Math.random() - 0.5) * 6,
+          vy: -Math.random() * 6 - 2,
+          life: 1
+        });
+      }
+      function draw() {
+        ctx.clearRect(0, 0, dirtCanvas.width, dirtCanvas.height);
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.15;
+          p.life -= 0.02;
+          ctx.globalAlpha = Math.max(p.life, 0);
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = "rgb(139,69,19)";
+          ctx.fill();
+        });
+        ctx.globalAlpha = 1;
+        if (particles.some(p => p.life > 0)) requestAnimationFrame(draw);
+      }
+      draw();
+    }
 
     drawBtn.addEventListener("click", async () => {
       drawBtn.disabled = true;
@@ -255,18 +245,11 @@
         const data = await res.json();
 
         setTimeout(() => {
-          const foundColor = Object.keys(carrotImages).find(c => data.fortune.includes(c)) || "紅";
-          carrot.src = carrotImages[foundColor];
+          carrot.src = carrotImages["紅"]; // 固定胡蘿蔔
           carrot.classList.add("show-carrot");
 
-          if (data.fortune.includes("大吉")) document.body.style.background = "linear-gradient(135deg, #fff3c4, #ffd700)";
-          else if (data.fortune.includes("中吉")) document.body.style.background = "linear-gradient(135deg, #e0ffe0, #b6ffb6)";
-          else if (data.fortune.includes("小吉")) document.body.style.background = "linear-gradient(135deg, #e3e8ff, #c5cfff)";
-          else if (data.fortune.includes("吉")) document.body.style.background = "linear-gradient(135deg, #fff4e0, #ffd6a5)";
-          else if (data.fortune.includes("凶")) document.body.style.background = "linear-gradient(135deg, #f9dede, #ff9e9e)";
-
           setTimeout(() => {
-            carrot.classList.add("fly-away"); // 🥕 飛上天空
+            carrot.classList.add("fly-away");
             confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
             if (data.fortune.includes("凶")) loseSound.play();
             else winSound.play();
