@@ -2,153 +2,168 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8" />
-  <title>🔮 胡蘿蔔命運占卜祭壇</title>
+  <title>🔮 胡蘿蔔占卜祭壇</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      margin: 0;
-      font-family: 'Noto Serif TC', serif;
-      background: radial-gradient(circle at center, #2e1b0e, #130b06 90%);
-      color: #f6e5b1;
-      text-align: center;
-      overflow: hidden;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-    }
+  body {
+    margin: 0;
+    font-family: 'Noto Serif TC', serif;
+    background: radial-gradient(circle at center, #2e1b0e, #130b06 90%);
+    color: #f6e5b1;
+    text-align: center;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
 
-    h1 {
-      color: #ffcc33;
-      text-shadow: 0 0 12px #bfa76f;
-      margin-bottom: 10px;
-    }
+  h1 {
+    color: #ffcc33;
+    text-shadow: 0 0 12px #bfa76f;
+    margin-bottom: 10px;
+  }
 
-    button {
-      background: linear-gradient(180deg, #d4a017 0%, #9a7410 100%);
-      border: none;
-      padding: 14px 34px;
-      border-radius: 10px;
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: #fff8dc;
-      cursor: pointer;
-      box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
-      transition: transform 0.2s, box-shadow 0.3s;
-    }
+  button {
+    background: linear-gradient(180deg, #d4a017 0%, #9a7410 100%);
+    border: none;
+    padding: 14px 34px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #fff8dc;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+    transition: transform 0.2s, box-shadow 0.3s;
+  }
 
-    button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 20px rgba(255, 230, 150, 0.8);
-    }
+  button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255, 230, 150, 0.8);
+  }
 
-    .section {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      text-align: center;
-    }
+  .section {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+  }
 
-    .show {
-      display: flex;
-    }
+  .show {
+    display: flex;
+  }
 
-    /* 泥土 */
-    .ground {
-      position: relative;
-      width: 300px;
-      height: 150px;
-      background: linear-gradient(to bottom, #3b2a18, #1d1208);
-      border-radius: 50% / 20%;
-      margin-top: 50px;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.4);
-      transition: opacity 1.5s ease;
-    }
+  /* 泥土 */
+  .ground {
+    position: relative;
+    width: 300px;
+    height: 150px;
+    background: linear-gradient(to bottom, #3b2a18, #1d1208);
+    border-radius: 50% / 20%;
+    margin-top: 50px;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.4);
+    transition: opacity 1.5s ease;
+  }
 
-    /* 蘿蔔 */
-    .carrot {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80px;
-      height: 120px;
-      background: linear-gradient(to bottom, #f99127 0%, #c75d07 90%);
-      border-radius: 50% 50% 10% 10%;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      transition: opacity 1.5s ease;
-    }
+  /* 蘿蔔 */
+  .carrot {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 120px;
+    background: radial-gradient(circle at 40% 30%, #ffa94d, #f99127 40%, #c75d07 90%);
+    border-radius: 50% 50% 10% 10%;
+    box-shadow: inset -4px -6px 10px rgba(0,0,0,0.2), 0 4px 12px rgba(0,0,0,0.3);
+    animation: carrotWiggle 3s ease-in-out infinite;
+    transition: opacity 1.5s ease;
+  }
 
-    /* 葉片 */
-    .leaf {
-      position: absolute;
-      bottom: 130px;
-      left: 50%;
-      width: 40px;
-      height: 60px;
-      background: #58c455;
-      border-radius: 40% 40% 0 0;
-      transform-origin: bottom center;
-      filter: drop-shadow(0 0 8px rgba(100,255,100,0.4));
-      transition: transform 1s ease-out, opacity 1s ease-out;
-    }
+  @keyframes carrotWiggle {
+    0%, 100% { transform: translateX(-50%) rotate(0deg); }
+    50% { transform: translateX(-50%) rotate(1.5deg); }
+  }
 
-    .leaf:nth-child(1) { transform: translate(-70px, 0) rotate(-20deg); }
-    .leaf:nth-child(2) { transform: translate(-20px, 0) rotate(-5deg); }
-    .leaf:nth-child(3) { transform: translate(30px, 0) rotate(15deg); }
+  /* 葉片 */
+  .leaf {
+    position: absolute;
+    bottom: 130px;
+    left: 50%;
+    width: 36px;
+    height: 60px;
+    background: linear-gradient(to top, #3fae3f, #7dfc7d);
+    border-radius: 40% 40% 0 0;
+    transform-origin: bottom center;
+    filter: drop-shadow(0 0 8px rgba(100,255,100,0.4));
+    transition: transform 1s ease-out, opacity 1s ease-out;
+  }
 
-    /* 被拔起的葉子動畫 */
-    .pulled {
-      animation: flyUp 1.5s ease-out forwards;
-    }
+  #leaf1 {
+    transform: translate(-70px, 0) rotate(-25deg) scale(1.1);
+    z-index: 1;
+  }
+  #leaf2 {
+    transform: translate(-20px, 0) rotate(-5deg) scale(1.2);
+    z-index: 2;
+  }
+  #leaf3 {
+    transform: translate(30px, 0) rotate(20deg) scale(1);
+    z-index: 1;
+  }
 
-    @keyframes flyUp {
-      0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
-      50% { transform: translate(0, -150px) rotate(-40deg); opacity: 1; }
-      100% { transform: translate(0, -300px) rotate(-120deg); opacity: 0; }
-    }
+  /* 被拔起的葉子動畫 */
+  .pulled {
+    animation: flyUp 1.5s ease-out forwards;
+  }
 
-    /* 結果卡 */
-    #result {
-      background: rgba(65, 40, 20, 0.9);
-      border: 2px solid #cfa842;
-      border-radius: 15px;
-      padding: 24px 20px;
-      font-size: 1.05rem;
-      line-height: 1.8;
-      box-shadow: 0 0 15px rgba(255, 200, 120, 0.3);
-      margin-top: 40px;
-      width: 85%;
-      max-width: 360px;
-      display: none;
-      opacity: 0;
-      transition: opacity 1s ease;
-    }
+  @keyframes flyUp {
+    0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
+    50% { transform: translate(0, -150px) rotate(-60deg) scale(1.2); opacity: 1; }
+    100% { transform: translate(0, -300px) rotate(-120deg) scale(0.8); opacity: 0; }
+  }
 
-    #result.show {
-      display: block;
-      opacity: 1;
-    }
+  /* 結果卡 */
+  #result {
+    background: rgba(65, 40, 20, 0.9);
+    border: 2px solid #cfa842;
+    border-radius: 15px;
+    padding: 24px 20px;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    box-shadow: 0 0 15px rgba(255, 200, 120, 0.3);
+    margin-top: 40px;
+    width: 85%;
+    max-width: 360px;
+    display: none;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
 
-    .fade-out {
-      opacity: 0;
-    }
-  </style>
+  #result.show {
+    display: block;
+    opacity: 1;
+  }
+
+  .fade-out {
+    opacity: 0;
+  }
+</style>
 </head>
 <body>
-  <h1>🔮 胡蘿蔔命運占卜祭壇</h1>
+  <h1>🔮 胡蘿蔔占卜祭壇</h1>
 
   <!-- 加入 Discord -->
   <div id="joinSection" class="section show">
-    <p>📜 請先加入占卜聖堂：</p>
+    <p>📜 請先加入聖蘿蔔大教堂：</p>
     <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https%3A%2F%2Fdiscord.gg%2Fmar4qT9XYn" alt="Discord QR Code" />
     <p style="margin-top:10px;">掃描上方符印或點擊下方按鈕</p>
-    <a href="https://discord.gg/mar4qT9XYn" target="_blank"><button>🔗 進入聖堂</button></a>
-    <button id="joinedBtn" style="margin-top:15px;">✅ 我已加入聖堂</button>
+    <a href="https://discord.gg/mar4qT9XYn" target="_blank"><button>🔗 進入教堂</button></a>
+    <button id="joinedBtn" style="margin-top:15px;">✅ 我已加入教堂</button>
   </div>
 
   <!-- 占卜畫面 -->
@@ -159,7 +174,7 @@
       <div class="leaf" id="leaf2"></div>
       <div class="leaf" id="leaf3"></div>
     </div>
-    <button id="drawBtn">啟動占卜儀式 ✨</button>
+    <button id="drawBtn">占卜今日運勢 ✨</button>
     <div id="result"></div>
   </div>
 
@@ -203,9 +218,9 @@
         setTimeout(() => {
           resultDiv.innerHTML = `
             <p>📜 占卜日期：${data.date}</p>
-            <p style="font-size:1.3rem;color:#ffd700;">🔮 今日籤文：${data.fortune}</p>
+            <p style="font-size:1.3rem;color:#ffd700;">🔮 今日運勢：${data.fortune}</p>
             <p>💡 占卜之言：${data.advice}</p>
-            <button id="backBtn" style="margin-top:15px;">🔙 返回聖堂</button>
+            <button id="backBtn" style="margin-top:15px;">🔙 返回首頁</button>
           `;
           resultDiv.classList.add("show");
 
