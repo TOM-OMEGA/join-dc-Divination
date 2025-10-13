@@ -3,330 +3,159 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🥕 胡蘿蔔今日運勢</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+  <title>🔮 胡蘿蔔命運占卜祭壇</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
     body {
-      font-family: 'Noto Sans TC', sans-serif;
-      background: linear-gradient(135deg, #fff4e0, #ffd6a5);
-      color: #333;
+      font-family: 'Noto Serif TC', serif;
+      background: radial-gradient(ellipse at center, #3c2a1e 0%, #1e1309 100%);
+      color: #f4e4c1;
       text-align: center;
-      min-height: 100vh;
       margin: 0;
       overflow: hidden;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
+      justify-content: center;
       align-items: center;
-      transition: background 1s ease;
     }
 
     h1 {
-      color: #ff8b00;
       font-size: 2rem;
-      margin-top: 30px;
+      color: #e6b800;
+      text-shadow: 0 0 10px #b39200;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+    }
+
+    .altar {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, #604020 0%, #2d1a0a 100%);
+      box-shadow: 0 0 25px rgba(255,215,0,0.3), inset 0 0 40px rgba(255,255,200,0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    .rune {
       position: absolute;
-      top: 20px;
-      z-index: 100;
+      font-size: 1.6rem;
+      color: rgba(255, 215, 0, 0.7);
+      animation: float 4s ease-in-out infinite;
     }
 
-    .soil {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      height: 160px;
-      background: linear-gradient(180deg, #b87938 0%, #704325 100%);
-      box-shadow: inset 0 -10px 18px rgba(0,0,0,0.3);
-      z-index: 1;
-    }
-
-    #carrot {
-      position: absolute;
-      bottom: 100px;
-      width: 120px;
-      transform: translateY(180px);
-      opacity: 0;
-      transition: transform 1.2s ease-in-out, opacity 0.8s ease;
-      z-index: 50;
-    }
-
-    .show-carrot {
-      opacity: 1;
-      transform: translateY(-20px);
-      animation: bounce 1.2s ease-out;
-    }
-
-    @keyframes bounce {
-      0% { transform: translateY(180px); }
-      60% { transform: translateY(-40px); }
-      80% { transform: translateY(10px); }
-      100% { transform: translateY(-20px); }
-    }
-
-    .fly-away {
-      animation: flyUp 1.2s ease-in forwards;
-    }
-
-    @keyframes flyUp {
-      0% { transform: translateY(-20px) scale(1); opacity: 1; }
-      100% { transform: translateY(-280px) scale(0.6); opacity: 0; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); opacity: 0.7; }
+      50% { transform: translateY(-6px); opacity: 1; }
     }
 
     button {
-      background-color: #ff9f1c;
+      background: linear-gradient(180deg, #d4a017 0%, #9a7410 100%);
+      color: #fff8dc;
       border: none;
-      padding: 15px 35px;
-      border-radius: 12px;
-      font-size: 1.2rem;
-      font-weight: bold;
+      padding: 12px 28px;
+      border-radius: 10px;
+      font-size: 1.1rem;
       cursor: pointer;
-      color: white;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      transition: transform 0.2s, background 0.3s;
-      z-index: 90;
-      margin-bottom: 240px;
+      font-weight: bold;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+      transition: transform 0.2s, box-shadow 0.3s;
     }
 
     button:hover {
-      background-color: #ff8b00;
       transform: scale(1.05);
-    }
-
-    .shake {
-      animation: shake 0.4s ease-in-out infinite alternate;
-    }
-
-    @keyframes shake {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(-8px); }
+      box-shadow: 0 0 20px rgba(255, 230, 150, 0.8);
     }
 
     #result {
-      position: absolute;
-      bottom: 190px;
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      font-size: 1.1rem;
-      background: rgba(255,255,255,0.95);
+      margin-top: 20px;
+      background: rgba(50, 30, 10, 0.8);
+      border: 2px solid #d4a017;
       border-radius: 15px;
-      padding: 28px 25px;
-      width: 85%;
-      max-width: 360px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      opacity: 0;
-      transition: opacity 1s ease, transform 1s ease;
-      z-index: 40;
-      line-height: 1.7;
+      padding: 20px;
+      max-width: 400px;
+      line-height: 1.8;
+      font-size: 1.1rem;
+      display: none;
+      box-shadow: inset 0 0 20px rgba(255,255,150,0.1);
     }
 
     #result.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    #result p {
-      margin: 14px 0;
-      line-height: 1.7;
-    }
-
-    #fortune {
-      font-size: 1.4rem;
-      color: #ff6f00;
-      font-weight: bold;
-      margin: 18px 0 14px 0;
       display: block;
-      opacity: 0;
-      animation: fadeIn 1.2s ease forwards;
-      animation-delay: 0.4s;
-    }
-
-    #advice {
-      font-style: italic;
-      color: #555;
-      margin-top: 18px;
-      display: block;
-      opacity: 0;
-      animation: fadeIn 1.2s ease forwards;
-      animation-delay: 0.8s;
+      animation: fadeIn 1.5s ease;
     }
 
     @keyframes fadeIn {
-      0% { opacity: 0; transform: translateY(10px); }
-      100% { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    canvas#dirtCanvas {
+    .glow {
       position: absolute;
-      bottom: 120px;
-      left: 50%;
-      transform: translateX(-50%);
-      pointer-events: none;
-      z-index: 10;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,150,0.2), transparent);
+      animation: pulse 2s infinite ease-in-out;
+      z-index: 0;
     }
 
-    @media (max-width: 480px) {
-      h1 { font-size: 1.5rem; }
-      button { padding: 12px 24px; font-size: 1rem; margin-bottom: 220px; }
-      #result {
-        bottom: 160px;
-        width: 92%;
-        padding: 24px 18px;
-        font-size: 1rem;
-        line-height: 1.8;
-      }
-      #result p { margin: 14px 0; }
-      #fortune { font-size: 1.25rem; margin-top: 16px; }
-      #advice { margin-top: 20px; }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.15); opacity: 1; }
     }
   </style>
 </head>
 <body>
-  <h1>🥕 胡蘿蔔今日運勢</h1>
-  <canvas id="dirtCanvas" width="400" height="200"></canvas>
-  <img id="carrot" src="https://cdn-icons-png.flaticon.com/512/619/619043.png" alt="carrot">
-  <div class="soil"></div>
-  <div id="content"></div>
+  <h1>🔮 胡蘿蔔命運占卜祭壇</h1>
+  <div class="altar">
+    <div class="glow"></div>
+    <div class="rune" style="top:10%;left:50%;transform:translateX(-50%) rotate(10deg);">✶</div>
+    <div class="rune" style="bottom:15%;left:25%;">☉</div>
+    <div class="rune" style="bottom:15%;right:25%;">☾</div>
+  </div>
 
-  <!-- 音效 -->
-  <audio id="pullSound" preload="auto" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_9a20c41a3d.mp3?filename=cartoon-pop-6072.mp3"></audio>
-  <audio id="winSound" preload="auto" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_3c4e6cc2b1.mp3?filename=success-1-6297.mp3"></audio>
-  <audio id="loseSound" preload="auto" src="https://cdn.pixabay.com/download/audio/2023/03/17/audio_1f5da0f07c.mp3?filename=error-126627.mp3"></audio>
+  <button id="drawBtn">啟動占卜儀式 🔮</button>
+  <div id="result"></div>
 
   <script>
-    const discordInvite = "https://discord.gg/mar4qT9XYn";
     const apiUrl = "https://carrot-bot-production.up.railway.app/api/fortune";
     const userId = "657882539331158016";
     const username = "湯姆瑞斗";
 
-    const carrot = document.getElementById("carrot");
-    const pullSound = document.getElementById("pullSound");
-    const winSound = document.getElementById("winSound");
-    const loseSound = document.getElementById("loseSound");
-    const dirtCanvas = document.getElementById("dirtCanvas");
-    const ctx = dirtCanvas.getContext("2d");
-    const contentDiv = document.getElementById("content");
+    const resultDiv = document.getElementById("result");
+    const drawBtn = document.getElementById("drawBtn");
 
-    // 🥕 不同運勢圖片（可換成你自己的）
-    const carrotImages = {
-      "金": "https://i.imgur.com/HhRkz8y.png",
-      "紅": "https://i.imgur.com/W1J8FnU.png",
-      "白": "https://i.imgur.com/fX5vW1Y.png",
-      "紫": "https://i.imgur.com/xmFn8R1.png",
-      "黑": "https://i.imgur.com/BW6R7kT.png"
-    };
+    drawBtn.addEventListener("click", async () => {
+      drawBtn.disabled = true;
+      drawBtn.textContent = "占卜儀式啟動中... ✨";
 
-    document.body.addEventListener("click", () => {
-      [pullSound, winSound, loseSound].forEach(s => {
-        s.play().then(() => s.pause()).catch(()=>{});
-      });
-    }, { once: true });
+      try {
+        const res = await fetch(`${apiUrl}?user_id=${userId}&username=${encodeURIComponent(username)}`);
+        const data = await res.json();
 
-    function spawnDirt() {
-      const particles = [];
-      for (let i = 0; i < 25; i++) {
-        particles.push({
-          x: dirtCanvas.width / 2,
-          y: dirtCanvas.height,
-          r: Math.random() * 3 + 2,
-          vx: (Math.random() - 0.5) * 6,
-          vy: -Math.random() * 6 - 2,
-          life: 1
-        });
+        confetti({ particleCount: 180, spread: 80, origin: { y: 0.6 } });
+
+        resultDiv.innerHTML = `
+          <p>📜 <strong>命運之日：</strong> ${data.date}</p>
+          <p style="font-size:1.3rem;color:#ffd700;">🔮 今日籤文：${data.fortune}</p>
+          <p>💡 占卜建言：${data.advice}</p>
+        `;
+        resultDiv.classList.add("show");
+
+      } catch {
+        resultDiv.innerHTML = "⚠️ 魔法干擾太強，無法取得預言結果。";
+        resultDiv.classList.add("show");
+      } finally {
+        drawBtn.disabled = false;
+        drawBtn.textContent = "再次啟動儀式 ✨";
       }
-      function draw() {
-        ctx.clearRect(0, 0, dirtCanvas.width, dirtCanvas.height);
-        particles.forEach(p => {
-          p.x += p.vx;
-          p.y += p.vy;
-          p.vy += 0.15;
-          p.life -= 0.02;
-          ctx.globalAlpha = Math.max(p.life, 0);
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-          ctx.fillStyle = "rgb(139,69,19)";
-          ctx.fill();
-        });
-        ctx.globalAlpha = 1;
-        if (particles.some(p => p.life > 0)) requestAnimationFrame(draw);
-      }
-      draw();
-    }
-
-    function showQRCode() {
-      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(discordInvite)}`;
-      contentDiv.innerHTML = `
-        <p>📱 請掃描下方 QR Code 加入 Discord！</p>
-        <img src="${qrUrl}" alt="Discord QR Code" />
-        <p style="margin-top:10px;">加入完成後請回到本頁</p>
-        <button id="joinedBtn">✅ 我已加入 Discord</button>
-      `;
-      document.getElementById("joinedBtn").addEventListener("click", showFortunePage);
-    }
-
-    function showFortunePage() {
-      contentDiv.innerHTML = `
-        <button id="drawBtn">抽出今日運勢</button>
-        <div id="result"></div>
-      `;
-
-      const drawBtn = document.getElementById("drawBtn");
-      const resultDiv = document.getElementById("result");
-
-      drawBtn.addEventListener("click", async () => {
-        drawBtn.disabled = true;
-        drawBtn.textContent = "抽籤中... 🌀";
-        drawBtn.classList.add("shake");
-        carrot.classList.remove("show-carrot", "fly-away");
-        resultDiv.classList.remove("show");
-        resultDiv.innerHTML = "";
-
-        pullSound.currentTime = 0;
-        pullSound.play().catch(()=>{});
-        spawnDirt();
-
-        try {
-          const res = await fetch(`${apiUrl}?user_id=${userId}&username=${encodeURIComponent(username)}`);
-          const data = await res.json();
-
-          setTimeout(() => {
-            const fortune = data.fortune;
-            if (fortune.includes("金")) carrot.src = carrotImages["金"];
-            else if (fortune.includes("紅")) carrot.src = carrotImages["紅"];
-            else if (fortune.includes("白")) carrot.src = carrotImages["白"];
-            else if (fortune.includes("紫")) carrot.src = carrotImages["紫"];
-            else if (fortune.includes("黑")) carrot.src = carrotImages["黑"];
-            else carrot.src = "https://cdn-icons-png.flaticon.com/512/619/619043.png";
-
-            carrot.classList.add("show-carrot");
-            setTimeout(() => {
-              carrot.classList.add("fly-away");
-              confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
-              if (fortune.includes("凶")) loseSound.play();
-              else winSound.play();
-
-              resultDiv.innerHTML = `
-                <p>📅 日期：${data.date}</p>
-                <p id="fortune">🎴 今日運勢：${data.fortune}</p>
-                <p id="advice">💡 小提醒：${data.advice}</p>
-                <button id="backBtn">🔙 回到 QR Code 畫面</button>
-              `;
-              resultDiv.classList.add("show");
-              document.getElementById("backBtn").addEventListener("click", showQRCode);
-            }, 1200);
-          }, 400);
-        } catch {
-          resultDiv.textContent = "🚫 無法連線到伺服器，請稍後再試。";
-          resultDiv.classList.add("show");
-        } finally {
-          drawBtn.disabled = false;
-          drawBtn.textContent = "再抽一次";
-          drawBtn.classList.remove("shake");
-        }
-      });
-    }
-
-    showQRCode();
+    });
   </script>
 </body>
 </html>
