@@ -2,35 +2,63 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8" />
-  <title>🔮 中世紀胡蘿蔔占卜祭壇</title>
+  <title>🥕 中世紀胡蘿蔔占卜祭壇</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&family=MedievalSharp&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      font-family: 'Uncial Antiqua', serif;
-      background: radial-gradient(circle at center, #f6f1e1, #d8c8a0 90%);
-      color: #4b2e1e;
+      font-family: 'Uncial Antiqua', 'MedievalSharp', serif;
+      background: radial-gradient(circle at center, #f9f2e0, #d6b97a 90%);
+      color: #3f2c16;
       text-align: center;
       height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ✨ 燭光動畫背景 */
+    body::before {
+      content: "";
+      position: absolute;
+      width: 300%;
+      height: 300%;
+      background: radial-gradient(circle at 50% 50%, rgba(255,240,180,0.12), transparent 70%),
+                  radial-gradient(circle at 30% 20%, rgba(255,220,150,0.15), transparent 70%),
+                  radial-gradient(circle at 70% 80%, rgba(255,230,180,0.1), transparent 70%);
+      animation: glow 8s ease-in-out infinite alternate;
+      z-index: 0;
+    }
+
+    @keyframes glow {
+      0% { transform: scale(1) rotate(0deg); opacity: 0.8; }
+      100% { transform: scale(1.1) rotate(10deg); opacity: 1; }
     }
 
     h1 {
       font-size: 2rem;
-      color: #a86f1a;
-      text-shadow: 0 0 6px #f0e0b0;
-      margin-bottom: 20px;
+      color: #b27a1e;
+      text-shadow: 0 0 8px #fff2b0;
+      margin-bottom: 25px;
+      z-index: 1;
     }
 
     .carrot-scene {
       width: 220px;
-      height: 220px;
+      height: 260px;
       position: relative;
       margin-bottom: 20px;
+      z-index: 1;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
     }
 
     .carrot-svg {
@@ -38,38 +66,50 @@
       height: 100%;
     }
 
+    .leaf {
+      transform-origin: center bottom;
+      animation: sway 2.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes sway {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(4deg); }
+    }
+
     button {
-      background: linear-gradient(180deg, #cfa842 0%, #9a7410 100%);
+      background: linear-gradient(180deg, #d8b348 0%, #9a6e16 100%);
       border: none;
       padding: 12px 28px;
-      border-radius: 10px;
+      border-radius: 12px;
       font-size: 1rem;
       font-weight: bold;
-      color: #fff8dc;
+      color: #fff9dc;
       cursor: pointer;
-      box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+      box-shadow: 0 0 12px rgba(255, 210, 100, 0.4);
       transition: transform 0.2s, box-shadow 0.3s;
+      z-index: 1;
     }
 
     button:hover {
       transform: scale(1.05);
-      box-shadow: 0 0 16px rgba(255, 230, 150, 0.6);
+      box-shadow: 0 0 20px rgba(255, 235, 160, 0.8);
     }
 
     #result {
-      background: rgba(255, 248, 220, 0.95);
+      background: rgba(255, 248, 220, 0.97);
       border: 2px solid #cfa842;
-      border-radius: 12px;
+      border-radius: 15px;
       padding: 20px;
       font-size: 1rem;
       line-height: 1.6;
-      box-shadow: 0 0 10px rgba(255, 200, 120, 0.3);
+      box-shadow: 0 0 12px rgba(255, 210, 130, 0.4);
       margin-top: 30px;
       width: 85%;
-      max-width: 360px;
+      max-width: 380px;
       display: none;
       opacity: 0;
       transition: opacity 1s ease;
+      z-index: 1;
     }
 
     #result.show {
@@ -82,18 +122,25 @@
   <h1>🥕 占卜祭壇：命運之蔔</h1>
 
   <div class="carrot-scene">
-    <svg class="carrot-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <svg class="carrot-svg" viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
       <!-- 土地 -->
-      <rect x="0" y="140" width="200" height="60" fill="#5c3b1e" />
+      <rect x="0" y="200" width="200" height="60" fill="#5c3b1e" />
 
-      <!-- 葫蘆蔔本體（可愛風格） -->
-      <path d="M100 80 C85 100, 85 130, 100 150 C115 130, 115 100, 100 80 Z"
-            fill="#f99127" stroke="#c75d07" stroke-width="2" />
+      <!-- 可愛胡蘿蔔本體 -->
+      <path d="M100 90 C75 130, 85 190, 100 210 C115 190, 125 130, 100 90 Z"
+            fill="#ff9933" stroke="#c86910" stroke-width="2" />
 
-      <!-- 葉片（圓潤可愛） -->
-      <ellipse cx="100" cy="60" rx="14" ry="20" fill="#7dfc7d" />
-      <ellipse cx="85" cy="65" rx="10" ry="18" fill="#7dfc7d" />
-      <ellipse cx="115" cy="65" rx="10" ry="18" fill="#7dfc7d" />
+      <!-- 蘿蔔表情 -->
+      <circle cx="90" cy="145" r="4" fill="#3a1f0a" />
+      <circle cx="110" cy="145" r="4" fill="#3a1f0a" />
+      <path d="M88 157 Q100 165 112 157" stroke="#3a1f0a" stroke-width="2" fill="none" />
+
+      <!-- 葉片（搖動動畫） -->
+      <g class="leaf">
+        <ellipse cx="100" cy="70" rx="15" ry="25" fill="#6efb6e" />
+        <ellipse cx="85" cy="75" rx="12" ry="20" fill="#6efb6e" />
+        <ellipse cx="115" cy="75" rx="12" ry="20" fill="#6efb6e" />
+      </g>
     </svg>
   </div>
 
