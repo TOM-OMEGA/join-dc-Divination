@@ -6,149 +6,173 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      margin: 0;
-      font-family: 'Noto Serif TC', serif;
-      background: radial-gradient(circle at center, #2e1b0e, #130b06 90%);
-      color: #f6e5b1;
-      text-align: center;
-      overflow: hidden;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-    }
+  body {
+    margin: 0;
+    font-family: 'Noto Serif TC', serif;
+    background: radial-gradient(circle at center, #2e1b0e, #130b06 90%);
+    color: #f6e5b1;
+    text-align: center;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
 
-    h1 {
-      color: #ffcc33;
-      text-shadow: 0 0 12px #bfa76f;
-      margin-bottom: 10px;
-    }
+  h1 {
+    color: #ffcc33;
+    text-shadow: 0 0 12px #bfa76f;
+    margin-bottom: 10px;
+  }
 
-    button {
-      background: linear-gradient(180deg, #d4a017 0%, #9a7410 100%);
-      border: none;
-      padding: 14px 34px;
-      border-radius: 10px;
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: #fff8dc;
-      cursor: pointer;
-      box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
-      transition: transform 0.2s, box-shadow 0.3s;
-    }
+  button {
+    background: linear-gradient(180deg, #d4a017 0%, #9a7410 100%);
+    border: none;
+    padding: 14px 34px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #fff8dc;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+    transition: transform 0.2s, box-shadow 0.3s;
+  }
 
-    button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 20px rgba(255, 230, 150, 0.8);
-    }
+  button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255, 230, 150, 0.8);
+  }
 
-    .section {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      text-align: center;
-    }
+  .section {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+  }
 
-    .show {
-      display: flex;
-    }
+  .show {
+    display: flex;
+  }
 
-    .ground {
-      position: relative;
-      width: 300px;
-      height: 150px;
-      background: linear-gradient(to bottom, #3b2a18, #1d1208);
-      border-radius: 50% / 20%;
-      margin-top: 50px;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.4);
-      transition: opacity 1.5s ease;
-    }
+  .ground {
+    position: relative;
+    width: 300px;
+    height: 150px;
+    background: linear-gradient(to bottom, #3b2a18, #1d1208);
+    border-radius: 50% / 20%;
+    margin-top: 50px;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.4);
+    transition: opacity 1.5s ease;
+  }
 
-    .carrot {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80px;
-      height: 120px;
-      background: radial-gradient(circle at 40% 30%, #ffa94d, #f99127 40%, #c75d07 90%);
-      border-radius: 50% 50% 10% 10%;
-      box-shadow: inset -4px -6px 10px rgba(0,0,0,0.2), 0 4px 12px rgba(0,0,0,0.3);
-      animation: carrotWiggle 3s ease-in-out infinite;
-      transition: opacity 1.5s ease;
-    }
+  .carrot {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 120px;
+    background: radial-gradient(circle at 40% 30%, #ffb347, #f99127 40%, #c75d07 90%);
+    border-radius: 50% 50% 10% 10%;
+    box-shadow:
+      inset -4px -6px 10px rgba(0,0,0,0.2),
+      0 6px 14px rgba(0,0,0,0.4),
+      0 0 12px rgba(255, 140, 0, 0.3);
+    animation: carrotGlow 4s ease-in-out infinite;
+    transition: opacity 1.5s ease;
+  }
 
-    @keyframes carrotWiggle {
-      0%, 100% { transform: translateX(-50%) rotate(0deg); }
-      50% { transform: translateX(-50%) rotate(1.5deg); }
-    }
+  @keyframes carrotGlow {
+    0%, 100% { filter: drop-shadow(0 0 6px rgba(255,140,0,0.3)); }
+    50% { filter: drop-shadow(0 0 12px rgba(255,180,0,0.6)); }
+  }
 
-    .leaf {
-      position: absolute;
-      bottom: 130px;
-      left: 50%;
-      width: 36px;
-      height: 60px;
-      background: linear-gradient(to top, #3fae3f, #7dfc7d);
-      border-radius: 40% 40% 0 0;
-      transform-origin: bottom center;
-      filter: drop-shadow(0 0 8px rgba(100,255,100,0.4));
-      transition: transform 1s ease-out, opacity 1s ease-out;
-    }
+  .leaf {
+    position: absolute;
+    bottom: 130px;
+    left: 50%;
+    width: 40px;
+    height: 65px;
+    background: linear-gradient(to top, #4fdc4f, #a0ffb0);
+    border-radius: 50% 50% 0 0;
+    transform-origin: bottom center;
+    filter: drop-shadow(0 0 8px rgba(100,255,100,0.4));
+    transition: transform 1s ease-out, opacity 1s ease-out;
+    animation: leafFloat 3s ease-in-out infinite;
+  }
 
-    #leaf1 {
-      transform: translate(-70px, 0) rotate(-25deg) scale(1.1);
-      z-index: 1;
-    }
-    #leaf2 {
-      transform: translate(-20px, 0) rotate(-5deg) scale(1.2);
-      z-index: 2;
-    }
-    #leaf3 {
-      transform: translate(30px, 0) rotate(20deg) scale(1);
-      z-index: 1;
-    }
+  @keyframes leafFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-4px) rotate(2deg); }
+  }
 
-    .pulled {
-      animation: flyUp 1.5s ease-out forwards;
-    }
+  #leaf1 {
+    transform: translate(-70px, 0) rotate(-25deg) scale(1.1);
+    z-index: 1;
+  }
+  #leaf2 {
+    transform: translate(-20px, 0) rotate(-5deg) scale(1.2);
+    z-index: 2;
+  }
+  #leaf3 {
+    transform: translate(30px, 0) rotate(20deg) scale(1);
+    z-index: 1;
+  }
 
-    @keyframes flyUp {
-      0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
-      50% { transform: translate(0, -150px) rotate(-60deg) scale(1.2); opacity: 1; }
-      100% { transform: translate(0, -300px) rotate(-120deg) scale(0.8); opacity: 0; }
-    }
+  .pulled {
+    animation: flyUp 1.5s ease-out forwards;
+  }
 
-    #result {
-      background: rgba(65, 40, 20, 0.9);
-      border: 2px solid #cfa842;
-      border-radius: 15px;
-      padding: 24px 20px;
-      font-size: 1.05rem;
-      line-height: 1.8;
-      box-shadow: 0 0 15px rgba(255, 200, 120, 0.3);
-      margin-top: 40px;
-      width: 85%;
-      max-width: 360px;
-      display: none;
-      opacity: 0;
-      transition: opacity 1s ease;
-    }
+  @keyframes flyUp {
+    0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
+    50% { transform: translate(0, -150px) rotate(-60deg) scale(1.2); opacity: 1; }
+    100% { transform: translate(0, -300px) rotate(-120deg) scale(0.8); opacity: 0; }
+  }
 
-    #result.show {
-      display: block;
-      opacity: 1;
-    }
+  .particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #ffd700;
+    border-radius: 50%;
+    animation: sparkle 1.2s ease-out forwards;
+    pointer-events: none;
+  }
 
-    .fade-out {
-      opacity: 0;
-      pointer-events: none;
-    }
-  </style>
+  @keyframes sparkle {
+    0% { transform: scale(1) translateY(0); opacity: 1; }
+    100% { transform: scale(0.5) translateY(-80px); opacity: 0; }
+  }
+
+  #result {
+    background: rgba(65, 40, 20, 0.9);
+    border: 2px solid #cfa842;
+    border-radius: 15px;
+    padding: 24px 20px;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    box-shadow: 0 0 15px rgba(255, 200, 120, 0.3);
+    margin-top: 40px;
+    width: 85%;
+    max-width: 360px;
+    display: none;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+
+  #result.show {
+    display: block;
+    opacity: 1;
+  }
+
+  .fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+</style>
 </head>
 <body>
   <h1>🔮 胡蘿蔔占卜祭壇</h1>
@@ -191,44 +215,58 @@
     });
 
     drawBtn.addEventListener("click", async () => {
-      drawBtn.disabled = true;
-      drawBtn.textContent = "占卜中... 🔮";
-      drawBtn.classList.add("fade-out");
-      setTimeout(() => { drawBtn.style.display = "none"; }, 1500);
+  drawBtn.disabled = true;
+  drawBtn.textContent = "占卜中... 🔮";
+  drawBtn.classList.add("fade-out");
+  setTimeout(() => { drawBtn.style.display = "none"; }, 1500);
 
-      const randomLeaf = document.getElementById("leaf" + (Math.floor(Math.random() * 3) + 1));
-      randomLeaf.classList.add("pulled");
+  // 隨機拔起一片葉子
+  const randomLeaf = document.getElementById("leaf" + (Math.floor(Math.random() * 3) + 1));
+  randomLeaf.classList.add("pulled");
 
-      setTimeout(() => {
-        ground.classList.add("fade-out");
-        carrot.classList.add("fade-out");
-        document.querySelectorAll(".leaf").forEach(leaf => leaf.classList.add("fade-out"));
-      }, 1500);
+  // 魔法粒子效果
+  for (let i = 0; i < 12; i++) {
+    const particle = document.createElement("div");
+    particle.className = "particle";
+    particle.style.left = (50 + Math.random() * 40 - 20) + "%";
+    particle.style.bottom = (130 + Math.random() * 20) + "px";
+    particle.style.animationDelay = (Math.random() * 0.5) + "s";
+    fortuneSection.appendChild(particle);
+    setTimeout(() => particle.remove(), 1500);
+  }
 
-      try {
-        const res = await fetch(`${apiUrl}?user_id=${userId}&username=${encodeURIComponent(username)}`);
-        const data = await res.json();
+  // 畫面淡出
+  setTimeout(() => {
+    ground.classList.add("fade-out");
+    carrot.classList.add("fade-out");
+    document.querySelectorAll(".leaf").forEach(leaf => leaf.classList.add("fade-out"));
+  }, 1500);
 
-        setTimeout(() => {
-          resultDiv.innerHTML = `
-            <p>📜 占卜日期：${data.date}</p>
-            <p style="font-size:1.3rem;color:#ffd700;">🔮 今日運勢：${data.fortune}</p>
-            <p>💡 占卜之言：${data.advice}</p>
-            <button id="backBtn" style="margin-top:15px;">🔙 返回首頁</button>
-          `;
-          resultDiv.classList.add("show");
+  // 占卜結果
+  try {
+    const res = await fetch(`${apiUrl}?user_id=${userId}&username=${encodeURIComponent(username)}`);
+    const data = await res.json();
 
-          document.getElementById("backBtn").addEventListener("click", () => {
-            location.reload();
-          });
-        }, 2800);
-      } catch {
-        setTimeout(() => {
-          resultDiv.textContent = "⚠️ 魔力干擾過強，無法預言。";
-          resultDiv.classList.add("show");
-        }, 2800);
-      }
-    });
+    setTimeout(() => {
+      resultDiv.innerHTML = `
+        <p>📜 占卜日期：${data.date}</p>
+        <p style="font-size:1.3rem;color:#ffd700;">🔮 今日運勢：${data.fortune}</p>
+        <p>💡 占卜之言：${data.advice}</p>
+        <button id="backBtn" style="margin-top:15px;">🔙 返回首頁</button>
+      `;
+      resultDiv.classList.add("show");
+
+      document.getElementById("backBtn").addEventListener("click", () => {
+        location.reload();
+      });
+    }, 2800);
+  } catch {
+    setTimeout(() => {
+      resultDiv.textContent = "⚠️ 魔力干擾過強，無法預言。";
+      resultDiv.classList.add("show");
+    }, 2800);
+  }
+});
   </script>
 </body>
 </html>
