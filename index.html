@@ -1,279 +1,191 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>🥕 胡蘿蔔命運占卜祭壇 — 葉片被拔起</title>
+  <meta charset="UTF-8" />
+  <title>🔮 胡蘿蔔命運占卜祭壇</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
-    :root{
-      --bg1:#2f1f13; --bg2:#160b06; --gold:#ffd66b; --earth:#2e1f14;
+    body {
+      margin: 0;
+      font-family: 'Noto Serif TC', serif;
+      background: radial-gradient(circle at center, #2e1b0e, #130b06 90%);
+      color: #f6e5b1;
+      text-align: center;
+      overflow: hidden;
+      height: 100vh;
     }
-    html,body{height:100%;margin:0;font-family:'Noto Serif TC',serif;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:var(--gold);display:flex;align-items:center;justify-content:center;}
-    .stage{width:100%;max-width:720px;padding:28px;box-sizing:border-box; text-align:center;}
-    h1{margin:0 0 18px;font-size:1.6rem;letter-spacing:2px;text-shadow:0 0 8px rgba(200,150,60,0.25);}
-    .scene{position:relative;height:420px;max-width:480px;margin:0 auto 18px;display:flex;align-items:flex-end;justify-content:center;pointer-events:none;}
-    /* 泥土 */
-    .ground{
-      width:320px;height:140px;border-radius:50%/30%;
-      background:radial-gradient(circle at 50% 20%, #4b341f 0%, #2b1b11 58%, #1a1208 100%);
-      box-shadow: inset 0 -12px 25px rgba(0,0,0,0.6), 0 10px 30px rgba(0,0,0,0.6);
-      position:relative; overflow:visible;
+
+    h1 {
+      color: #ffcc33;
+      margin-top: 30px;
+      text-shadow: 0 0 12px #bfa76f;
     }
-    /* 蘿蔔（留在土裡） */
-    .carrot{
-      position:absolute; left:50%; transform:translateX(-50%); bottom:26px;
-      width:72px; height:114px; border-radius:44% 44% 14% 14%;
-      background: linear-gradient(180deg,#ff9e2a,#e36c0a 85%);
-      box-shadow: inset 0 -6px 12px rgba(0,0,0,0.15);
-      transition:box-shadow .3s;
-      pointer-events:auto; z-index:3;
+
+    button {
+      background: linear-gradient(180deg, #d4a017 0%, #9a7410 100%);
+      border: none;
+      padding: 14px 34px;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #fff8dc;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+      transition: transform 0.2s, box-shadow 0.3s;
     }
-    /* 蘿蔔頂端的小傷口 / 割口（在拔葉子後顯示） */
-    .stump{
-      position:absolute; left:50%; transform:translateX(-50%); bottom:124px;
-      width:40px; height:18px; border-radius:10px; background:#2a180f;
-      opacity:0; transition:opacity .6s ease .3s; z-index:4;
-      box-shadow: inset 0 2px 6px rgba(255,200,120,0.06);
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(255, 230, 150, 0.8);
     }
-    /* 葉片：會被拔起（獨立於蘿蔔） */
-    .leaves{
-      position:absolute; left:50%; transform:translateX(-50%); bottom:146px;
-      width:120px; height:120px; pointer-events:auto; z-index:5;
-      display:flex; align-items:flex-start; justify-content:center;
-      transform-origin:center bottom;
+
+    .section {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
     }
-    /* 用 SVG 形狀做葉片，讓動畫可控 */
-    .leaf-wrap{width:120px;height:90px; display:block; transform-origin:center bottom;}
-    svg.leaf{width:120px;height:90px; display:block; overflow:visible;}
-    /* 動畫類別 */
-    .pulling .leaves{animation:shake .45s ease-in-out 0s 1;}
-    @keyframes shake{
-      0%{ transform:translateX(-50%) translateY(0) rotate(0deg);}
-      20%{ transform:translateX(-50%) translateY(-6px) rotate(-6deg);}
-      40%{ transform:translateX(-50%) translateY(6px) rotate(6deg);}
-      60%{ transform:translateX(-50%) translateY(-4px) rotate(-4deg);}
-      100%{ transform:translateX(-50%) translateY(0) rotate(0deg);}
+    .show {
+      display: flex;
     }
-    /* 被拔起的飛出動畫（拔出後使用） */
-    .flying {
-      animation:flyUp 1.2s cubic-bezier(.08,.82,.17,1) forwards;
+
+    /* 泥土區塊 */
+    .ground {
+      position: relative;
+      width: 300px;
+      height: 150px;
+      background: linear-gradient(to bottom, #3b2a18, #1d1208);
+      border-radius: 50% / 20%;
+      margin-top: 50px;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.4);
     }
-    @keyframes flyUp{
-      0%{ transform:translateX(-50%) translateY(0) rotate(0) scale(1); opacity:1; filter:drop-shadow(0 6px 6px rgba(0,0,0,.25)); }
-      30%{ transform:translateX(-60%) translateY(-40px) rotate(-14deg) scale(1.02); }
-      65%{ transform:translateX(-120%) translateY(-170px) rotate(-60deg) scale(.85); opacity:0.95; }
-      100%{ transform:translateX(-160%) translateY(-280px) rotate(-110deg) scale(.6); opacity:0; }
+
+    /* 蘿蔔 */
+    .carrot {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 120px;
+      background: linear-gradient(to bottom, #f99127 0%, #c75d07 90%);
+      border-radius: 50% 50% 10% 10%;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
-    /* 微粒子（泥土） */
-    .particles{position:absolute; left:50%; bottom:48px; transform:translateX(-50%); width:220px; height:80px; pointer-events:none; z-index:2; overflow:visible;}
-    .particle{position:absolute;width:6px;height:6px;border-radius:50%;background:#5a3b22;opacity:0;transform:translateY(0);}
-    /* 按鈕區 */
-    .controls{pointer-events:auto;margin-top:8px;}
-    button{
-      background:linear-gradient(180deg,#c89c2b,#8b6612);
-      color:#fff8dc;border:none;padding:12px 22px;border-radius:10px;font-weight:700;cursor:pointer;
-      box-shadow:0 6px 18px rgba(0,0,0,.45);
+
+    /* 葉子 */
+    .leaves {
+      position: absolute;
+      bottom: 130px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 30px solid transparent;
+      border-right: 30px solid transparent;
+      border-bottom: 50px solid #58c455;
+      filter: drop-shadow(0 0 8px rgba(100,255,100,0.4));
+      transition: transform 1s ease-out;
     }
-    button:disabled{opacity:.55;cursor:not-allowed;}
+    .pulled {
+      transform: translate(-50%, -180px) rotate(-5deg);
+    }
+
     /* 結果卡 */
-    #resultCard{max-width:460px;margin:14px auto 0;background:rgba(20,12,6,.86);border:2px solid #cfa842;border-radius:12px;padding:18px;display:none;box-shadow:0 8px 30px rgba(0,0,0,.6);}
-    #resultCard.show{display:block; animation:cardIn .5s ease;}
-    @keyframes cardIn{from{transform:translateY(10px);opacity:0}to{transform:translateY(0);opacity:1}}
-    .muted{color:rgba(255,214,120,.7);font-size:.95rem}
-    /* 小裝飾 */
-    footer{margin-top:18px;color:rgba(255,214,120,.45);font-size:.86rem;}
-    @media (max-width:480px){
-      .scene{height:360px}
-      .ground{width:90%}
-      .carrot{width:56px;height:90px}
+    #result {
+      background: rgba(65, 40, 20, 0.9);
+      border: 2px solid #cfa842;
+      border-radius: 15px;
+      padding: 24px 20px;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      box-shadow: 0 0 15px rgba(255, 200, 120, 0.3);
+      margin-top: 40px;
+      width: 85%;
+      max-width: 360px;
+      display: none;
+    }
+    #result.show {
+      display: block;
+      animation: fadeIn 1.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
-  <div class="stage">
-    <h1>🔮 胡蘿蔔命運占卜祭壇（葉片被拔起）</h1>
+  <h1>🔮 胡蘿蔔命運占卜祭壇</h1>
 
-    <div class="scene" id="scene">
-      <div class="ground" id="ground">
-        <!-- 蘿蔔在土中（保持不動） -->
-        <div class="carrot" id="carrot"></div>
+  <!-- 加入 Discord 區塊 -->
+  <div id="joinSection" class="section show">
+    <p>📜 請先加入占卜聖堂：</p>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https%3A%2F%2Fdiscord.gg%2Fmar4qT9XYn" alt="Discord QR Code" />
+    <p style="margin-top:10px;">掃描上方符印或點擊下方按鈕</p>
+    <a href="https://discord.gg/mar4qT9XYn" target="_blank"><button>🔗 進入聖堂</button></a>
+    <button id="joinedBtn" style="margin-top:15px;">✅ 我已加入聖堂</button>
+  </div>
 
-        <!-- 顯示頂端割口（初始隱藏） -->
-        <div class="stump" id="stump" aria-hidden="true"></div>
-
-        <!-- 葉片（獨立於蘿蔔） -->
-        <div class="leaves" id="leaves" aria-hidden="false">
-          <div class="leaf-wrap" id="leafWrap">
-            <!-- SVG 葉片：你可以替換成更細緻的向量 -->
-            <svg class="leaf" viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <defs>
-                <linearGradient id="lg" x1="0" x2="1"><stop offset="0" stop-color="#80c875"/><stop offset="1" stop-color="#2f9e3b"/></linearGradient>
-              </defs>
-              <g transform="translate(60,55)">
-                <path d="M0,-6 C20,-30 60,-28 80,-6 C60,-18 25,-3 0,10 C-25,-3 -60,-18 -80,-6 C-60,-28 -20,-30 0,-6 Z"
-                      fill="url(#lg)" stroke="#2a6b2a" stroke-width="1.6" />
-              </g>
-            </svg>
-          </div>
-        </div>
-
-        <!-- 泥土粒子容器（制作簡易粒子效果） -->
-        <div class="particles" id="particles"></div>
-      </div>
+  <!-- 占卜區塊 -->
+  <div id="fortuneSection" class="section">
+    <div class="ground">
+      <div class="leaves" id="leaves"></div>
+      <div class="carrot"></div>
     </div>
-
-    <div class="controls">
-      <button id="pullBtn">拔出今日運勢（拔葉片） ✨</button>
-    </div>
-
-    <div id="resultCard" role="status" aria-live="polite">
-      <div class="muted" id="resDate">📜 占卜日期：-</div>
-      <div id="resFortune" style="font-size:1.2rem;margin-top:8px;color:var(--gold)">🔮 今日籤文：-</div>
-      <div id="resAdvice" style="margin-top:8px;color:#ffd"/> 
-      <div style="margin-top:12px;">
-        <button id="againBtn" style="background:linear-gradient(180deg,#9a6e1a,#6b4a0e);">再拔一次</button>
-      </div>
-    </div>
-
-    <footer>建議：按一次讓葉片被拔起，蘿蔔會留在泥土中。</footer>
+    <button id="drawBtn">啟動占卜儀式 ✨</button>
+    <div id="result"></div>
   </div>
 
   <script>
-    // 設定（保留你原本的 API 參數）
+    const joinedBtn = document.getElementById("joinedBtn");
+    const joinSection = document.getElementById("joinSection");
+    const fortuneSection = document.getElementById("fortuneSection");
+    const drawBtn = document.getElementById("drawBtn");
+    const leaves = document.getElementById("leaves");
+    const resultDiv = document.getElementById("result");
+
     const apiUrl = "https://carrot-bot-production.up.railway.app/api/fortune";
     const userId = "657882539331158016";
     const username = "湯姆瑞斗";
 
-    // DOM
-    const pullBtn = document.getElementById('pullBtn');
-    const againBtn = document.getElementById('againBtn');
-    const leaves = document.getElementById('leaves');
-    const leafWrap = document.getElementById('leafWrap');
-    const stump = document.getElementById('stump');
-    const particlesEl = document.getElementById('particles');
-    const scene = document.getElementById('scene');
-    const resCard = document.getElementById('resultCard');
-    const resDate = document.getElementById('resDate');
-    const resFortune = document.getElementById('resFortune');
-    const resAdvice = document.getElementById('resAdvice');
-
-    // 生成幾個泥土粒子元素（預先）
-    function makeParticles(n=12){
-      particlesEl.innerHTML = '';
-      for(let i=0;i<n;i++){
-        const p = document.createElement('div');
-        p.className='particle';
-        p.style.left = (30 + Math.random()*160) + 'px'; // 範圍
-        p.style.bottom = (6 + Math.random()*8) + 'px';
-        p.style.width = p.style.height = (4 + Math.random()*6) + 'px';
-        p.style.opacity = 0;
-        particlesEl.appendChild(p);
-      }
-    }
-    makeParticles(16);
-
-    // 播放簡單泥土飛散動畫
-    function playParticles(){
-      const parts = Array.from(particlesEl.children);
-      parts.forEach((p, idx) => {
-        const delay = idx * 30;
-        p.style.transition = `transform 650ms cubic-bezier(.08,.82,.17,1) ${delay}ms, opacity 300ms ${delay}ms`;
-        const dx = (Math.random()*160 - 80);
-        const dy = -(80 + Math.random()*120);
-        p.style.transform = `translate(${dx}px, ${dy}px) rotate(${(Math.random()*70-35)}deg)`;
-        p.style.opacity = 1;
-        setTimeout(()=> p.style.opacity = 0, 600 + delay);
-      });
-    }
-
-    // 執行 confetti（視覺強化）
-    function boomConfetti(){
-      confetti({ particleCount: 120, spread: 90, scalar: 0.9, origin: { y: 0.6 } });
-    }
-
-    // 取得籤文（帶 fallback）
-    async function fetchFortune(){
-      try{
-        const resp = await fetch(`${apiUrl}?user_id=${encodeURIComponent(userId)}&username=${encodeURIComponent(username)}`);
-        if(!resp.ok) throw new Error('network');
-        const data = await resp.json();
-        // 確保有關鍵欄位
-        return {
-          date: data.date || new Date().toISOString().slice(0,10),
-          fortune: data.fortune || "平安",
-          advice: data.advice || "順其自然即可。"
-        };
-      }catch(e){
-        // fallback 範例文案
-        return {
-          date: new Date().toISOString().slice(0,10),
-          fortune: ["大吉","中吉","小吉","平安","有變動"].sort(()=>Math.random()-0.5)[0],
-          advice: ["今日宜守成，不宜冒進。","今天社交運佳，試著主動打招呼。","小心細節，休息足夠。"][Math.floor(Math.random()*3)]
-        };
-      }
-    }
-
-    // 當按下拔葉按鈕
-    pullBtn.addEventListener('click', async () => {
-      if(pullBtn.disabled) return;
-      pullBtn.disabled = true;
-      pullBtn.textContent = '拔葉中…';
-
-      // 1) 葉片先短暫抖動（給出被抓住的感覺）
-      scene.classList.add('pulling');
-
-      // 2) 畫面小延遲後把葉片設為飛出動畫（葉片離開）
-      setTimeout(() => {
-        // 觸發泥土粒子
-        playParticles();
-        // 葉片飛出
-        leafWrap.classList.add('flying');
-        // 顯示蘿蔔頂端 stump（像被拔空的痕跡）
-        stump.style.opacity = 1;
-      }, 420);
-
-      // 3) 同步去抓籤文（AJAX）
-      const data = await fetchFortune();
-
-      // 4) 等葉片飛出動畫結束再顯示結果（略留時間）
-      setTimeout(() => {
-        // 顯示結果卡與 confetti
-        resDate.textContent = `📜 占卜日期：${data.date}`;
-        resFortune.textContent = `🔮 今日籤文：${data.fortune}`;
-        resAdvice.textContent = `💡 占卜之言：${data.advice}`;
-        resCard.classList.add('show');
-        boomConfetti();
-
-        // 清理：把葉片隱藏（或保留碎片效果）
-        leafWrap.style.opacity = 0;
-        // re-enable 再抽一次按鈕
-        pullBtn.disabled = false;
-        pullBtn.textContent = '拔出今日運勢（拔葉片） ✨';
-      }, 1400);
+    joinedBtn.addEventListener("click", () => {
+      joinSection.classList.remove("show");
+      fortuneSection.classList.add("show");
     });
 
-    // 再抽一次：重置動畫（葉片回到原位）
-    againBtn.addEventListener('click', () => {
-      // 重置葉片（把 svg 歸位）
-      leafWrap.style.transition = 'opacity .3s';
-      leafWrap.style.opacity = 1;
-      leafWrap.classList.remove('flying');
-      // 重新觸發 layout，保證動畫可再次運行
-      void leafWrap.offsetWidth;
-      stump.style.opacity = 0;
-      resCard.classList.remove('show');
-      makeParticles(16);
-      // scroll to controls（手機友善）
-      window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
-    });
+    drawBtn.addEventListener("click", async () => {
+      drawBtn.disabled = true;
+      drawBtn.textContent = "占卜中... 🔮";
+      leaves.classList.add("pulled");
 
-    // 初始化：確保按鈕可點
-    (function init(){
-      pullBtn.disabled = false;
-      pullBtn.textContent = '拔出今日運勢（拔葉片） ✨';
-    })();
+      try {
+        const res = await fetch(`${apiUrl}?user_id=${userId}&username=${encodeURIComponent(username)}`);
+        const data = await res.json();
+
+        setTimeout(() => {
+          resultDiv.innerHTML = `
+            <p>📜 占卜日期：${data.date}</p>
+            <p style="font-size:1.3rem;color:#ffd700;">🔮 今日籤文：${data.fortune}</p>
+            <p>💡 占卜之言：${data.advice}</p>
+            <button id="backBtn" style="margin-top:15px;">🔙 返回聖堂</button>
+          `;
+          resultDiv.classList.add("show");
+
+          document.getElementById("backBtn").addEventListener("click", () => {
+            resultDiv.classList.remove("show");
+            leaves.classList.remove("pulled");
+            drawBtn.disabled = false;
+            drawBtn.textContent = "再次啟動儀式 ✨";
+          });
+        }, 1200);
+      } catch {
+        resultDiv.textContent = "⚠️ 魔力干擾過強，無法預言。";
+        resultDiv.classList.add("show");
+      }
+    });
   </script>
 </body>
 </html>
