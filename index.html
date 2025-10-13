@@ -14,12 +14,16 @@
       text-align: center;
       overflow: hidden;
       height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
     }
 
     h1 {
       color: #ffcc33;
-      margin-top: 30px;
       text-shadow: 0 0 12px #bfa76f;
+      margin-bottom: 10px;
     }
 
     button {
@@ -34,6 +38,7 @@
       box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
       transition: transform 0.2s, box-shadow 0.3s;
     }
+
     button:hover {
       transform: scale(1.05);
       box-shadow: 0 0 20px rgba(255, 230, 150, 0.8);
@@ -45,7 +50,9 @@
       align-items: center;
       justify-content: center;
       height: 100%;
+      text-align: center;
     }
+
     .show {
       display: flex;
     }
@@ -74,22 +81,28 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
 
-    /* 葉子 */
-    .leaves {
+    /* 葉片 */
+    .leaf {
       position: absolute;
       bottom: 130px;
       left: 50%;
-      transform: translateX(-50%);
-      width: 0;
-      height: 0;
-      border-left: 30px solid transparent;
-      border-right: 30px solid transparent;
-      border-bottom: 50px solid #58c455;
+      width: 40px;
+      height: 60px;
+      background: #58c455;
+      border-radius: 40% 40% 0 0;
+      transform-origin: bottom center;
       filter: drop-shadow(0 0 8px rgba(100,255,100,0.4));
-      transition: transform 1s ease-out;
+      transition: transform 1s ease-out, opacity 1s ease-out;
     }
+
+    .leaf:nth-child(1) { transform: translate(-70px, 0) rotate(-20deg); }
+    .leaf:nth-child(2) { transform: translate(-20px, 0) rotate(-5deg); }
+    .leaf:nth-child(3) { transform: translate(30px, 0) rotate(15deg); }
+
+    /* 被拔起的葉子 */
     .pulled {
-      transform: translate(-50%, -180px) rotate(-5deg);
+      transform: translate(0, -200px) rotate(-30deg) !important;
+      opacity: 0;
     }
 
     /* 結果卡 */
@@ -106,6 +119,7 @@
       max-width: 360px;
       display: none;
     }
+
     #result.show {
       display: block;
       animation: fadeIn 1.2s ease;
@@ -132,19 +146,20 @@
   <!-- 占卜區塊 -->
   <div id="fortuneSection" class="section">
     <div class="ground">
-      <div class="leaves" id="leaves"></div>
       <div class="carrot"></div>
+      <div class="leaf" id="leaf1"></div>
+      <div class="leaf" id="leaf2"></div>
+      <div class="leaf" id="leaf3"></div>
     </div>
     <button id="drawBtn">啟動占卜儀式 ✨</button>
     <div id="result"></div>
   </div>
 
   <script>
-    const joinedBtn = document.getElementById("joinedBtn");
     const joinSection = document.getElementById("joinSection");
     const fortuneSection = document.getElementById("fortuneSection");
+    const joinedBtn = document.getElementById("joinedBtn");
     const drawBtn = document.getElementById("drawBtn");
-    const leaves = document.getElementById("leaves");
     const resultDiv = document.getElementById("result");
 
     const apiUrl = "https://carrot-bot-production.up.railway.app/api/fortune";
@@ -159,7 +174,10 @@
     drawBtn.addEventListener("click", async () => {
       drawBtn.disabled = true;
       drawBtn.textContent = "占卜中... 🔮";
-      leaves.classList.add("pulled");
+
+      // 隨機選一片葉子拔起
+      const randomLeaf = document.getElementById("leaf" + (Math.floor(Math.random() * 3) + 1));
+      randomLeaf.classList.add("pulled");
 
       try {
         const res = await fetch(`${apiUrl}?user_id=${userId}&username=${encodeURIComponent(username)}`);
@@ -175,10 +193,7 @@
           resultDiv.classList.add("show");
 
           document.getElementById("backBtn").addEventListener("click", () => {
-            resultDiv.classList.remove("show");
-            leaves.classList.remove("pulled");
-            drawBtn.disabled = false;
-            drawBtn.textContent = "再次啟動儀式 ✨";
+            location.reload(); // 回到首頁
           });
         }, 1200);
       } catch {
