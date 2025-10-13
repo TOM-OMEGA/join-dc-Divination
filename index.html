@@ -2,69 +2,89 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>🔮 胡蘿蔔命運占卜祭壇</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
     body {
       font-family: 'Noto Serif TC', serif;
-      background: radial-gradient(ellipse at center, #3c2a1e 0%, #1e1309 100%);
-      color: #f4e4c1;
+      background: radial-gradient(circle at center, #2e1b0e, #130b06 90%);
+      color: #f6e5b1;
       text-align: center;
-      margin: 0;
       overflow: hidden;
-      min-height: 100vh;
+      height: 100vh;
+      margin: 0;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-end;
       align-items: center;
+      transition: background 1s ease;
     }
 
     h1 {
-      font-size: 2rem;
-      color: #e6b800;
-      text-shadow: 0 0 10px #b39200;
+      color: #ffcc33;
+      font-size: 1.8rem;
       letter-spacing: 2px;
-      margin-bottom: 20px;
+      text-shadow: 0 0 12px #bfa76f;
+      position: absolute;
+      top: 20px;
+      text-align: center;
     }
 
     .altar {
-      position: relative;
-      width: 300px;
-      height: 300px;
+      position: absolute;
+      bottom: 160px;
+      width: 240px;
+      height: 240px;
       border-radius: 50%;
-      background: radial-gradient(circle at center, #604020 0%, #2d1a0a 100%);
-      box-shadow: 0 0 25px rgba(255,215,0,0.3), inset 0 0 40px rgba(255,255,200,0.2);
+      background: radial-gradient(circle, rgba(255,215,100,0.15), rgba(100,60,20,0.1));
+      box-shadow: 0 0 25px rgba(255,215,150,0.25);
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-bottom: 40px;
+      overflow: visible;
+    }
+
+    .glow {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,220,100,0.2), transparent);
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.1); opacity: 1; }
     }
 
     .rune {
       position: absolute;
-      font-size: 1.6rem;
-      color: rgba(255, 215, 0, 0.7);
+      font-size: 1.5rem;
+      color: rgba(255,210,100,0.6);
       animation: float 4s ease-in-out infinite;
     }
 
     @keyframes float {
-      0%, 100% { transform: translateY(0); opacity: 0.7; }
+      0%,100% { transform: translateY(0); opacity: 0.8; }
       50% { transform: translateY(-6px); opacity: 1; }
     }
 
     button {
       background: linear-gradient(180deg, #d4a017 0%, #9a7410 100%);
-      color: #fff8dc;
       border: none;
-      padding: 12px 28px;
+      padding: 14px 34px;
       border-radius: 10px;
       font-size: 1.1rem;
-      cursor: pointer;
       font-weight: bold;
+      color: #fff8dc;
+      cursor: pointer;
+      margin-bottom: 200px;
       box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
       transition: transform 0.2s, box-shadow 0.3s;
+      z-index: 90;
     }
 
     button:hover {
@@ -73,21 +93,25 @@
     }
 
     #result {
-      margin-top: 20px;
-      background: rgba(50, 30, 10, 0.8);
-      border: 2px solid #d4a017;
+      position: absolute;
+      bottom: 210px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 85%;
+      max-width: 360px;
+      background: rgba(65, 40, 20, 0.9);
+      border: 2px solid #cfa842;
       border-radius: 15px;
-      padding: 20px;
-      max-width: 400px;
+      padding: 24px 20px;
+      font-size: 1.05rem;
       line-height: 1.8;
-      font-size: 1.1rem;
+      box-shadow: 0 0 15px rgba(255, 200, 120, 0.3);
       display: none;
-      box-shadow: inset 0 0 20px rgba(255,255,150,0.1);
+      animation: fadeIn 1.5s ease;
     }
 
     #result.show {
       display: block;
-      animation: fadeIn 1.5s ease;
     }
 
     @keyframes fadeIn {
@@ -95,24 +119,26 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .glow {
+    canvas#magicCanvas {
       position: absolute;
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,255,150,0.2), transparent);
-      animation: pulse 2s infinite ease-in-out;
-      z-index: 0;
+      bottom: 160px;
+      pointer-events: none;
+      z-index: 5;
     }
 
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 0.6; }
-      50% { transform: scale(1.15); opacity: 1; }
+    @media (orientation: portrait) {
+      body {
+        transform: rotate(90deg);
+        transform-origin: center center;
+        height: 100vw;
+        width: 100vh;
+      }
     }
   </style>
 </head>
 <body>
   <h1>🔮 胡蘿蔔命運占卜祭壇</h1>
+  <canvas id="magicCanvas" width="400" height="200"></canvas>
   <div class="altar">
     <div class="glow"></div>
     <div class="rune" style="top:10%;left:50%;transform:translateX(-50%) rotate(10deg);">✶</div>
@@ -120,42 +146,103 @@
     <div class="rune" style="bottom:15%;right:25%;">☾</div>
   </div>
 
-  <button id="drawBtn">啟動占卜儀式 🔮</button>
-  <div id="result"></div>
+  <div id="content"></div>
 
   <script>
+    const discordInvite = "https://discord.gg/mar4qT9XYn";
     const apiUrl = "https://carrot-bot-production.up.railway.app/api/fortune";
     const userId = "657882539331158016";
     const username = "湯姆瑞斗";
 
-    const resultDiv = document.getElementById("result");
-    const drawBtn = document.getElementById("drawBtn");
+    const contentDiv = document.getElementById("content");
+    const magicCanvas = document.getElementById("magicCanvas");
+    const ctx = magicCanvas.getContext("2d");
 
-    drawBtn.addEventListener("click", async () => {
-      drawBtn.disabled = true;
-      drawBtn.textContent = "占卜儀式啟動中... ✨";
-
-      try {
-        const res = await fetch(`${apiUrl}?user_id=${userId}&username=${encodeURIComponent(username)}`);
-        const data = await res.json();
-
-        confetti({ particleCount: 180, spread: 80, origin: { y: 0.6 } });
-
-        resultDiv.innerHTML = `
-          <p>📜 <strong>命運之日：</strong> ${data.date}</p>
-          <p style="font-size:1.3rem;color:#ffd700;">🔮 今日籤文：${data.fortune}</p>
-          <p>💡 占卜建言：${data.advice}</p>
-        `;
-        resultDiv.classList.add("show");
-
-      } catch {
-        resultDiv.innerHTML = "⚠️ 魔法干擾太強，無法取得預言結果。";
-        resultDiv.classList.add("show");
-      } finally {
-        drawBtn.disabled = false;
-        drawBtn.textContent = "再次啟動儀式 ✨";
+    function drawMagic() {
+      const particles = [];
+      for (let i = 0; i < 30; i++) {
+        particles.push({
+          x: magicCanvas.width / 2,
+          y: magicCanvas.height,
+          r: Math.random() * 2 + 2,
+          vx: (Math.random() - 0.5) * 3,
+          vy: -Math.random() * 5 - 1,
+          life: 1
+        });
       }
-    });
+      function animate() {
+        ctx.clearRect(0, 0, magicCanvas.width, magicCanvas.height);
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.1;
+          p.life -= 0.015;
+          ctx.globalAlpha = Math.max(p.life, 0);
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(255,215,100,1)";
+          ctx.fill();
+        });
+        ctx.globalAlpha = 1;
+        if (particles.some(p => p.life > 0)) requestAnimationFrame(animate);
+      }
+      animate();
+    }
+
+    function showQRCode() {
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(discordInvite)}`;
+      contentDiv.innerHTML = `
+        <p>📜 請掃描下方卷軸符印以加入占卜者聖堂：</p>
+        <img src="${qrUrl}" alt="Discord QR Code" />
+        <p style="margin-top:10px;">加入完成後請回到本頁</p>
+        <button id="joinedBtn">✅ 我已加入聖堂</button>
+      `;
+      document.getElementById("joinedBtn").addEventListener("click", showFortunePage);
+    }
+
+    function showFortunePage() {
+      contentDiv.innerHTML = `
+        <button id="drawBtn">啟動占卜儀式 ✨</button>
+        <div id="result"></div>
+      `;
+
+      const drawBtn = document.getElementById("drawBtn");
+      const resultDiv = document.getElementById("result");
+
+      drawBtn.addEventListener("click", async () => {
+        drawBtn.disabled = true;
+        drawBtn.textContent = "占卜中... 🔮";
+        drawMagic();
+
+        try {
+          const res = await fetch(`${apiUrl}?user_id=${userId}&username=${encodeURIComponent(username)}`);
+          const data = await res.json();
+
+          setTimeout(() => {
+            confetti({ particleCount: 180, spread: 90, origin: { y: 0.6 } });
+
+            resultDiv.innerHTML = `
+              <p>📜 占卜日期：${data.date}</p>
+              <p style="font-size:1.3rem;color:#ffd700;">🔮 今日籤文：${data.fortune}</p>
+              <p>💡 占卜之言：${data.advice}</p>
+              <button id="backBtn">🔙 返回聖堂</button>
+            `;
+            resultDiv.classList.add("show");
+
+            document.getElementById("backBtn").addEventListener("click", showQRCode);
+          }, 1000);
+
+        } catch {
+          resultDiv.textContent = "⚠️ 魔力干擾過強，無法預言。";
+          resultDiv.classList.add("show");
+        } finally {
+          drawBtn.disabled = false;
+          drawBtn.textContent = "再次啟動儀式 ✨";
+        }
+      });
+    }
+
+    showQRCode();
   </script>
 </body>
 </html>
