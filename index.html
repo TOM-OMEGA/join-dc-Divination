@@ -2,15 +2,15 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8" />
-  <title>🥕 中世紀胡蘿蔔占卜祭壇</title>
+  <title>🥕 命運之蔔 · 森林占卜祭壇</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&family=MedievalSharp&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      font-family: 'Uncial Antiqua', 'MedievalSharp', serif;
-      background: radial-gradient(circle at center, #f9f2e0, #d6b97a 90%);
-      color: #3f2c16;
+      font-family: 'Uncial Antiqua', serif;
+      background: radial-gradient(circle at center, #f6f1e1 20%, #cfc19a 80%);
+      color: #3b2a16;
       text-align: center;
       height: 100vh;
       display: flex;
@@ -21,59 +21,77 @@
       overflow: hidden;
     }
 
-    /* ✨ 燭光動畫背景 */
+    /* 🏞️ 森林柔光背景層 */
     body::before {
       content: "";
       position: absolute;
-      width: 300%;
-      height: 300%;
-      background: radial-gradient(circle at 50% 50%, rgba(255,240,180,0.12), transparent 70%),
-                  radial-gradient(circle at 30% 20%, rgba(255,220,150,0.15), transparent 70%),
-                  radial-gradient(circle at 70% 80%, rgba(255,230,180,0.1), transparent 70%);
-      animation: glow 8s ease-in-out infinite alternate;
+      inset: 0;
+      background: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1280&q=80') center/cover no-repeat;
+      opacity: 0.35;
+      filter: blur(2px) brightness(0.9);
       z-index: 0;
     }
 
-    @keyframes glow {
-      0% { transform: scale(1) rotate(0deg); opacity: 0.8; }
-      100% { transform: scale(1.1) rotate(10deg); opacity: 1; }
+    /* 📜 紙張紋理層 */
+    body::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url('https://www.transparenttextures.com/patterns/old-map.png');
+      opacity: 0.4;
+      mix-blend-mode: multiply;
+      z-index: 0;
     }
 
     h1 {
       font-size: 2rem;
       color: #b27a1e;
-      text-shadow: 0 0 8px #fff2b0;
+      text-shadow: 0 0 6px #f0e0b0;
       margin-bottom: 25px;
-      z-index: 1;
+      z-index: 2;
     }
 
-    .carrot-scene {
-      width: 220px;
-      height: 260px;
+    /* 🥕 蘿蔔插畫（手抄本風） */
+    .carrot-container {
+      width: 260px;
+      height: 300px;
       position: relative;
-      margin-bottom: 20px;
-      z-index: 1;
-      animation: float 3s ease-in-out infinite;
+      z-index: 2;
+    }
+
+    .carrot {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: 100%;
+      height: auto;
+      animation: float 4s ease-in-out infinite;
+      filter: drop-shadow(0 0 10px rgba(255, 225, 150, 0.4));
     }
 
     @keyframes float {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
+      50% { transform: translateY(-5px); }
     }
 
-    .carrot-svg {
-      width: 100%;
-      height: 100%;
+    /* 🕯️ 符文光暈 */
+    .magic-circle {
+      position: absolute;
+      top: 60%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 240, 180, 0.6) 0%, transparent 70%);
+      box-shadow: 0 0 25px rgba(255, 220, 130, 0.6);
+      animation: pulse 3s ease-in-out infinite alternate;
+      z-index: 1;
     }
 
-    .leaf {
-      transform-origin: center bottom;
-      animation: sway 2.5s ease-in-out infinite alternate;
-    }
-
-    @keyframes sway {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(4deg); }
+    @keyframes pulse {
+      0% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.05); }
     }
 
     button {
@@ -87,7 +105,7 @@
       cursor: pointer;
       box-shadow: 0 0 12px rgba(255, 210, 100, 0.4);
       transition: transform 0.2s, box-shadow 0.3s;
-      z-index: 1;
+      z-index: 2;
     }
 
     button:hover {
@@ -96,7 +114,7 @@
     }
 
     #result {
-      background: rgba(255, 248, 220, 0.97);
+      background: rgba(255, 248, 220, 0.95);
       border: 2px solid #cfa842;
       border-radius: 15px;
       padding: 20px;
@@ -109,7 +127,7 @@
       display: none;
       opacity: 0;
       transition: opacity 1s ease;
-      z-index: 1;
+      z-index: 2;
     }
 
     #result.show {
@@ -119,29 +137,15 @@
   </style>
 </head>
 <body>
-  <h1>🥕 占卜祭壇：命運之蔔</h1>
+  <h1>🥕 森林占卜祭壇：命運之蔔</h1>
 
-  <div class="carrot-scene">
-    <svg class="carrot-svg" viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
-      <!-- 土地 -->
-      <rect x="0" y="200" width="200" height="60" fill="#5c3b1e" />
-
-      <!-- 可愛胡蘿蔔本體 -->
-      <path d="M100 90 C75 130, 85 190, 100 210 C115 190, 125 130, 100 90 Z"
-            fill="#ff9933" stroke="#c86910" stroke-width="2" />
-
-      <!-- 蘿蔔表情 -->
-      <circle cx="90" cy="145" r="4" fill="#3a1f0a" />
-      <circle cx="110" cy="145" r="4" fill="#3a1f0a" />
-      <path d="M88 157 Q100 165 112 157" stroke="#3a1f0a" stroke-width="2" fill="none" />
-
-      <!-- 葉片（搖動動畫） -->
-      <g class="leaf">
-        <ellipse cx="100" cy="70" rx="15" ry="25" fill="#6efb6e" />
-        <ellipse cx="85" cy="75" rx="12" ry="20" fill="#6efb6e" />
-        <ellipse cx="115" cy="75" rx="12" ry="20" fill="#6efb6e" />
-      </g>
-    </svg>
+  <div class="carrot-container">
+    <div class="magic-circle"></div>
+    <img
+      src="https://cdn.pixabay.com/photo/2023/07/05/10/19/carrot-8107762_960_720.png"
+      alt="中世紀手抄本風胡蘿蔔"
+      class="carrot"
+    />
   </div>
 
   <button id="drawBtn">占卜今日運勢 ✨</button>
