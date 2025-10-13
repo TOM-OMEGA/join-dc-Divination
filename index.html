@@ -2,50 +2,44 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8" />
-  <title>🔮 可愛葫蘆蔔占卜祭壇</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&display=swap" rel="stylesheet">
+  <title>🔮 中世紀胡蘿蔔占卜祭壇</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      font-family: 'Noto Serif TC', serif;
-      background: radial-gradient(circle at center, #fdf6e3, #e0cfa0 90%);
-      color: #5c3b1e;
+      font-family: 'Uncial Antiqua', serif;
+      background: radial-gradient(circle at center, #f6f1e1, #d8c8a0 90%);
+      color: #4b2e1e;
       text-align: center;
-      overflow: hidden;
       height: 100vh;
       display: flex;
-      justify-content: center;
-      align-items: center;
       flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
     h1 {
-      color: #d47f00;
-      text-shadow: 0 0 6px #fff0c0;
+      font-size: 2rem;
+      color: #a86f1a;
+      text-shadow: 0 0 6px #f0e0b0;
       margin-bottom: 20px;
     }
 
     .carrot-scene {
-      width: 200px;
-      height: 200px;
-      margin: 20px auto;
+      width: 220px;
+      height: 220px;
       position: relative;
+      margin-bottom: 20px;
     }
 
-    .cute-carrot {
+    .carrot-svg {
       width: 100%;
       height: 100%;
-      animation: wiggle 3s ease-in-out infinite;
-    }
-
-    @keyframes wiggle {
-      0%, 100% { transform: rotate(0deg); }
-      50% { transform: rotate(1deg); }
     }
 
     button {
-      background: linear-gradient(180deg, #d4a017 0%, #9a7410 100%);
+      background: linear-gradient(180deg, #cfa842 0%, #9a7410 100%);
       border: none;
       padding: 12px 28px;
       border-radius: 10px;
@@ -55,7 +49,6 @@
       cursor: pointer;
       box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
       transition: transform 0.2s, box-shadow 0.3s;
-      margin-top: 20px;
     }
 
     button:hover {
@@ -64,7 +57,7 @@
     }
 
     #result {
-      background: rgba(255, 248, 220, 0.9);
+      background: rgba(255, 248, 220, 0.95);
       border: 2px solid #cfa842;
       border-radius: 12px;
       padding: 20px;
@@ -86,21 +79,21 @@
   </style>
 </head>
 <body>
-  <h1>🥕 可愛葫蘆蔔占卜祭壇</h1>
+  <h1>🥕 占卜祭壇：命運之蔔</h1>
 
   <div class="carrot-scene">
-    <svg class="cute-carrot" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <svg class="carrot-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
       <!-- 土地 -->
       <rect x="0" y="140" width="200" height="60" fill="#5c3b1e" />
 
-      <!-- 葫蘆蔔本體 -->
+      <!-- 葫蘆蔔本體（可愛風格） -->
       <path d="M100 80 C85 100, 85 130, 100 150 C115 130, 115 100, 100 80 Z"
             fill="#f99127" stroke="#c75d07" stroke-width="2" />
 
-      <!-- 葉片 -->
-      <path d="M100 80 C90 60, 110 60, 100 40" fill="#7dfc7d" />
-      <path d="M90 75 C80 60, 100 60, 90 45" fill="#7dfc7d" />
-      <path d="M110 75 C120 60, 100 60, 110 45" fill="#7dfc7d" />
+      <!-- 葉片（圓潤可愛） -->
+      <ellipse cx="100" cy="60" rx="14" ry="20" fill="#7dfc7d" />
+      <ellipse cx="85" cy="65" rx="10" ry="18" fill="#7dfc7d" />
+      <ellipse cx="115" cy="65" rx="10" ry="18" fill="#7dfc7d" />
     </svg>
   </div>
 
@@ -126,7 +119,7 @@
         setTimeout(() => {
           resultDiv.innerHTML = `
             <p>📜 占卜日期：${data.date}</p>
-            <p style="font-size:1.2rem;color:#d47f00;">🔮 今日運勢：${data.fortune}</p>
+            <p style="font-size:1.2rem;color:#a86f1a;">🔮 今日運勢：${data.fortune}</p>
             <p>💡 占卜之言：${data.advice}</p>
             <button onclick="location.reload()" style="margin-top:15px;">🔙 再占一次</button>
           `;
