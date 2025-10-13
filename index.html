@@ -57,7 +57,7 @@
       display: flex;
     }
 
-    /* 泥土區塊 */
+    /* 泥土 */
     .ground {
       position: relative;
       width: 300px;
@@ -66,6 +66,7 @@
       border-radius: 50% / 20%;
       margin-top: 50px;
       box-shadow: inset 0 0 20px rgba(0,0,0,0.4);
+      transition: opacity 1.5s ease;
     }
 
     /* 蘿蔔 */
@@ -79,6 +80,7 @@
       background: linear-gradient(to bottom, #f99127 0%, #c75d07 90%);
       border-radius: 50% 50% 10% 10%;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: opacity 1.5s ease;
     }
 
     /* 葉片 */
@@ -99,10 +101,15 @@
     .leaf:nth-child(2) { transform: translate(-20px, 0) rotate(-5deg); }
     .leaf:nth-child(3) { transform: translate(30px, 0) rotate(15deg); }
 
-    /* 被拔起的葉子 */
+    /* 被拔起的葉子動畫 */
     .pulled {
-      transform: translate(0, -200px) rotate(-30deg) !important;
-      opacity: 0;
+      animation: flyUp 1.5s ease-out forwards;
+    }
+
+    @keyframes flyUp {
+      0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+      50% { transform: translate(0, -150px) rotate(-40deg); opacity: 1; }
+      100% { transform: translate(0, -300px) rotate(-120deg); opacity: 0; }
     }
 
     /* 結果卡 */
@@ -118,23 +125,24 @@
       width: 85%;
       max-width: 360px;
       display: none;
+      opacity: 0;
+      transition: opacity 1s ease;
     }
 
     #result.show {
       display: block;
-      animation: fadeIn 1.2s ease;
+      opacity: 1;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
+    .fade-out {
+      opacity: 0;
     }
   </style>
 </head>
 <body>
   <h1>🔮 胡蘿蔔命運占卜祭壇</h1>
 
-  <!-- 加入 Discord 區塊 -->
+  <!-- 加入 Discord -->
   <div id="joinSection" class="section show">
     <p>📜 請先加入占卜聖堂：</p>
     <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https%3A%2F%2Fdiscord.gg%2Fmar4qT9XYn" alt="Discord QR Code" />
@@ -143,10 +151,10 @@
     <button id="joinedBtn" style="margin-top:15px;">✅ 我已加入聖堂</button>
   </div>
 
-  <!-- 占卜區塊 -->
+  <!-- 占卜畫面 -->
   <div id="fortuneSection" class="section">
-    <div class="ground">
-      <div class="carrot"></div>
+    <div class="ground" id="ground">
+      <div class="carrot" id="carrot"></div>
       <div class="leaf" id="leaf1"></div>
       <div class="leaf" id="leaf2"></div>
       <div class="leaf" id="leaf3"></div>
@@ -161,6 +169,8 @@
     const joinedBtn = document.getElementById("joinedBtn");
     const drawBtn = document.getElementById("drawBtn");
     const resultDiv = document.getElementById("result");
+    const ground = document.getElementById("ground");
+    const carrot = document.getElementById("carrot");
 
     const apiUrl = "https://carrot-bot-production.up.railway.app/api/fortune";
     const userId = "657882539331158016";
@@ -175,10 +185,17 @@
       drawBtn.disabled = true;
       drawBtn.textContent = "占卜中... 🔮";
 
-      // 隨機選一片葉子拔起
       const randomLeaf = document.getElementById("leaf" + (Math.floor(Math.random() * 3) + 1));
       randomLeaf.classList.add("pulled");
 
+      // 等葉片飛完，再讓整個畫面淡出
+      setTimeout(() => {
+        ground.classList.add("fade-out");
+        carrot.classList.add("fade-out");
+        document.querySelectorAll(".leaf").forEach(leaf => leaf.classList.add("fade-out"));
+      }, 1500);
+
+      // 再顯示結果
       try {
         const res = await fetch(`${apiUrl}?user_id=${userId}&username=${encodeURIComponent(username)}`);
         const data = await res.json();
@@ -193,9 +210,9 @@
           resultDiv.classList.add("show");
 
           document.getElementById("backBtn").addEventListener("click", () => {
-            location.reload(); // 回到首頁
+            location.reload(); // 回首頁
           });
-        }, 1200);
+        }, 2800);
       } catch {
         resultDiv.textContent = "⚠️ 魔力干擾過強，無法預言。";
         resultDiv.classList.add("show");
