@@ -60,67 +60,25 @@
     .ground {
       position: relative;
       width: 300px;
-      height: 150px;
-      background: linear-gradient(to bottom, #3b2a18, #1d1208);
-      border-radius: 50% / 20%;
-      margin-top: 50px;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.4);
-      transition: opacity 1.5s ease;
+      height: 180px;
+      margin-top: 40px;
     }
 
-    .carrot {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80px;
-      height: 120px;
-      background: repeating-linear-gradient(to bottom, #ffb347 0px, #f99127 10px, #c75d07 20px);
-      border-radius: 50% 50% 10% 10%;
-      box-shadow:
-        inset -4px -6px 10px rgba(0,0,0,0.2),
-        0 6px 14px rgba(0,0,0,0.4),
-        0 0 18px rgba(255, 140, 0, 0.5);
-      animation: carrotPulse 3s ease-in-out infinite;
-      transition: transform 1s ease, opacity 1.5s ease;
+    #magicCarrot {
+      animation: floatCarrot 4s ease-in-out infinite;
+      transform-origin: center bottom;
+      filter: drop-shadow(0 0 10px rgba(255, 140, 0, 0.5));
+      transition: transform 1s ease;
     }
 
-    @keyframes carrotPulse {
-      0%, 100% { filter: drop-shadow(0 0 6px rgba(255,140,0,0.3)); }
-      50% { filter: drop-shadow(0 0 14px rgba(255,180,0,0.6)); }
-    }
-
-    .leaf {
-      position: absolute;
-      bottom: 130px;
-      left: 50%;
-      width: 40px;
-      height: 65px;
-      background: linear-gradient(to top, #4fdc4f, #a0ffb0);
-      border-radius: 50% 50% 0 0;
-      transform-origin: bottom center;
-      filter: drop-shadow(0 0 8px rgba(100,255,100,0.4));
-      transition: transform 1s ease-out, opacity 1s ease-out;
-      animation: leafFloat 3s ease-in-out infinite;
-    }
-
-    @keyframes leafFloat {
+    @keyframes floatCarrot {
       0%, 100% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-4px) rotate(2deg); }
+      50% { transform: translateY(-6px) rotate(1deg); }
     }
 
-    #leaf1 { transform: translate(-70px, 0) rotate(-25deg) scale(1.1); z-index: 1; }
-    #leaf2 { transform: translate(-20px, 0) rotate(-5deg) scale(1.2); z-index: 2; }
-    #leaf3 { transform: translate(30px, 0) rotate(20deg) scale(1); z-index: 1; }
-
-    .pulled {
-      animation: flyUp 1.5s ease-out forwards;
-    }
-
-    @keyframes flyUp {
-      0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
-      50% { transform: translate(0, -150px) rotate(-60deg) scale(1.2); opacity: 1; }
-      100% { transform: translate(0, -300px) rotate(-120deg) scale(0.8); opacity: 0; }
+    .pulledCarrot {
+      transform: translateY(-120px) rotate(-20deg) scale(1.1);
+      filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
     }
 
     .particle {
@@ -168,6 +126,7 @@
 <body>
   <h1>🔮 胡蘿蔔占卜祭壇</h1>
 
+  <!-- 加入 Discord 區塊 -->
   <div id="joinSection" class="section show">
     <p>📜 請先加入聖蘿蔔大教堂：</p>
     <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https%3A%2F%2Fdiscord.gg%2Fmar4qT9XYn" alt="Discord QR Code" />
@@ -176,103 +135,128 @@
     <button id="joinedBtn" style="margin-top:15px;">✅ 我已加入教堂</button>
   </div>
 
+  <!-- 占卜區塊 -->
   <div id="fortuneSection" class="section">
-    <div class="ground" id="ground">
-      <div class="carrot" id="carrot"></div>
-      <div class="leaf" id="leaf1"></div>
-      <div class="leaf" id="leaf2"></div>
-      <div class="leaf" id="leaf3"></div>
+    <div class="ground">
+      <!-- 魔法蘿蔔 SVG -->
+      <svg id="magicCarrot" width="120" height="180" viewBox="0 0 120 180" xmlns="http://www.w3.org/2000/svg" style="overflow:visible;">
+        <!-- 葉片 -->
+        <path d="M60 0 C50 30, 70 30, 60 60" fill="url(#leafGradient)" />
+        <path d="M40 10 C30 40, 50 40, 40 70" fill="url(#leafGradient)" />
+        <path d="M80 10 C70 40, 90 40, 80 70" fill="url(#leafGradient)" />
+
+        <!-- 蘿蔔本體 -->
+        <path d="M60 60 C30 80, 30 140, 60 170 C90 140, 90 80, 60 60 Z" fill="url(#carrotGradient)" stroke="#c75d07" stroke-width="2" />
+
+        <!-- 漸層定義 -->
+        <defs>
+          <linearGradient id="carrotGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#ffb347" />
+            <stop offset="50%" stop-color="#f99127" />
+            <stop offset="100%" stop-color="#c75d07" />
+          </linearGradient>
+          <linearGradient id="leafGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#7dfc7d" />
+            <stop offset="100%" stop-color="#3fae3f" />
+          </linearGradient>
+        </defs>
+      </svg>
     </div>
+
     <button id="drawBtn">占卜今日運勢 ✨</button>
     <div id="result"></div>
   </div>
 
   <script>
-    const joinSection = document.getElementById("joinSection");
-    const fortuneSection = document.getElementById("fortuneSection");
-    const joinedBtn = document.getElementById("joinedBtn");
-    const drawBtn = document.getElementById("drawBtn");
-    const resultDiv = document.getElementById("result");
-    const ground = document.getElementById("ground");
-    const carrot = document.getElementById("carrot");
+  const joinSection = document.getElementById("joinSection");
+  const fortuneSection = document.getElementById("fortuneSection");
+  const joinedBtn = document.getElementById("joinedBtn");
+  const drawBtn = document.getElementById("drawBtn");
+  const resultDiv = document.getElementById("result");
+  const carrot = document.getElementById("magicCarrot");
 
-    const apiUrl = "https://carrot-bot-production.up.railway.app/api/fortune";
-    const userId = "657882539331158016";
-    const username = "湯姆瑞斗";
+  const apiUrl = "https://carrot-bot-production.up.railway.app/api/fortune";
+  const userId = "657882539331158016";
+  const username = "湯姆瑞斗";
 
-    joinedBtn.addEventListener("click", () => {
-      joinSection.classList.remove("show");
-      fortuneSection.classList.add("show");
-    });
+  joinedBtn.addEventListener("click", () => {
+    joinSection.classList.remove("show");
+    fortuneSection.classList.add("show");
+  });
 
-    drawBtn.addEventListener("click", async () => {
-      drawBtn.disabled = true;
-      drawBtn.textContent = "占卜中... 🔮";
-      drawBtn.classList.add("fade-out");
-      setTimeout(() => { drawBtn.style.display = "none"; }, 1500);
+  drawBtn.addEventListener("click", async () => {
+    drawBtn.disabled = true;
+    drawBtn.textContent = "占卜中... 🔮";
+    drawBtn.classList.add("fade-out");
+    setTimeout(() => { drawBtn.style.display = "none"; }, 1500);
 
-      const randomLeaf = document.getElementById("leaf" + (Math.floor(Math.random() * 3) + 1));
-      randomLeaf.classList.add("pulled");
+    // 魔法粒子效果
+    for (let i = 0; i < 12; i++) {
+      const particle = document.createElement("div");
+      particle.className = "particle";
+      particle.style.left = (50 + Math.random() * 40 - 20) + "%";
+      particle.style.bottom = (130 + Math.random() * 20) + "px";
+      particle.style.animationDelay = (Math.random() * 0.5) + "s";
+      fortuneSection.appendChild(particle);
+      setTimeout(() => particle.remove(), 1500);
+    }
 
-      // 魔法粒子效果
-      for (let i = 0; i < 12; i++) {
-        const particle = document.createElement("div");
-        particle.className = "particle";
-        particle.style.left = (50 + Math.random() * 40 - 20) + "%";
-        particle.style.bottom = (130 + Math.random() * 20) + "px";
-        particle.style.animationDelay = (Math.random() * 0.5) + "s";
-        fortuneSection.appendChild(particle);
-        setTimeout(() => particle.remove(), 1500);
-      }
+    // 蘿蔔拔起動畫
+    carrot.classList.add("pulledCarrot");
 
-      // 蘿蔔拔起動畫
-      carrot.style.transform = "translate(-50%, -100px) rotate(-20deg) scale(1.1)";
-      carrot.style.transition = "transform 1.2s ease-out";
+    // 占卜結果
+    try {
+      const res = await fetch(`${apiUrl}?user_id=${userId}&username=${encodeURIComponent(username)}`);
+      const data = await res.json();
 
-      // 畫面淡出
       setTimeout(() => {
-        ground.classList.add("fade-out");
-        carrot.classList.add("fade-out");
-        document.querySelectorAll(".leaf").forEach(leaf => leaf.classList.add("fade-out"));
-      }, 1500);
+        resultDiv.innerHTML = `
+          <p>📜 占卜日期：${data.date}</p>
+          <p style="font-size:1.3rem;color:#ffd700;">🔮 今日運勢：${data.fortune}</p>
+          <p>💡 占卜之言：${data.advice}</p>
+          <button id="backBtn" style="margin-top:15px;">🔙 返回首頁</button>
+        `;
 
-      // 占卜結果
-      try {
-        const res = await fetch(`${apiUrl}?user_id=${userId}&username=${encodeURIComponent(username)}`);
-        const data = await res.json();
-
-        setTimeout(() => {
-          resultDiv.innerHTML = `
-            <p>📜 占卜日期：${data.date}</p>
-            <p style="font-size:1.3rem;color:#ffd700;">🔮 今日運勢：${data.fortune}</p>
-            <p>💡 占卜之言：${data.advice}</p>
-            <button id="backBtn" style="margin-top:15px;">🔙 返回首頁</button>
+        // 金蘿蔔彩蛋觸發
+        if (data.fortune.includes("大吉") || data.fortune.includes("金蘿蔔")) {
+          // 改變蘿蔔漸層
+          const defs = carrot.querySelector("defs");
+          const goldGradient = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
+          goldGradient.setAttribute("id", "carrotGradient");
+          goldGradient.setAttribute("x1", "0%");
+          goldGradient.setAttribute("y1", "0%");
+          goldGradient.setAttribute("x2", "0%");
+          goldGradient.setAttribute("y2", "100%");
+          goldGradient.innerHTML = `
+            <stop offset="0%" stop-color="#fff8b0" />
+            <stop offset="50%" stop-color="#ffd700" />
+            <stop offset="100%" stop-color="#cfa842" />
           `;
+          defs.querySelector("#carrotGradient").replaceWith(goldGradient);
 
-          // 金蘿蔔彩蛋觸發
-          if (data.fortune.includes("大吉") || data.fortune.includes("金蘿蔔")) {
-            carrot.style.background = "radial-gradient(circle at 40% 30%, #fff8b0, #ffd700 40%, #cfa842 90%)";
-            carrot.style.boxShadow = "0 0 30px rgba(255, 215, 0, 0.8), 0 0 60px rgba(255, 255, 150, 0.5)";
-            document.body.style.background = "radial-gradient(circle at center, #3f2b00, #1a0f00 90%)";
-            resultDiv.innerHTML += `
-              <p style="margin-top:10px;color:#ffec8b;font-weight:bold;">🌟 你拔出了金蘿蔔！命運之門為你敞開！</p>
-            `;
-          }
+          // 背景變色
+          document.body.style.background = "radial-gradient(circle at center, #3f2b00, #1a0f00 90%)";
 
-          resultDiv.classList.add("show");
+          // 額外祝福語
+          resultDiv.innerHTML += `
+            <p style="margin-top:10px;color:#ffec8b;font-weight:bold;">🌟 你拔出了金蘿蔔！命運之門為你敞開！</p>
+          `;
+        }
 
-          document.getElementById("backBtn").addEventListener("click", () => {
-            location.reload();
-          });
-        }, 2800);
-      } catch {
-        setTimeout(() => {
-          resultDiv.textContent = "⚠️ 魔力干擾過強，無法預言。";
-          resultDiv.classList.add("show");
-        }, 2800);
-      }
-    });
-  </script>
+        resultDiv.classList.add("show");
+
+        document.getElementById("backBtn").addEventListener("click", () => {
+          location.reload();
+        });
+      }, 2800);
+    } catch {
+      setTimeout(() => {
+        resultDiv.textContent = "⚠️ 魔力干擾過強，無法預言。";
+        resultDiv.classList.add("show");
+      }, 2800);
+    }
+  });
+</script>
 </body>
 </html>
   
