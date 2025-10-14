@@ -27,7 +27,8 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  filter: brightness(0.92) contrast(1.05);
+  /* 移除濾鏡，確保圖片原色顯示 */
+  filter: none !important;
 }
 
 /* ===== 主要容器 ===== */
@@ -42,6 +43,15 @@ html, body {
   flex-direction: column;
   align-items: center;
   text-align: center;
+}
+
+/* 🔹 所有半透明殘留層一律清除 */
+.panel, .qr, .div-bg, .magic-plate, .div-inner, .divination, .content {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  outline: none !important;
 }
 
 /* ===== 頁首區 ===== */
