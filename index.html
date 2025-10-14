@@ -28,19 +28,21 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
+  filter: brightness(0.95) contrast(1.05);
 }
 
-/* 主要浮水框（中央區域） */
+/* 取消浮水框（中央區域） */
 .stage {
   box-sizing: border-box;
   width: 900px;
   max-width: 95%;
   padding: 28px;
-  background: rgba(243, 234, 213, 0.55); /* 半透明羊皮色 */
-  border-radius: 10px;
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.25) inset, 0 4px 25px rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(90, 60, 30, 0.2);
-  backdrop-filter: blur(1.5px);
+
+  background: none; /* 取消浮水底 */
+  border: none; /* 移除邊框 */
+  box-shadow: none; /* 移除陰影 */
+  backdrop-filter: none; /* 取消模糊效果 */
+
   position: relative;
   transition: opacity .5s ease;
   display: flex;
