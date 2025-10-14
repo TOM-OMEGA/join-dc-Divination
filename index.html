@@ -132,12 +132,15 @@
       transform-origin:center;
     }
     /* 可以把 images/medieval-carrot.png 替換成你上傳的插畫 */
-    .div-bg.placeholder{
+    .div-bg.placeholder {
       background-image:
         linear-gradient(rgba(18,12,6,0.06), rgba(10,8,6,0.04)),
-        url('images/medieval-carrot-placeholder.jpg');
+        url('./images/medieval-carrot-placeholder.jpg');
+      background-size: cover;
+      background-position: center;
       background-blend-mode: multiply;
     }
+
 
     .div-inner {
       position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;
