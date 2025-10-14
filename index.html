@@ -18,32 +18,35 @@
 }
 
 /* ===== 全頁背景 ===== */
-html, body{
-  height:100%;
-  margin:0;
-  font-family:"Uncial Antiqua", serif;
-  color:var(--ink);
-  background: linear-gradient(rgba(18,12,6,0.08), rgba(10,8,6,0.06)),
-              url('images/medieval-carrot-placeholder.jpg') center/cover no-repeat fixed;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: "Uncial Antiqua", serif;
+  background: url('images/medieval-carrot-placeholder.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* ===== 主要容器 ===== */
+/* 主要浮水框（中央區域） */
 .stage {
   box-sizing: border-box;
-  max-width: var(--max-width);
-  width: 90%;
-  margin: auto;
+  width: 900px;
+  max-width: 95%;
   padding: 28px;
-  border-radius: 14px;
-  background: rgba(243,234,213,0.92);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
-  border: 2px solid rgba(60,40,20,0.08);
+  background: rgba(243, 234, 213, 0.55); /* 半透明羊皮色 */
+  border-radius: 10px;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.25) inset, 0 4px 25px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(90, 60, 30, 0.2);
+  backdrop-filter: blur(1.5px);
   position: relative;
-  overflow: hidden;
   transition: opacity .5s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 /* header */
@@ -66,8 +69,14 @@ header{
 h1{margin:0;font-size:1.26rem;color:var(--gold);text-shadow:0 1px 0 rgba(255,255,255,0.6);}
 .subtitle{font-size:0.9rem;color:rgba(46,34,22,0.8)}
 
-/* layout */
-.content { display:grid; grid-template-columns: 1fr 420px; gap:20px; align-items:start; }
+/* 讓占卜畫面也同樣置中 */
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
 @media (max-width: 980px){ .content{grid-template-columns:1fr} }
 
 /* 左側：流程與說明 */
