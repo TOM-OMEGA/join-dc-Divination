@@ -9,36 +9,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --paper:#f3ead5;
-  --ink:#2e2316;
-  --gold:#b9872b;
-  --accent: rgba(185, 138, 42, 0.14);
+:root {
+  --paper: #f3ead5;
+  --ink: #2e2316;
+  --gold: #b9872b;
   --max-width: 980px;
 }
-/* 🔹 首頁 QR Code 區塊完全去除浮框與陰影 */
-.stage, .card, .magic-plate {
-  background: none !important;
-  border: none !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-}
 
-/* 🔹 如果 QR code 有自己的框（例如 qrcode-container），一併清掉 */
-.qrcode-container, .qrcode-box {
-  background: none !important;
-  border: none !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-}
-
-/* 🔹 若還有微透明底，這行可確保文字直接貼背景 */
-html, body {
-  background: url('images/medieval-carrot-placeholder.jpg') no-repeat center center fixed;
-  background-size: cover;
-  filter: brightness(0.92) contrast(1.05);
-}
-  
 /* ===== 全頁背景 ===== */
 html, body {
   height: 100%;
@@ -50,139 +27,171 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-
-  /* 微調背景亮度/對比度，讓文字更清晰但不破壞風格 */
   filter: brightness(0.92) contrast(1.05);
 }
 
-/* 主要的文字容器，移除浮水效果 */
+/* ===== 主要容器 ===== */
 .stage {
-  box-sizing: border-box;
   width: 900px;
   max-width: 95%;
   padding: 28px;
-
-  background: none !important;  /* 完全透明，移除半透明底 */
-  border: none !important;      /* 移除邊框 */
-  box-shadow: none !important;   /* 移除陰影 */
-
-  position: relative;
-  transition: opacity .5s ease;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  text-align: center;
 }
 
-
-/* header */
-header{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  justify-content:space-between;
-  margin-bottom:18px;
+/* ===== 頁首區 ===== */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
 }
-.title { display:flex; gap:12px; align-items:center; }
+.title { display: flex; gap: 12px; align-items: center; }
 .crest {
-  width:56px;height:56px;border-radius:8px;
-  background:linear-gradient(180deg,#f6e7c9,#e5c985);
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 3px 10px rgba(0,0,0,0.12), inset 0 -4px 8px rgba(0,0,0,0.03);
-  border:1px solid rgba(0,0,0,0.06);
-}
-.crest svg{width:34px;height:34px;fill:var(--gold);opacity:0.95}
-h1{margin:0;font-size:1.26rem;color:var(--gold);text-shadow:0 1px 0 rgba(255,255,255,0.6);}
-.subtitle{font-size:0.9rem;color:rgba(46,34,22,0.8)}
-
-/* 讓占卜畫面也同樣置中 */
-.content {
+  width: 56px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.crest svg {
+  width: 36px;
+  height: 36px;
+  fill: var(--gold);
+}
+h1 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: var(--gold);
+  text-shadow: 0 0 4px rgba(0,0,0,0.1);
+}
+.subtitle {
+  font-size: 0.9rem;
+  color: rgba(46,34,22,0.8);
+}
+
+/* ===== 內容區 ===== */
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 20px;
-  flex-wrap: wrap;
-}
-@media (max-width: 980px){ .content{grid-template-columns:1fr} }
-
-/* 左側：流程與說明 */
-.panel {
-  background: rgba(255,255,255,0.15);
-  padding:18px;border-radius:10px;
-  border:1px solid rgba(0,0,0,0.06);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-  backdrop-filter: blur(2px);
-  text-align:center;
 }
 
-.qr-wrap { display:flex;flex-direction:column;align-items:center;gap:12px; }
-.qr { width:200px;height:200px;border-radius:8px;
-  background:linear-gradient(180deg,#fff,#f7f1da);
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 8px 20px rgba(0,0,0,0.12);
-  border:3px solid rgba(185,135,40,0.12);
-}
-.qr img{width:86%;height:86%;object-fit:contain;border-radius:6px}
-
-.muted{color:rgba(46,34,22,0.72);font-size:0.95rem}
-.btn {
-  margin-top:10px;
-  background: linear-gradient(180deg, #e9d089 0%, #b9852a 100%);
-  border:none;padding:12px 18px;border-radius:10px;color:#fff;font-weight:700;cursor:pointer;
-  box-shadow:0 6px 18px rgba(185,135,40,0.18);
-  transition: transform .16s ease, box-shadow .16s ease;
-  font-size:1rem;
-}
-.btn:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(185,135,40,0.28)}
-.btn.secondary{background:transparent;color:var(--ink);box-shadow:none;border:1px solid rgba(0,0,0,0.08);font-weight:600}
-
-/* 占卜畫面 */
-.divination {
-  position:relative;
-  min-height:360px;
-  border-radius:10px;
-  overflow:hidden;
-  padding:18px;
-  display:none;
-  align-items:stretch;
-  justify-content:center;
-  transition: opacity .5s ease;
-}
-.divination.show{display:flex;opacity:1;}
-
-/* 占卜背景圖層 div-bg 的處理 */
-.div-bg {
-  position: absolute;
-  inset: 0;
-
-  /* 如果你想保留背景圖做為整體背景，就讓這裡透明，或移除這層背景 */
+/* 🔹 首頁（QR Code 區） */
+.panel,
+.qr {
   background: none !important;
-
-  z-index: 0;  /* 背後層 */
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
 }
-.div-inner { position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:12px;width:100%; }
+.qr-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.qr img {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  border: none !important;
+  box-shadow: none !important;
+  background: none !important;
+}
+.muted {
+  color: rgba(46,34,22,0.75);
+  font-size: 0.95rem;
+}
 
+/* ===== 按鈕 ===== */
+.btn {
+  margin-top: 10px;
+  background: linear-gradient(180deg, #e9d089 0%, #b9852a 100%);
+  border: none;
+  padding: 12px 18px;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform .16s ease, box-shadow .16s ease;
+  font-size: 1rem;
+}
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(185,135,40,0.28);
+}
+.btn.secondary {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid rgba(0,0,0,0.1);
+}
 
-/* div-inner 和 magic-plate 保持透明感以便文字清楚 */
-.magic-plate {
-  background: rgba(255, 248, 232, 0.0) !important;  /* 完全透明或非常低不透明度 */
+/* ===== 占卜畫面 ===== */
+.divination {
+  display: none;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+}
+.divination.show {
+  display: flex;
+}
+.magic-plate,
+.div-bg {
+  background: none !important;
   border: none !important;
   box-shadow: none !important;
 }
-
-.carrot-thumb { width:160px;height:160px;border-radius:8px;object-fit:contain;border:3px solid rgba(165,120,50,0.08);
-  background:linear-gradient(180deg,#fff8ec,#f1e5c8);padding:8px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.12); margin:0 auto 4px auto;display:block;
+.carrot-thumb {
+  width: 160px;
+  height: 160px;
+  border: none !important;
+  box-shadow: none !important;
+  background: none !important;
+}
+.fortune {
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+.fortune strong {
+  color: var(--gold);
+}
+.advice {
+  margin-top: 6px;
+  color: rgba(46,34,22,0.85);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+.small-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 12px;
+}
+.back-home {
+  margin-top: 12px;
+  background: transparent;
+  border: none;
+  color: var(--ink);
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 0.95rem;
 }
 
-.fortune {font-size:1.02rem;color:var(--ink);margin:8px 0 0 0}
-.fortune strong{color:var(--gold);font-weight:900;font-size:1.08rem}
-.advice {margin-top:6px;color:rgba(46,34,22,0.8);font-size:0.95rem;line-height:1.45;text-align:left}
-.small-row {display:flex;gap:12px;align-items:center;justify-content:center;margin-top:12px}
-.small-row .btn{padding:8px 12px;font-size:0.92rem}
-
-.back-home { margin-top:12px;background:transparent;border:none;color:var(--ink);cursor:pointer;text-decoration:underline;font-size:0.95rem; }
-footer{margin-top:18px;font-size:0.82rem;color:rgba(46,34,22,0.6);text-align:center}
+/* ===== 頁尾 ===== */
+footer {
+  margin-top: 18px;
+  font-size: 0.82rem;
+  color: rgba(46,34,22,0.6);
+}
 </style>
 </head>
 
