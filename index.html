@@ -2,14 +2,8 @@
 <html lang="zh-TW">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>中世紀占卜祭壇 · 加入 Discord</title>
-
-<!-- PWA 設定 -->
-<link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#000000">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
 <!-- 古風字體 -->
 <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
@@ -33,28 +27,8 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-}
-
-/* ===== 橫向提示 ===== */
-.rotate-warning {
-  display: none;
-  position: fixed;
-  z-index: 9999;
-  width: 100vw;
-  height: 100vh;
-  background: #000;
-  color: #fff;
-  font-size: 1.4rem;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 20px;
-}
-@media screen and (orientation: portrait) {
-  .rotate-warning {
-    display: flex;
-  }
+  /* 移除濾鏡，確保圖片原色顯示 */
+  filter: none !important;
 }
 
 /* ===== 主要容器 ===== */
@@ -222,11 +196,6 @@ h1 {
   font-size: 0.95rem;
 }
 
-/* ===== 文字柔光陰影（提高清晰度） ===== */
-h1, .subtitle, .muted, .fortune, .advice {
-  text-shadow: 0 0 6px rgba(255,255,255,0.4);
-}
-  
 /* ===== 頁尾 ===== */
 footer {
   margin-top: 18px;
@@ -247,6 +216,9 @@ footer {
         <h1 id="title">命運之蔔 · 森林占卜祭壇</h1>
         <div class="subtitle">加入 Discord 並領取你的專屬胡蘿蔔占卜</div>
       </div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:0.86rem;color:rgba(46,34,22,0.6)">中世紀手抄本風 · 莊嚴神秘</div>
     </div>
   </header>
 
@@ -295,64 +267,6 @@ footer {
   <footer>© 命運之蔔 · 祭壇系統</footer>
 </div>
 <script>
-/ 註冊 Service Worker
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js')
-    .then(() => console.log('✅ Service Worker 已註冊'))
-    .catch((err) => console.error('❌ Service Worker 註冊失敗', err));
-}
-
-// 安裝提示
-let deferredPrompt = null;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-
-  const installBox = document.createElement('div');
-  installBox.innerHTML = `
-    <div style="
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(243,234,213,0.95);
-      border: 2px solid #b9872b;
-      padding: 14px 20px;
-      border-radius: 12px;
-      font-family: 'Uncial Antiqua', serif;
-      color: #2e2316;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      z-index: 9999;
-      text-align: center;
-    ">
-      📜 <strong>加入祭壇至主畫面</strong><br>
-      <button id="installBtn" style="
-        margin-top: 8px;
-        background: linear-gradient(180deg, #e9d089 0%, #b9852a 100%);
-        border: none;
-        padding: 8px 14px;
-        border-radius: 8px;
-        color: #fff;
-        font-weight: bold;
-        cursor: pointer;
-        font-size: 1rem;
-      ">📲 安裝</button>
-    </div>
-  `;
-  document.body.appendChild(installBox);
-
-  document.getElementById('installBtn').addEventListener('click', async () => {
-    installBox.remove();
-    deferredPrompt.prompt();
-    const result = await deferredPrompt.userChoice;
-    if (result.outcome === 'accepted') {
-      console.log('🎉 使用者已安裝祭壇');
-    } else {
-      console.log('🛑 使用者取消安裝');
-    }
-    deferredPrompt = null;
-  });
-});
 const apiUrl = "https://carrot-bot-production.up.railway.app/api/fortune";
 const userId = "657882539331158016";
 const username = "湯姆瑞斗";
