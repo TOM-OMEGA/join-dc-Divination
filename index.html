@@ -1,151 +1,220 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>中世紀占卜祭壇 · 加入 Discord</title>
-  <!-- 古風字體 -->
-  <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
-  <style>
-:root{ --paper:#f3ead5; --ink:#2e2316; --gold:#b9872b; --accent: rgba(185, 138, 42, 0.14); --max-width: 980px; }
-html,body{height:100%;margin:0;font-family:"Uncial Antiqua", serif;background:linear-gradient(180deg,#efe6cf 0%, #dbc89a 100%);color:var(--ink);} /* 羊皮紙質感區塊（中心容器） */
-.stage { box-sizing: border-box; max-width: var(--max-width); margin: 28px auto; padding: 28px; border-radius: 14px; background: /* subtle vignette */ radial-gradient(1200px 600px at 10% 10%, rgba(0,0,0,0.03), transparent 10%), linear-gradient(180deg, rgba(255,255,255,0.35), rgba(0,0,0,0.02)), var(--paper); box-shadow: 0 8px 30px rgba(0,0,0,0.18), inset 0 2px 0 rgba(255,255,255,0.25); border: 2px solid rgba(60,40,20,0.06); position: relative; overflow: hidden; }
-header{ display:flex; align-items:center; gap:12px; justify-content:space-between; margin-bottom:18px; }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>中世紀占卜祭壇 · 加入 Discord</title>
+
+<!-- 古風字體 -->
+<link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --paper:#f3ead5;
+  --ink:#2e2316;
+  --gold:#b9872b;
+  --accent: rgba(185, 138, 42, 0.14);
+  --max-width: 980px;
+}
+
+/* ===== 全頁背景 ===== */
+html, body{
+  height:100%;
+  margin:0;
+  font-family:"Uncial Antiqua", serif;
+  color:var(--ink);
+  background: linear-gradient(rgba(18,12,6,0.08), rgba(10,8,6,0.06)),
+              url('images/medieval-carrot-placeholder.jpg') center/cover no-repeat fixed;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* ===== 主要容器 ===== */
+.stage {
+  box-sizing: border-box;
+  max-width: var(--max-width);
+  width: 90%;
+  margin: auto;
+  padding: 28px;
+  border-radius: 14px;
+  background: rgba(243,234,213,0.92);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+  border: 2px solid rgba(60,40,20,0.08);
+  position: relative;
+  overflow: hidden;
+  transition: opacity .5s ease;
+}
+
+/* header */
+header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  justify-content:space-between;
+  margin-bottom:18px;
+}
 .title { display:flex; gap:12px; align-items:center; }
-.crest { width:56px;height:56px;border-radius:8px; background:linear-gradient(180deg,#f6e7c9,#e5c985); display:flex;align-items:center;justify-content:center; box-shadow: 0 3px 10px rgba(0,0,0,0.12), inset 0 -4px 8px rgba(0,0,0,0.03); border:1px solid rgba(0,0,0,0.06); }
+.crest {
+  width:56px;height:56px;border-radius:8px;
+  background:linear-gradient(180deg,#f6e7c9,#e5c985);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 3px 10px rgba(0,0,0,0.12), inset 0 -4px 8px rgba(0,0,0,0.03);
+  border:1px solid rgba(0,0,0,0.06);
+}
 .crest svg{width:34px;height:34px;fill:var(--gold);opacity:0.95}
-h1{margin:0;font-size:1.26rem;color:var(--gold);text-shadow:0 1px 0 rgba(255,255,255,0.6);letter-spacing:0.02em}
+h1{margin:0;font-size:1.26rem;color:var(--gold);text-shadow:0 1px 0 rgba(255,255,255,0.6);}
 .subtitle{font-size:0.9rem;color:rgba(46,34,22,0.8)}
+
 /* layout */
 .content { display:grid; grid-template-columns: 1fr 420px; gap:20px; align-items:start; }
 @media (max-width: 980px){ .content{grid-template-columns:1fr} }
-/* 左側：流程與說明 (卡片風) */
-.panel { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02)); padding:18px;border-radius:10px; border:1px solid rgba(0,0,0,0.03); box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+
+/* 左側：流程與說明 */
+.panel {
+  background: rgba(255,255,255,0.15);
+  padding:18px;border-radius:10px;
+  border:1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  backdrop-filter: blur(2px);
+  text-align:center;
+}
+
 .qr-wrap { display:flex;flex-direction:column;align-items:center;gap:12px; }
-/* QR 圖片（使用你提供的 Discord invite 產生 QR） */
-.qr { width:200px;height:200px;border-radius:8px; background:linear-gradient(180deg,#fff,#f7f1da); display:flex;align-items:center;justify-content:center; box-shadow: 0 8px 20px rgba(0,0,0,0.12); border:3px solid rgba(185,135,40,0.12); }
-.qr img{width:86%;height:86%;object-fit:contain;display:block;border-radius:6px}
-.muted{color:rgba(46,34,22,0.62);font-size:0.95rem}
-.btn { margin-top:10px; background: linear-gradient(180deg, #e9d089 0%, #b9852a 100%); border:none;padding:12px 18px;border-radius:10px;color:#fff;font-weight:700;cursor:pointer; box-shadow:0 6px 18px rgba(185,135,40,0.18); transition: transform .16s ease, box-shadow .16s ease, opacity .12s; font-size:1rem; }
+.qr { width:200px;height:200px;border-radius:8px;
+  background:linear-gradient(180deg,#fff,#f7f1da);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 20px rgba(0,0,0,0.12);
+  border:3px solid rgba(185,135,40,0.12);
+}
+.qr img{width:86%;height:86%;object-fit:contain;border-radius:6px}
+
+.muted{color:rgba(46,34,22,0.72);font-size:0.95rem}
+.btn {
+  margin-top:10px;
+  background: linear-gradient(180deg, #e9d089 0%, #b9852a 100%);
+  border:none;padding:12px 18px;border-radius:10px;color:#fff;font-weight:700;cursor:pointer;
+  box-shadow:0 6px 18px rgba(185,135,40,0.18);
+  transition: transform .16s ease, box-shadow .16s ease;
+  font-size:1rem;
+}
 .btn:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(185,135,40,0.28)}
-.btn.secondary{background:transparent;color:var(--ink);box-shadow:none;border:1px solid rgba(0,0,0,0.06);font-weight:600}
-/* 右側：占卜畫面（預設隱藏） */
-.divination { position:relative; min-height:360px; border-radius:10px; overflow:hidden; padding:18px; display:none; align-items:stretch; justify-content:center; }
-.divination.show{display:flex}
-/* 預留的背景圖（可替換） */
-.div-bg { position:absolute;inset:0;background-size:cover;background-position:center; filter:contrast(0.95) saturate(0.9) blur(0.18px); transform-origin:center; }
-/* 可以把 images/medieval-carrot.png 替換成你上傳的插畫 */
-.div-bg.placeholder{ background-image: linear-gradient(rgba(18,12,6,0.06), rgba(10,8,6,0.04)), url('images/medieval-carrot-placeholder.jpg'); background-blend-mode: multiply; }
+.btn.secondary{background:transparent;color:var(--ink);box-shadow:none;border:1px solid rgba(0,0,0,0.08);font-weight:600}
+
+/* 占卜畫面 */
+.divination {
+  position:relative;
+  min-height:360px;
+  border-radius:10px;
+  overflow:hidden;
+  padding:18px;
+  display:none;
+  align-items:stretch;
+  justify-content:center;
+  transition: opacity .5s ease;
+}
+.divination.show{display:flex;opacity:1;}
+
+.div-bg {
+  position:absolute;inset:0;
+  background: linear-gradient(rgba(18,12,6,0.08), rgba(10,8,6,0.06)),
+              url('images/medieval-carrot-placeholder.jpg') center/cover no-repeat;
+  filter:contrast(0.95) saturate(0.9);
+  z-index:1;
+}
 .div-inner { position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:12px;width:100%; }
-.magic-plate { width:86%;max-width:520px;border-radius:14px;padding:18px;background:rgba(255,248,232,0.9); border:1px solid rgba(165,120,50,0.12); box-shadow: 0 12px 30px rgba(0,0,0,0.12), inset 0 2px 0 rgba(255,255,255,0.6); text-align:center; }
-.carrot-thumb { width:160px;height:160px;border-radius:8px;object-fit:contain;border:3px solid rgba(165,120,50,0.08); background:linear-gradient(180deg,#fff8ec,#f1e5c8);padding:8px;box-shadow:0 10px 30px rgba(0,0,0,0.12); margin:0 auto 4px auto;display:block; }
+
+.magic-plate {
+  width:86%;max-width:520px;border-radius:14px;padding:18px;
+  background:rgba(255,248,232,0.9);
+  border:1px solid rgba(165,120,50,0.12);
+  box-shadow:0 12px 30px rgba(0,0,0,0.12);
+  text-align:center;
+}
+
+.carrot-thumb { width:160px;height:160px;border-radius:8px;object-fit:contain;border:3px solid rgba(165,120,50,0.08);
+  background:linear-gradient(180deg,#fff8ec,#f1e5c8);padding:8px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.12); margin:0 auto 4px auto;display:block;
+}
+
 .fortune {font-size:1.02rem;color:var(--ink);margin:8px 0 0 0}
 .fortune strong{color:var(--gold);font-weight:900;font-size:1.08rem}
 .advice {margin-top:6px;color:rgba(46,34,22,0.8);font-size:0.95rem;line-height:1.45;text-align:left}
 .small-row {display:flex;gap:12px;align-items:center;justify-content:center;margin-top:12px}
 .small-row .btn{padding:8px 12px;font-size:0.92rem}
-/* 返回首頁按鈕放下方 */
+
 .back-home { margin-top:12px;background:transparent;border:none;color:var(--ink);cursor:pointer;text-decoration:underline;font-size:0.95rem; }
-/* Portrait overlay： 請橫放手機 */
-.orientation-overlay { position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:9999; background: linear-gradient(180deg, rgba(6,6,6,0.45), rgba(8,8,8,0.55)); color:white; text-align:center; padding:20px; }
-.orientation-overlay.show{display:flex}
-.orientation-box{max-width:420px;padding:22px;border-radius:12px;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.06)}
-.orientation-box h2{margin:0 0 8px 0;font-size:1.1rem}
-.orientation-box p{margin:0;color:rgba(255,255,255,0.92);font-size:0.98rem}
 footer{margin-top:18px;font-size:0.82rem;color:rgba(46,34,22,0.6);text-align:center}
-  </style>
+</style>
 </head>
+
 <body>
-  <div class="stage" role="main" aria-labelledby="title">
-    <header>
-      <div class="title">
-        <div class="crest" aria-hidden="true">
-          <!-- 小徽章（純裝飾） -->
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c2.8 0 5 2.2 5 5 0 1.9-.9 3.6-2.3 4.7L12 18 9.3 11.7C7.9 10.6 7 8.9 7 7c0-2.8 2.2-5 5-5z"/></svg>
-        </div>
-        <div>
-          <h1 id="title">命運之蔔 · 森林占卜祭壇</h1>
-          <div class="subtitle">加入 Discord 並領取你的專屬胡蘿蔔占卜</div>
-        </div>
+<div class="stage" role="main" aria-labelledby="title" id="mainStage">
+  <header>
+    <div class="title">
+      <div class="crest" aria-hidden="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c2.8 0 5 2.2 5 5 0 1.9-.9 3.6-2.3 4.7L12 18 9.3 11.7C7.9 10.6 7 8.9 7 7c0-2.8 2.2-5 5-5z"/></svg>
       </div>
-      <div style="text-align:right">
-        <div style="font-size:0.86rem;color:rgba(46,34,22,0.6)">中世紀手抄本風 · 莊嚴神秘</div>
+      <div>
+        <h1 id="title">命運之蔔 · 森林占卜祭壇</h1>
+        <div class="subtitle">加入 Discord 並領取你的專屬胡蘿蔔占卜</div>
       </div>
-    </header>
-
-    <section class="content">
-      <!-- 左側：QR & 操作 -->
-      <div class="panel" id="home-panel">
-        <div style="display:flex;flex-direction:column;gap:12px">
-          <div class="qr-wrap">
-            <div class="qr" title="掃描加入 Discord">
-              <!-- QR 使用 QRServer 以你的 invite 產生（你也可以替換成本地圖片檔） -->
-              <img id="qr-img" alt="Discord QR" src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=https://discord.gg/mar4qT9XYn" />
-            </div>
-            <div class="muted">掃描或點擊 QR 加入 Discord 群組</div>
-            <a href="https://discord.gg/mar4qT9XYn" target="_blank" rel="noopener" class="btn secondary" style="margin-top:6px">打開 Discord 邀請連結</a>
-          </div>
-
-          <div style="margin-top:14px;">
-            <div style="font-weight:700;margin-bottom:8px">步驟</div>
-            <ol style="margin:0 0 8px 18px;color:rgba(46,34,22,0.8)">
-              <li>掃描上方 QR 或點擊邀請加入 Discord</li>
-              <li>完成後回到此頁按「我已加入」繼續占卜</li>
-            </ol>
-
-            <button id="joinedBtn" class="btn" title="我已加入">我已加入</button>
-          </div>
-
-          <hr style="margin:12px 0;border:none;border-top:1px dashed rgba(0,0,0,0.06)">
-
-          <div style="font-size:0.92rem;color:rgba(46,34,22,0.72)">
-            <strong>注意</strong><br>
-            你可以替換右側占卜背景圖（路徑：<code>images/medieval-carrot-placeholder.jpg</code>）與縮圖（<code>images/carrot-thumb.png</code>）。
-          </div>
-        </div>
-      </div>
-
-      <!-- 右側：占卜區（同頁切換顯示） -->
-      <div class="divination" id="divination-panel" aria-hidden="true">
-        <div class="div-bg placeholder" id="divBg" role="img" aria-label="中世紀手抄本風森林占卜背景"></div>
-        <div class="div-inner" role="region" aria-live="polite">
-          <div class="magic-plate">
-            <!-- 可替換的小縮圖（預設放在 images/carrot-thumb.png） -->
-            <img id="carrotThumb" class="carrot-thumb" src="images/carrot-thumb.png" alt="中世紀胡蘿蔔插畫（替換）" onerror="this.style.display='none'">
-
-            <div class="fortune" id="fortuneLine">按下 <strong>占卜今日運勢</strong> 來喚醒命運之蔔</div>
-            <div class="advice" id="adviceText" style="display:none"> <!-- 由 API 填入 --> </div>
-
-            <div class="small-row">
-              <button id="drawBtn" class="btn">占卜今日運勢 ✨</button>
-              <button id="backBtn" class="btn secondary">返回首頁</button>
-            </div>
-          </div>
-
-          <div style="margin-top:8px;color:rgba(46,34,22,0.6);font-size:0.88rem">占卜使用：你的 bot API（已連線）</div>
-        </div>
-      </div>
-    </section>
-
-    <footer>© 命運之蔔 · 祭壇系統</footer>
-  </div>
-
-  <!-- 直向提示遮罩（手機） -->
-  <div class="orientation-overlay" id="orientOverlay" aria-hidden="true">
-    <div class="orientation-box">
-      <h2>請將裝置橫放</h2>
-      <p>本占卜祭壇在橫向（Landscape）顯示時能呈現最佳的中世紀畫面與互動體驗。</p>
-      <p style="margin-top:8px;font-weight:700">把手機旋轉後畫面會自動切換。</p>
     </div>
-  </div>
+    <div style="text-align:right">
+      <div style="font-size:0.86rem;color:rgba(46,34,22,0.6)">中世紀手抄本風 · 莊嚴神秘</div>
+    </div>
+  </header>
 
-  <script>
-// ========== 你要用的 API 設定（保留） ==========
+  <section class="content">
+    <!-- 首頁（QR 區） -->
+    <div class="panel" id="home-panel">
+      <div class="qr-wrap">
+        <div class="qr" title="掃描加入 Discord">
+          <img id="qr-img" alt="Discord QR" src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=https://discord.gg/mar4qT9XYn" />
+        </div>
+        <div class="muted">掃描或點擊 QR 加入 Discord 群組</div>
+        <a href="https://discord.gg/mar4qT9XYn" target="_blank" rel="noopener" class="btn secondary">打開 Discord 邀請連結</a>
+      </div>
+      <div style="margin-top:14px;">
+        <div style="font-weight:700;margin-bottom:8px">步驟</div>
+        <ol style="margin:0 0 8px 18px;color:rgba(46,34,22,0.8)">
+          <li>掃描上方 QR 或點擊邀請加入 Discord</li>
+          <li>完成後回到此頁按「我已加入」繼續占卜</li>
+        </ol>
+        <button id="joinedBtn" class="btn" title="我已加入">我已加入</button>
+      </div>
+      <hr style="margin:12px 0;border:none;border-top:1px dashed rgba(0,0,0,0.06)">
+      <div style="font-size:0.92rem;color:rgba(46,34,22,0.72)">
+        <strong>注意：</strong>可替換右側占卜背景圖（<code>images/medieval-carrot-placeholder.jpg</code>）與縮圖（<code>images/carrot-thumb.png</code>）。
+      </div>
+    </div>
+
+    <!-- 占卜畫面 -->
+    <div class="divination" id="divination-panel" aria-hidden="true">
+      <div class="div-bg" id="divBg" role="img" aria-label="中世紀森林占卜背景"></div>
+      <div class="div-inner">
+        <div class="magic-plate">
+          <img id="carrotThumb" class="carrot-thumb" src="images/carrot-thumb.png" alt="胡蘿蔔插畫" onerror="this.style.display='none'">
+          <div class="fortune" id="fortuneLine">按下 <strong>占卜今日運勢</strong> 來喚醒命運之蔔</div>
+          <div class="advice" id="adviceText" style="display:none"></div>
+          <div class="small-row">
+            <button id="drawBtn" class="btn">占卜今日運勢 ✨</button>
+            <button id="backBtn" class="btn secondary">返回首頁</button>
+          </div>
+        </div>
+        <div style="margin-top:8px;color:rgba(46,34,22,0.6);font-size:0.88rem">占卜使用：你的 bot API（已連線）</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>© 命運之蔔 · 祭壇系統</footer>
+</div>
+
+<script>
 const apiUrl = "https://carrot-bot-production.up.railway.app/api/fortune";
 const userId = "657882539331158016";
 const username = "湯姆瑞斗";
 
-// DOM
 const joinedBtn = document.getElementById('joinedBtn');
 const divinationPanel = document.getElementById('divination-panel');
 const homePanel = document.getElementById('home-panel');
@@ -153,139 +222,60 @@ const drawBtn = document.getElementById('drawBtn');
 const fortuneLine = document.getElementById('fortuneLine');
 const adviceText = document.getElementById('adviceText');
 const backBtn = document.getElementById('backBtn');
-const orientOverlay = document.getElementById('orientOverlay');
 
-// 切換到占卜區（平滑）
+// 切換到占卜畫面
 joinedBtn.addEventListener('click', () => {
-  // 顯示占卜區
-  homePanel.style.transition = 'opacity .4s ease';
   homePanel.style.opacity = 0;
-  setTimeout(() => { homePanel.style.display = 'none'; }, 420);
-
-  divinationPanel.classList.add('show');
-  divinationPanel.style.opacity = 0;
-  divinationPanel.style.transition = 'opacity .5s ease';
-  setTimeout(()=> { divinationPanel.style.opacity = 1; }, 30);
-  // 檢查方向（若為 portrait 則顯示提示）
-  checkOrientation();
+  setTimeout(() => {
+    homePanel.style.display = 'none';
+    divinationPanel.classList.add('show');
+    divinationPanel.style.opacity = 0;
+    setTimeout(()=> { divinationPanel.style.opacity = 1; }, 30);
+  }, 500);
 });
 
 // 返回首頁
 backBtn.addEventListener('click', () => {
   divinationPanel.style.opacity = 0;
-  setTimeout(() => { divinationPanel.classList.remove('show'); }, 420);
-  homePanel.style.display = '';
-  setTimeout(()=> { homePanel.style.opacity = 1; }, 40);
-  orientOverlay.classList.remove('show');
+  setTimeout(() => {
+    divinationPanel.classList.remove('show');
+    homePanel.style.display = '';
+    setTimeout(()=> { homePanel.style.opacity = 1; }, 40);
+  }, 500);
 });
 
-// 占卜按鈕：呼叫你的 API 並顯示回傳
+// 占卜按鈕
 drawBtn.addEventListener('click', async () => {
   drawBtn.disabled = true;
   drawBtn.textContent = '占卜中... 🔮';
   fortuneLine.innerHTML = '占卜中... 請稍候';
   adviceText.style.display = 'none';
   try {
-    const res = await fetch(${apiUrl}?user_id=${encodeURIComponent(userId)}&username=${encodeURIComponent(username)});
+    const res = await fetch(`${apiUrl}?user_id=${encodeURIComponent(userId)}&username=${encodeURIComponent(username)}`);
     if (!res.ok) throw new Error('API 回傳錯誤');
     const data = await res.json();
-    // 畫面淡入效果
-    fortuneLine.innerHTML = 📜 占卜日期：<strong>${escapeHtml(data.date || new Date().toLocaleDateString())}</strong>;
+    fortuneLine.innerHTML = `📜 占卜日期：<strong>${escapeHtml(data.date || new Date().toLocaleDateString())}</strong>`;
     adviceText.style.display = 'block';
-    adviceText.innerHTML = <p style="margin:6px 0;"><strong style="color:var(--gold)">${escapeHtml(data.fortune || '靜默')}</strong></p>
-      <p style="margin-top:6px">${escapeHtml(data.advice || '無建議')}</p>;
+    adviceText.innerHTML = `
+      <p style="margin:6px 0;"><strong style="color:var(--gold)">${escapeHtml(data.fortune || '靜默')}</strong></p>
+      <p style="margin-top:6px">${escapeHtml(data.advice || '無建議')}</p>
+    `;
     drawBtn.textContent = '再次占卜';
   } catch (e) {
-    fortuneLine.innerHTML = '⚠️ 佔卜失敗，請稍後重試';
+    fortuneLine.innerHTML = '⚠️ 占卜失敗，請稍後重試';
     adviceText.style.display = 'block';
     adviceText.innerHTML = '<p>魔力干擾過強，無法從祭壇讀取命運。</p>';
-    console.error('占卜 API 錯誤：', e);
     drawBtn.textContent = '再試一次';
   } finally {
     drawBtn.disabled = false;
   }
 });
 
-// 簡單防 XSS 的 escape（只給 UI 顯示用）
-function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-// ===== Orientation 檢查（手機直向時提示橫放） =====
-function isPortrait() {
-  // 優先使用 matchMedia，如果不可用則用寬高判斷
-  if (window.matchMedia) {
-    return window.matchMedia('(orientation: portrait)').matches;
-  }
-  return window.innerHeight > window.innerWidth;
+function escapeHtml(s){
+  return String(s||'').replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
 }
-function checkOrientation() {
-  // 只在占卜頁顯示時才要顯示提示
-  if (!divinationPanel.classList.contains('show')) { orientOverlay.classList.remove('show'); return; }
-  if (isPortrait()) { orientOverlay.classList.add('show'); } else { orientOverlay.classList.remove('show'); }
-}
-window.addEventListener('resize', checkOrientation);
-window.addEventListener('orientationchange', checkOrientation);
-// 首次載入也檢查（若使用者直接分享占卜畫面網址）
-document.addEventListener('visibilitychange', checkOrientation);
-// 小延遲確保 layout 穩定
-setTimeout(checkOrientation, 300);
-
-// ===== 可選：預載背景/示意圖（若你還沒放圖） =====
-// 我在 CSS 中預設了 images/medieval-carrot-placeholder.jpg 與 images/carrot-thumb.png
-// 下面加入更穩定的載入策略：會嘗試幾個常見檔名、加入 cache-bust 以避開瀏覽器或 GitHub Pages 的快取，並在找不到時自動保留原本的 CSS。這段只改背景載入行為，其他功能未動。
-
-(function(){
-  const divBg = document.getElementById('divBg');
-  const thumb = document.getElementById('carrotThumb');
-
-  // 要嘗試的背景檔名（相對路徑）
-  const bgCandidates = [
-    './images/medieval-carrot-placeholder.jpg',
-    './images/medieval-carrot.jpg',
-    '/images/medieval-carrot-placeholder.jpg',
-    '/images/medieval-carrot.jpg'
-  ];
-
-  // 縮圖候選
-  const thumbCandidates = [
-    './images/carrot-thumb.png',
-    './images/carrot-thumb.jpg',
-    '/images/carrot-thumb.png',
-    '/images/carrot-thumb.jpg'
-  ];
-
-  function tryLoad(candidates, cb){
-    let i = 0;
-    function next(){
-      if(i >= candidates.length){ cb(null); return; }
-      // 加上短暫的 cache-bust 參數，這樣每次部署新圖時能較快更新
-      const url = candidates[i] + '?v=' + Date.now();
-      const img = new Image();
-      img.onload = () => cb(url);
-      img.onerror = () => { i++; setTimeout(next, 80); };
-      img.src = url;
-    }
-    next();
-  }
-
-  // 嘗試載入背景
-  tryLoad(bgCandidates, function(url){
-    if(url){
-      // 用發現到的有效圖片替換背景（保留原本的 linear-gradient 層）
-      divBg.style.backgroundImage = `linear-gradient(rgba(18,12,6,0.06), rgba(10,8,6,0.04)), url("${url}")`;
-      divBg.style.backgroundBlendMode = 'multiply';
-    }
-  });
-
-  // 嘗試載入縮圖
-  tryLoad(thumbCandidates, function(url){
-    if(url && thumb){
-      thumb.src = url;
-      thumb.style.display = '';
-      thumb.onerror = function(){ this.style.display = 'none'; };
-    }
-  });
-})();
-
-  </script>
+</script>
 </body>
 </html>
