@@ -2,8 +2,14 @@
 <html lang="zh-TW">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>中世紀占卜祭壇 · 加入 Discord</title>
+
+<!-- PWA 設定 -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
 <!-- 古風字體 -->
 <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
@@ -27,8 +33,28 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* 移除濾鏡，確保圖片原色顯示 */
-  filter: none !important;
+  overflow: hidden;
+}
+
+/* ===== 橫向提示 ===== */
+.rotate-warning {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  color: #fff;
+  font-size: 1.4rem;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+@media screen and (orientation: portrait) {
+  .rotate-warning {
+    display: flex;
+  }
 }
 
 /* ===== 主要容器 ===== */
@@ -221,9 +247,6 @@ footer {
         <h1 id="title">命運之蔔 · 森林占卜祭壇</h1>
         <div class="subtitle">加入 Discord 並領取你的專屬胡蘿蔔占卜</div>
       </div>
-    </div>
-    <div style="text-align:right">
-      <div style="font-size:0.86rem;color:rgba(46,34,22,0.6)">中世紀手抄本風 · 莊嚴神秘</div>
     </div>
   </header>
 
