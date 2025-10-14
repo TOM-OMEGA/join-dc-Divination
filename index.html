@@ -28,20 +28,21 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  filter: brightness(0.95) contrast(1.05);
+
+  /* 微調背景亮度/對比度，讓文字更清晰但不破壞風格 */
+  filter: brightness(0.92) contrast(1.05);
 }
 
-/* 取消浮水框（中央區域） */
+/* 主要的文字容器，移除浮水效果 */
 .stage {
   box-sizing: border-box;
   width: 900px;
   max-width: 95%;
   padding: 28px;
 
-  background: none; /* 取消浮水底 */
-  border: none; /* 移除邊框 */
-  box-shadow: none; /* 移除陰影 */
-  backdrop-filter: none; /* 取消模糊效果 */
+  background: none !important;  /* 完全透明，移除半透明底 */
+  border: none !important;      /* 移除邊框 */
+  box-shadow: none !important;   /* 移除陰影 */
 
   position: relative;
   transition: opacity .5s ease;
@@ -50,6 +51,7 @@ html, body {
   justify-content: center;
   align-items: center;
 }
+
 
 /* header */
 header{
@@ -126,21 +128,24 @@ h1{margin:0;font-size:1.26rem;color:var(--gold);text-shadow:0 1px 0 rgba(255,255
 }
 .divination.show{display:flex;opacity:1;}
 
+/* 占卜背景圖層 div-bg 的處理 */
 .div-bg {
-  position:absolute;inset:0;
-  background: linear-gradient(rgba(18,12,6,0.08), rgba(10,8,6,0.06)),
-              url('images/medieval-carrot-placeholder.jpg') center/cover no-repeat;
-  filter:contrast(0.95) saturate(0.9);
-  z-index:1;
+  position: absolute;
+  inset: 0;
+
+  /* 如果你想保留背景圖做為整體背景，就讓這裡透明，或移除這層背景 */
+  background: none !important;
+
+  z-index: 0;  /* 背後層 */
 }
 .div-inner { position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:12px;width:100%; }
 
+
+/* div-inner 和 magic-plate 保持透明感以便文字清楚 */
 .magic-plate {
-  width:86%;max-width:520px;border-radius:14px;padding:18px;
-  background:rgba(255,248,232,0.9);
-  border:1px solid rgba(165,120,50,0.12);
-  box-shadow:0 12px 30px rgba(0,0,0,0.12);
-  text-align:center;
+  background: rgba(255, 248, 232, 0.0) !important;  /* 完全透明或非常低不透明度 */
+  border: none !important;
+  box-shadow: none !important;
 }
 
 .carrot-thumb { width:160px;height:160px;border-radius:8px;object-fit:contain;border:3px solid rgba(165,120,50,0.08);
