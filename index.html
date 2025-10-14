@@ -64,7 +64,6 @@
 
     .subtitle{font-size:0.9rem;color:rgba(46,34,22,0.8)}
 
-    /* layout */
     .content {
       display:grid;
       grid-template-columns: 1fr 420px;
@@ -76,7 +75,6 @@
       .content{grid-template-columns:1fr}
     }
 
-    /* 左側：流程與說明 (卡片風) */
     .panel {
       background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
       padding:18px;border-radius:10px;
@@ -88,7 +86,6 @@
       display:flex;flex-direction:column;align-items:center;gap:12px;
     }
 
-    /* QR 圖片 */
     .qr {
       width:200px;height:200px;border-radius:8px;
       background:linear-gradient(180deg,#fff,#f7f1da);
@@ -111,7 +108,6 @@
     .btn:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(185,135,40,0.28)}
     .btn.secondary{background:transparent;color:var(--ink);box-shadow:none;border:1px solid rgba(0,0,0,0.06);font-weight:600}
 
-    /* 右側：占卜畫面（預設隱藏） */
     .divination {
       position:relative;
       min-height:360px;
@@ -125,19 +121,13 @@
 
     .divination.show{display:flex}
 
-    /* 預留的背景圖（替換並加版本號避免快取） */
     .div-bg {
       position:absolute;inset:0;background-size:cover;background-position:center;
       filter:contrast(0.95) saturate(0.9) blur(0.18px);
       transform-origin:center;
-    }
-
-    .div-bg.placeholder {
       background-image:
         linear-gradient(rgba(18,12,6,0.06), rgba(10,8,6,0.04)),
         url('./images/medieval-carrot-placeholder.jpg?v=2');
-      background-size: cover;
-      background-position: center;
       background-blend-mode: multiply;
     }
 
@@ -170,22 +160,61 @@
       margin-top:12px;background:transparent;border:none;color:var(--ink);cursor:pointer;text-decoration:underline;font-size:0.95rem;
     }
 
-    /* 直向提示遮罩（手機） */
-    .orientation-overlay {
-      position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:9999;
-      background: linear-gradient(180deg, rgba(6,6,6,0.45), rgba(8,8,8,0.55));
-      color:white; text-align:center; padding:20px;
-    }
-    .orientation-overlay.show{display:flex}
-    .orientation-box{max-width:420px;padding:22px;border-radius:12px;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.06)}
-    .orientation-box h2{margin:0 0 8px 0;font-size:1.1rem}
-    .orientation-box p{margin:0;color:rgba(255,255,255,0.92);font-size:0.98rem}
-
     footer{margin-top:18px;font-size:0.82rem;color:rgba(46,34,22,0.6);text-align:center}
   </style>
 </head>
 <body>
-  <!-- 其餘部分不變 -->
-  ...（保持原內容）
+  <div class="stage">
+    <header>
+      <div class="title">
+        <div class="crest">
+          <svg viewBox="0 0 512 512">
+            <path d="M256 32l64 128h128l-104 96 40 128-104-80-104 80 40-128-104-96h128z"/>
+          </svg>
+        </div>
+        <div>
+          <h1>中世紀占卜祭壇</h1>
+          <div class="subtitle">加入 Discord，啟動命運占卜儀式 ✨</div>
+        </div>
+      </div>
+    </header>
+
+    <div class="content">
+      <!-- 左側 -->
+      <div class="panel">
+        <div class="qr-wrap">
+          <div class="qr"><img src="./images/qrcode.png" alt="Discord QR Code"></div>
+          <p class="muted">掃描上方 QR Code 或點擊下方按鈕，加入我們的 Discord。</p>
+          <button class="btn" onclick="showDivination()">啟動占卜儀式 ✨</button>
+        </div>
+      </div>
+
+      <!-- 右側：占卜畫面 -->
+      <div class="divination" id="divination">
+        <div class="div-bg" id="divBg"></div>
+        <div class="div-inner">
+          <div class="magic-plate">
+            <img class="carrot-thumb" src="./images/carrot.png" alt="carrot">
+            <p class="fortune">🌿 今日運勢：<strong>吉祥如意</strong></p>
+            <p class="advice">命運的風將為你帶來驚喜，願你勇敢前行。</p>
+            <div class="small-row">
+              <button class="btn secondary" onclick="backHome()">返回聖堂</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>© 2025 Divination Altar</footer>
+  </div>
+
+  <script>
+    function showDivination() {
+      document.getElementById('divination').classList.add('show');
+    }
+    function backHome() {
+      document.getElementById('divination').classList.remove('show');
+    }
+  </script>
 </body>
 </html>
