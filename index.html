@@ -16,7 +16,29 @@
   --accent: rgba(185, 138, 42, 0.14);
   --max-width: 980px;
 }
+/* 🔹 首頁 QR Code 區塊完全去除浮框與陰影 */
+.stage, .card, .magic-plate {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
 
+/* 🔹 如果 QR code 有自己的框（例如 qrcode-container），一併清掉 */
+.qrcode-container, .qrcode-box {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+/* 🔹 若還有微透明底，這行可確保文字直接貼背景 */
+html, body {
+  background: url('images/medieval-carrot-placeholder.jpg') no-repeat center center fixed;
+  background-size: cover;
+  filter: brightness(0.92) contrast(1.05);
+}
+  
 /* ===== 全頁背景 ===== */
 html, body {
   height: 100%;
