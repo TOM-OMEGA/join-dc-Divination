@@ -1,19 +1,12 @@
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open('divination-cache-v1').then(cache => {
+    caches.open('divination-v1').then(cache => {
       return cache.addAll([
-        '/',
-        '/index.html',
-        '/manifest.json',
-        '/images/medieval-carrot-placeholder.jpg',
-        '/images/carrot-thumb.png'
+        '/join-dc-Divination/',
+        '/join-dc-Divination/index.html',
+        '/join-dc-Divination/manifest.json',
+        '/join-dc-Divination/images/medieval-carrot-placeholder.jpg'
       ]);
     })
-  );
-});
-
-self.addEventListener('fetch', e => {
-  e.respondWith(
-    caches.match(e.request).then(resp => resp || fetch(e.request))
   );
 });
