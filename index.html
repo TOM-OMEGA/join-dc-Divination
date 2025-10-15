@@ -78,7 +78,27 @@ h1 {
   color: rgba(46,34,22,0.8);
 }
 
-/* ===== 按鈕 ===== */
+/* ===== QR 區 & 大小固定 ===== */
+.qr-wrap { display:flex; flex-direction:column; align-items:center; gap:12px; }
+.qr {
+  width: 200px;
+  height: 200px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:8px;
+  overflow:hidden;
+  background: rgba(255,255,255,0.02);
+}
+.qr img {
+  width: 180px;   /* <-- 固定大小，避免變超大 */
+  height: 180px;
+  object-fit:contain;
+  display:block;
+  border-radius:6px;
+}
+
+/* ===== 按鈕（統一樣式） ===== */
 .btn {
   margin-top: 10px;
   background: linear-gradient(180deg, #e9d089 0%, #b9852a 100%);
@@ -108,10 +128,12 @@ h1 {
 .carrot-thumb {
   width: 160px;
   height: 160px;
+  object-fit: contain;
 }
 .fortune {
   font-size: 1.05rem;
   color: var(--ink);
+  margin-top: 6px;
 }
 .fortune strong { color: var(--gold); }
 .advice {
@@ -119,6 +141,8 @@ h1 {
   color: rgba(46,34,22,0.85);
   font-size: 0.95rem;
   line-height: 1.45;
+  text-align: left;
+  max-width: 460px;
 }
 .small-row {
   display: flex;
@@ -139,7 +163,7 @@ footer {
 <div class="stage" role="main" aria-labelledby="title" id="mainStage">
   <header>
     <div class="title">
-      <div class="crest">
+      <div class="crest" aria-hidden="true">
         <svg viewBox="0 0 24 24"><path d="M12 2c2.8 0 5 2.2 5 5 0 1.9-.9 3.6-2.3 4.7L12 18 9.3 11.7C7.9 10.6 7 8.9 7 7c0-2.8 2.2-5 5-5z"/></svg>
       </div>
       <div>
@@ -153,12 +177,14 @@ footer {
     <!-- 🏠 首頁 -->
     <div class="panel" id="home-panel">
       <div class="qr-wrap">
-        <div class="qr">
+        <div class="qr" title="掃描加入 Discord">
+          <!-- size query 不會影響顯示尺寸，因為 CSS 強制限制為 180×180 -->
           <img id="qr-img" alt="Discord QR" src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=https://discord.gg/mar4qT9XYn" />
         </div>
         <div class="muted">掃描或點擊 QR 加入 Discord 群組</div>
         <a href="https://discord.gg/mar4qT9XYn" target="_blank" rel="noopener" class="btn">打開 Discord 邀請連結</a>
       </div>
+
       <div style="margin-top:14px;">
         <div style="font-weight:700;margin-bottom:8px">步驟</div>
         <ol style="margin:0 0 8px 18px;color:rgba(46,34,22,0.8)">
@@ -200,32 +226,56 @@ const drawBtn = document.getElementById('drawBtn');
 const fortuneLine = document.getElementById('fortuneLine');
 const adviceText = document.getElementById('adviceText');
 const backBtn = document.getElementById('backBtn');
+const carrotThumb = document.getElementById('carrotThumb');
 
-// 進入占卜畫面
+// Helper: escape HTML
+function escapeHtml(s){
+  return String(s||'').replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+
+// 進入占卜畫面：在顯示前先清除任何舊狀態（確保每次都是乾淨狀態）
 joinedBtn.addEventListener('click', () => {
+  // reset UI state before showing
+  fortuneLine.innerHTML = '按下 <strong>占卜今日運勢</strong> 來喚醒命運之蔔';
+  adviceText.style.display = 'none';
+  adviceText.innerHTML = '';
+  drawBtn.disabled = false;
+  drawBtn.textContent = '占卜今日運勢 ✨';
+  if (carrotThumb) carrotThumb.style.display = ''; // show if available
+
+  // transition
   homePanel.style.opacity = 0;
   setTimeout(() => {
     homePanel.style.display = 'none';
     divinationPanel.classList.add('show');
-  }, 400);
+    // make sure aria-hidden updated
+    divinationPanel.setAttribute('aria-hidden', 'false');
+  }, 300);
 });
 
-// 返回首頁並重置
+// 返回首頁並重置所有占卜內容
 backBtn.addEventListener('click', () => {
   divinationPanel.classList.remove('show');
+  // mark aria-hidden
+  divinationPanel.setAttribute('aria-hidden', 'true');
+
   setTimeout(() => {
     homePanel.style.display = '';
     homePanel.style.opacity = 1;
 
-    // 🔄 清空占卜內容
+    // reset fields
     fortuneLine.innerHTML = '按下 <strong>占卜今日運勢</strong> 來喚醒命運之蔔';
     adviceText.style.display = 'none';
     adviceText.innerHTML = '';
     drawBtn.textContent = '占卜今日運勢 ✨';
-  }, 300);
+    drawBtn.disabled = false;
+    if (carrotThumb) carrotThumb.style.display = ''; // restore thumbnail visibility
+  }, 260);
 });
 
-// 占卜功能
+// 占卜功能（每次強制隨機）
 drawBtn.addEventListener('click', async () => {
   drawBtn.disabled = true;
   drawBtn.textContent = '占卜中... 🔮';
@@ -233,18 +283,32 @@ drawBtn.addEventListener('click', async () => {
   adviceText.style.display = 'none';
 
   try {
-    const res = await fetch(`${apiUrl}?user_id=${encodeURIComponent(userId)}&username=${encodeURIComponent(username)}&t=${Date.now()}`);
-    if (!res.ok) throw new Error('API 回傳錯誤');
-    const data = await res.json();
+    // Use force_random=true so backend will produce a fresh random
+    const url = `${apiUrl}?user_id=${encodeURIComponent(userId)}&username=${encodeURIComponent(username)}&force_random=true&t=${Date.now()}`;
 
+    // ensure not cached and log for debugging
+    console.log('🔮 呼叫占卜 API：', url);
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) throw new Error('API 回傳錯誤：' + res.status);
+
+    const data = await res.json();
+    console.log('📩 API 回傳：', data);
+
+    // show result
     fortuneLine.innerHTML = `📜 占卜時間：<strong>${new Date().toLocaleString('zh-TW')}</strong>`;
     adviceText.style.display = 'block';
     adviceText.innerHTML = `
-      <p><strong style="color:var(--gold)">${escapeHtml(data.fortune)}</strong></p>
-      <p>${escapeHtml(data.advice)}</p>
+      <p style="margin:6px 0;"><strong style="color:var(--gold)">${escapeHtml(data.fortune)}</strong></p>
+      <p style="margin-top:6px">${escapeHtml(data.advice)}</p>
     `;
     drawBtn.textContent = '再抽一次 ✨';
+
+    // if thumbnail missing, it's fine — shrink/hide handled by onerror
+    if (carrotThumb && carrotThumb.complete === false) {
+      // nothing: browser will load or onerror will hide
+    }
   } catch (err) {
+    console.error('占卜錯誤：', err);
     fortuneLine.innerHTML = '⚠️ 占卜失敗，請稍後重試';
     adviceText.style.display = 'block';
     adviceText.innerHTML = '<p>魔力干擾過強，無法從祭壇讀取命運。</p>';
@@ -254,13 +318,7 @@ drawBtn.addEventListener('click', async () => {
   }
 });
 
-function escapeHtml(s){
-  return String(s||'').replace(/[&<>"']/g, c => ({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-  }[c]));
-}
-
-// 📱 PWA
+// Service worker (PWA)
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(err => console.log('SW failed', err));
 }
