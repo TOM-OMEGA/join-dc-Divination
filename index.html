@@ -265,23 +265,36 @@ drawBtn.addEventListener('click', async () => {
   drawBtn.textContent = '占卜中... 🔮';
   fortuneLine.innerHTML = '占卜中... 請稍候';
   adviceText.style.display = 'none';
+
   try {
-    const res = await fetch(`${apiUrl}?user_id=${encodeURIComponent(userId)}&username=${encodeURIComponent(username)}`);
+    // ✅ 每次按下都重新抽籤（避免被快取）
+    const url = `${apiUrl}?user_id=${encodeURIComponent(userId)}&username=${encodeURIComponent(username)}&t=${Date.now()}`;
+    const res = await fetch(url, { cache: "no-store" });
     const data = await res.json();
-    fortuneLine.innerHTML = `📜 占卜日期：<strong>${escapeHtml(data.date)}</strong>`;
+
+    // ✅ 顯示結果
+    fortuneLine.innerHTML = `📜 占卜時間：<strong>${new Date().toLocaleString('zh-TW')}</strong>`;
     adviceText.style.display = 'block';
-    adviceText.innerHTML = `<p><strong style="color:var(--gold)">${escapeHtml(data.fortune)}</strong></p><p>${escapeHtml(data.advice)}</p>`;
-    drawBtn.textContent = '再次占卜';
-  } catch {
+    adviceText.innerHTML = `
+      <p><strong style="color:var(--gold)">${escapeHtml(data.fortune)}</strong></p>
+      <p>${escapeHtml(data.advice)}</p>
+    `;
+    drawBtn.textContent = '再抽一次 ✨';
+  } catch (err) {
+    console.error(err);
     fortuneLine.innerHTML = '⚠️ 占卜失敗，請稍後重試';
     adviceText.style.display = 'block';
     adviceText.innerHTML = '<p>魔力干擾過強，無法從祭壇讀取命運。</p>';
     drawBtn.textContent = '再試一次';
-  } finally { drawBtn.disabled = false; }
+  } finally {
+    drawBtn.disabled = false;
+  }
 });
 
 function escapeHtml(s){
-  return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  return String(s||'').replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
 }
 
 // 📱 PWA 註冊
@@ -291,5 +304,6 @@ if ('serviceWorker' in navigator) {
     .catch(err => console.log('❌ Service Worker 註冊失敗:', err));
 }
 </script>
+
 </body>
 </html>
