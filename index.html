@@ -269,7 +269,7 @@ drawBtn.addEventListener('click', async () => {
   try {
     // ✅ 每次按下都重新抽籤（避免被快取）
     const url = `${apiUrl}?user_id=${encodeURIComponent(userId)}&username=${encodeURIComponent(username)}&t=${Date.now()}`;
-    const res = await fetch(url, { cache: "no-store" });
+    const res = await fetch(`${apiUrl}?user_id=${encodeURIComponent(userId)}&username=${encodeURIComponent(username)}&force_random=true`);
     const data = await res.json();
 
     // ✅ 顯示結果
