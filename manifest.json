@@ -1,12 +1,12 @@
 {
   "name": "命運之蔔 · 森林占卜祭壇",
   "short_name": "命運之蔔",
-  "start_url": "/join-dc-Divination/index.html?t=1",
-  "scope": "/join-dc-Divination/",
+  "start_url": "index.html?t=1",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
-  "orientation": "landscape",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "images/icon-192.png",
@@ -14,13 +14,13 @@
       "type": "image/png"
     },
     {
-      "src": "images/icon-512.png",
-      "sizes": "512x512",
+      "src": "images/icon-256.png",
+      "sizes": "256x256",
       "type": "image/png"
     },
     {
-      "src": "images/icon-256.png",
-      "sizes": "256x256",
+      "src": "images/icon-512.png",
+      "sizes": "512x512",
       "type": "image/png"
     }
   ]
