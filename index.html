@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no" />
 <title>中世紀占卜祭壇 · 加入 Discord</title>
 
-<!-- 📱 PWA 全螢幕設定 -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
@@ -13,7 +12,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="命運之蔔">
 
-<!-- 古風字體 -->
 <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
 
 <style>
@@ -21,7 +19,6 @@
   --paper: #f3ead5;
   --ink: #2e2316;
   --gold: #b9872b;
-  --max-width: 980px;
 }
 
 /* ===== 全頁背景 ===== */
@@ -35,7 +32,6 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  filter: none !important;
   overflow: hidden;
 }
 
@@ -44,22 +40,11 @@ html, body {
   width: 900px;
   max-width: 95%;
   padding: 28px;
-  background: none !important;
-  border: none !important;
-  box-shadow: none !important;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-}
-
-/* 清除所有半透明層 */
-.panel, .qr, .div-bg, .magic-plate, .div-inner, .divination, .content {
-  background: none !important;
-  border: none !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  outline: none !important;
+  background: none;
 }
 
 /* ===== 頁首 ===== */
@@ -93,31 +78,6 @@ h1 {
   color: rgba(46,34,22,0.8);
 }
 
-/* ===== 內容 ===== */
-.content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-
-/* ===== 首頁 ===== */
-.qr-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
-.qr img {
-  width: 200px;
-  height: 200px;
-  object-fit: contain;
-}
-.muted {
-  color: rgba(46,34,22,0.75);
-  font-size: 0.95rem;
-}
-
 /* ===== 按鈕 ===== */
 .btn {
   margin-top: 10px;
@@ -135,16 +95,10 @@ h1 {
   transform: translateY(-3px);
   box-shadow: 0 8px 20px rgba(185,135,40,0.28);
 }
-.btn.secondary {
-  background: transparent;
-  color: var(--ink);
-  border: 1px solid rgba(0,0,0,0.1);
-}
 
 /* ===== 占卜畫面 ===== */
 .divination {
   display: none;
-  position: relative;
   align-items: center;
   justify-content: center;
 }
@@ -185,8 +139,8 @@ footer {
 <div class="stage" role="main" aria-labelledby="title" id="mainStage">
   <header>
     <div class="title">
-      <div class="crest" aria-hidden="true">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c2.8 0 5 2.2 5 5 0 1.9-.9 3.6-2.3 4.7L12 18 9.3 11.7C7.9 10.6 7 8.9 7 7c0-2.8 2.2-5 5-5z"/></svg>
+      <div class="crest">
+        <svg viewBox="0 0 24 24"><path d="M12 2c2.8 0 5 2.2 5 5 0 1.9-.9 3.6-2.3 4.7L12 18 9.3 11.7C7.9 10.6 7 8.9 7 7c0-2.8 2.2-5 5-5z"/></svg>
       </div>
       <div>
         <h1 id="title">命運之蔔 · 森林占卜祭壇</h1>
@@ -199,11 +153,11 @@ footer {
     <!-- 🏠 首頁 -->
     <div class="panel" id="home-panel">
       <div class="qr-wrap">
-        <div class="qr" title="掃描加入 Discord">
+        <div class="qr">
           <img id="qr-img" alt="Discord QR" src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=https://discord.gg/mar4qT9XYn" />
         </div>
         <div class="muted">掃描或點擊 QR 加入 Discord 群組</div>
-        <a href="https://discord.gg/mar4qT9XYn" target="_blank" rel="noopener" class="btn secondary">打開 Discord 邀請連結</a>
+        <a href="https://discord.gg/mar4qT9XYn" target="_blank" rel="noopener" class="btn">打開 Discord 邀請連結</a>
       </div>
       <div style="margin-top:14px;">
         <div style="font-weight:700;margin-bottom:8px">步驟</div>
@@ -224,7 +178,7 @@ footer {
           <div class="advice" id="adviceText" style="display:none"></div>
           <div class="small-row">
             <button id="drawBtn" class="btn">占卜今日運勢 ✨</button>
-            <button id="backBtn" class="btn secondary">返回首頁</button>
+            <button id="backBtn" class="btn">返回首頁</button>
           </div>
         </div>
       </div>
@@ -247,19 +201,31 @@ const fortuneLine = document.getElementById('fortuneLine');
 const adviceText = document.getElementById('adviceText');
 const backBtn = document.getElementById('backBtn');
 
+// 進入占卜畫面
 joinedBtn.addEventListener('click', () => {
   homePanel.style.opacity = 0;
   setTimeout(() => {
     homePanel.style.display = 'none';
     divinationPanel.classList.add('show');
-  }, 500);
+  }, 400);
 });
 
+// 返回首頁並重置
 backBtn.addEventListener('click', () => {
   divinationPanel.classList.remove('show');
-  setTimeout(() => { homePanel.style.display = ''; homePanel.style.opacity = 1; }, 300);
+  setTimeout(() => {
+    homePanel.style.display = '';
+    homePanel.style.opacity = 1;
+
+    // 🔄 清空占卜內容
+    fortuneLine.innerHTML = '按下 <strong>占卜今日運勢</strong> 來喚醒命運之蔔';
+    adviceText.style.display = 'none';
+    adviceText.innerHTML = '';
+    drawBtn.textContent = '占卜今日運勢 ✨';
+  }, 300);
 });
 
+// 占卜功能
 drawBtn.addEventListener('click', async () => {
   drawBtn.disabled = true;
   drawBtn.textContent = '占卜中... 🔮';
@@ -267,12 +233,10 @@ drawBtn.addEventListener('click', async () => {
   adviceText.style.display = 'none';
 
   try {
-    // ✅ 每次按下都重新抽籤（避免被快取）
-    const url = `${apiUrl}?user_id=${encodeURIComponent(userId)}&username=${encodeURIComponent(username)}&t=${Date.now()}`;
-    const res = await fetch(`${apiUrl}?user_id=${encodeURIComponent(userId)}&username=${encodeURIComponent(username)}&force_random=true`);
+    const res = await fetch(`${apiUrl}?user_id=${encodeURIComponent(userId)}&username=${encodeURIComponent(username)}&t=${Date.now()}`);
+    if (!res.ok) throw new Error('API 回傳錯誤');
     const data = await res.json();
 
-    // ✅ 顯示結果
     fortuneLine.innerHTML = `📜 占卜時間：<strong>${new Date().toLocaleString('zh-TW')}</strong>`;
     adviceText.style.display = 'block';
     adviceText.innerHTML = `
@@ -281,7 +245,6 @@ drawBtn.addEventListener('click', async () => {
     `;
     drawBtn.textContent = '再抽一次 ✨';
   } catch (err) {
-    console.error(err);
     fortuneLine.innerHTML = '⚠️ 占卜失敗，請稍後重試';
     adviceText.style.display = 'block';
     adviceText.innerHTML = '<p>魔力干擾過強，無法從祭壇讀取命運。</p>';
@@ -297,11 +260,9 @@ function escapeHtml(s){
   }[c]));
 }
 
-// 📱 PWA 註冊
+// 📱 PWA
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js')
-    .then(() => console.log('✅ Service Worker 已啟動'))
-    .catch(err => console.log('❌ Service Worker 註冊失敗:', err));
+  navigator.serviceWorker.register('sw.js').catch(err => console.log('SW failed', err));
 }
 </script>
 
