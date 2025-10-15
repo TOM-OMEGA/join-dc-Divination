@@ -16,11 +16,6 @@
   --max-width: 980px;
 }
 
-h1, h2, h3 {
-  letter-spacing: 1px;
-  text-shadow: 0 0 3px rgba(255,255,230,0.3);
-}
-  
 /* ===== 全頁背景 ===== */
 html, body {
   height: 100%;
@@ -107,14 +102,14 @@ h1 {
   backdrop-filter: none !important;
 }
 .qr-wrap {
-  background: rgba(255, 255, 255, 0.5); /* 可移除，若想保留紙張感 */
-  padding: 12px;
-  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 }
 .qr img {
-  width: 180px;
-  max-width: 60%;
-  height: auto;
+  width: 200px;
+  height: 200px;
   object-fit: contain;
   border: none !important;
   box-shadow: none !important;
@@ -143,9 +138,9 @@ h1 {
   box-shadow: 0 8px 20px rgba(185,135,40,0.28);
 }
 .btn.secondary {
-  background: linear-gradient(180deg, #f0e7c0 0%, #c8ae6a 100%);
+  background: transparent;
   color: var(--ink);
-  border: 1px solid rgba(0,0,0,0.06);
+  border: 1px solid rgba(0,0,0,0.1);
 }
 
 /* ===== 占卜畫面 ===== */
@@ -304,55 +299,25 @@ backBtn.addEventListener('click', () => {
 
 // 占卜按鈕
 drawBtn.addEventListener('click', async () => {
-  // 按鈕鎖定避免重複點擊
   drawBtn.disabled = true;
   drawBtn.textContent = '占卜中... 🔮';
   fortuneLine.innerHTML = '占卜中... 請稍候';
   adviceText.style.display = 'none';
-
   try {
-    // 構造請求 URL
-    const url = `${apiUrl}?user_id=${encodeURIComponent(userId)}&username=${encodeURIComponent(username)}`;
-    console.log('🔮 呼叫占卜 API：', url);
-
-    // 發送請求
-    const res = await fetch(url, { cache: 'no-cache' });
-
-    // 處理非 200 回應
-    if (!res.ok) {
-      throw new Error(`API 回傳錯誤狀態碼：${res.status}`);
-    }
-
-    // 嘗試解析 JSON
-    const data = await res.json().catch(() => {
-      throw new Error('API 回傳非 JSON 格式');
-    });
-
-    console.log('📩 API 回傳資料：', data);
-
-    // 讀取結果
-    const fortune = data.fortune?.trim() || '靜默';
-    const advice = data.advice?.trim() || '命運之聲今日未語。';
-    const date = data.date || new Date().toLocaleDateString();
-
-    // 顯示結果
-    fortuneLine.innerHTML = `📜 占卜日期：<strong>${escapeHtml(date)}</strong>`;
+    const res = await fetch(`${apiUrl}?user_id=${encodeURIComponent(userId)}&username=${encodeURIComponent(username)}`);
+    if (!res.ok) throw new Error('API 回傳錯誤');
+    const data = await res.json();
+    fortuneLine.innerHTML = `📜 占卜日期：<strong>${escapeHtml(data.date || new Date().toLocaleDateString())}</strong>`;
     adviceText.style.display = 'block';
     adviceText.innerHTML = `
-      <p style="margin:6px 0;"><strong style="color:var(--gold)">${escapeHtml(fortune)}</strong></p>
-      <p style="margin-top:6px">${escapeHtml(advice)}</p>
+      <p style="margin:6px 0;"><strong style="color:var(--gold)">${escapeHtml(data.fortune || '靜默')}</strong></p>
+      <p style="margin-top:6px">${escapeHtml(data.advice || '無建議')}</p>
     `;
-
     drawBtn.textContent = '再次占卜';
-
   } catch (e) {
-    console.error('❌ 占卜錯誤：', e);
     fortuneLine.innerHTML = '⚠️ 占卜失敗，請稍後重試';
     adviceText.style.display = 'block';
-    adviceText.innerHTML = `
-      <p>魔力干擾過強，無法從祭壇讀取命運。</p>
-      <p style="font-size:0.9em;color:#a88">錯誤：${escapeHtml(e.message)}</p>
-    `;
+    adviceText.innerHTML = '<p>魔力干擾過強，無法從祭壇讀取命運。</p>';
     drawBtn.textContent = '再試一次';
   } finally {
     drawBtn.disabled = false;
