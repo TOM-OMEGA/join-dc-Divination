@@ -1,7 +1,8 @@
-const CACHE_NAME = 'divination-v4'; // ⚡ 更新版本號
+const CACHE_NAME = 'divination-v5'; // ⚡ 更新版本號（每次改要加1）
 const urlsToCache = [
   '/join-dc-Divination/',
   '/join-dc-Divination/index.html',
+  '/join-dc-Divination/manifest.json',
   '/join-dc-Divination/images/medieval-carrot-placeholder.jpg',
   '/join-dc-Divination/images/carrot-thumb.png',
   '/join-dc-Divination/images/icon-192.png',
@@ -44,15 +45,13 @@ self.addEventListener('fetch', e => {
 
   // 🚫 跳過 manifest、API、或非 GET 請求
   if (
-    url.includes('manifest.json') ||
     url.includes('api') ||
     e.request.method !== 'GET'
   ) {
     console.log('Service Worker: 跳過網路請求', url);
-    return; // 不干涉，直接交給瀏覽器處理
+    return;
   }
 
-  // ✅ 一般快取邏輯
   e.respondWith(
     caches.match(e.request, { ignoreSearch: true }).then(response => {
       if (response) {
@@ -60,7 +59,6 @@ self.addEventListener('fetch', e => {
         return response;
       }
       return fetch(e.request).then(networkResponse => {
-        // 僅快取成功回應
         if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
           return networkResponse;
         }
@@ -71,8 +69,6 @@ self.addEventListener('fetch', e => {
       });
     }).catch(err => {
       console.warn('Service Worker: 離線且無快取', url, err);
-      // 這裡可加上預設離線頁
-      // return caches.match('/join-dc-Divination/offline.html');
     })
   );
 });
