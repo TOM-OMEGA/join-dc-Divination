@@ -37,8 +37,8 @@ html, body {
   padding: 0 !important;
   font-family: "Uncial Antiqua", serif;
   background: url('images/medieval-carrot-placeholder.jpg') no-repeat center center;
-  background-size: cover;
-  background-attachment: fixed;
+  background-size: contain; /* ✅ 改成 contain 才不會被裁掉 */
+  background-color: #000;
   color: var(--ink);
   display: flex;
   flex-direction: column;
@@ -50,97 +50,76 @@ html, body {
   user-select: none;
 }
 
-/* 強制覆蓋瀏覽器預設的 margin */
-body {
-  background-color: transparent;
-}
-
-/* 防止縮放與拖曳 */
-* {
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* ===== 主要容器 ===== */
+/* ===== 主舞台縮放 ===== */
 .stage {
-  width: 800px;
-  max-width: 90%;
-  padding: 20px 40px;
-  margin: 0 auto;
+  width: 90vw;
+  max-width: 700px;
+  transform: scale(0.85); /* ✅ 整體縮小 */
+  transform-origin: center;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  background: none;
-  position: relative;
-  z-index: 1;
 }
 
-/* ===== 內容置中微調 ===== */
-.content {
-  transform: translateY(5vh);
-}
-
-/* ===== 頁首 ===== */
-header {
+/* ===== QR 區縮小 ===== */
+.qr-wrap {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 18px;
+  gap: 8px;
 }
-.title { display: flex; gap: 12px; align-items: center; }
-.crest {
-  width: 56px;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.crest svg {
-  width: 36px;
-  height: 36px;
-  fill: var(--gold);
-}
-h1 {
-  margin: 0;
-  font-size: 1.4rem;
-  color: var(--gold);
-  text-shadow: 0 0 4px rgba(0,0,0,0.1);
-}
-.subtitle {
-  font-size: 0.9rem;
-  color: rgba(46,34,22,0.8);
-}
-
-/* ===== QR 區 ===== */
-.qr-wrap { display:flex; flex-direction:column; align-items:center; gap:12px; }
 .qr {
-  width: 160px;
-  height: 160px;
+  width: 120px;
+  height: 120px;
   background: rgba(255,255,255,0.05);
   border-radius: 8px;
 }
 .qr img {
-  width: 150px;
-  height: 150px;
+  width: 110px;
+  height: 110px;
 }
 
-/* ===== 按鈕 ===== */
+/* ===== 字型與內容排版 ===== */
+h1 {
+  font-size: 1.1rem;
+  color: var(--gold);
+  margin: 0;
+}
+.subtitle {
+  font-size: 0.8rem;
+  color: rgba(46,34,22,0.8);
+}
+ol {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* ===== 按鈕縮小 ===== */
 .btn {
-  margin-top: 10px;
+  margin-top: 8px;
   background: linear-gradient(180deg, #e9d089 0%, #b9852a 100%);
   border: none;
-  padding: 12px 18px;
-  border-radius: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
   color: #fff;
   font-weight: 700;
+  font-size: 0.9rem;
   cursor: pointer;
   transition: transform .16s ease, box-shadow .16s ease;
-  font-size: 1rem;
 }
 .btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(185,135,40,0.28);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(185,135,40,0.28);
+}
+
+/* ===== 底部 ===== */
+footer {
+  margin-top: 8px;
+  font-size: 0.75rem;
+  color: rgba(46,34,22,0.6);
 }
 
 /* ===== 占卜畫面 ===== */
