@@ -3,11 +3,14 @@
 <head>
 <meta charset="utf-8" />
 <title>中世紀占卜祭壇 · 加入 Discord</title>
+
+<!-- 🧿 網站圖示 -->
 <link rel="icon" href="images/favicon.ico" type="image/x-icon">
-  
-<!-- ✅ 行動裝置與 PWA 設定 -->
+<link rel="apple-touch-icon" href="images/icon-192.png">
+
+<!-- ✅ PWA 與行動裝置設定 -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, orientation=landscape">
-<link rel="manifest" href="/join-dc-Divination/manifest.json">
+<link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -19,7 +22,6 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
 
-  
 <style>
 :root {
   --paper: #f3ead5;
@@ -50,8 +52,6 @@ html, body {
 
 /* 強制覆蓋瀏覽器預設的 margin */
 body {
-  margin: 0 !important;
-  padding: 0 !important;
   background-color: transparent;
 }
 
@@ -63,14 +63,22 @@ body {
 
 /* ===== 主要容器 ===== */
 .stage {
-  width: 900px;
-  max-width: 95%;
-  padding: 28px;
+  width: 800px;
+  max-width: 90%;
+  padding: 20px 40px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   background: none;
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== 內容置中微調 ===== */
+.content {
+  transform: translateY(5vh);
 }
 
 /* ===== 頁首 ===== */
@@ -107,21 +115,14 @@ h1 {
 /* ===== QR 區 ===== */
 .qr-wrap { display:flex; flex-direction:column; align-items:center; gap:12px; }
 .qr {
-  width: 200px;
-  height: 200px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-radius:8px;
-  overflow:hidden;
-  background: rgba(255,255,255,0.02);
+  width: 160px;
+  height: 160px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
 }
 .qr img {
-  width: 180px;
-  height: 180px;
-  object-fit:contain;
-  display:block;
-  border-radius:6px;
+  width: 150px;
+  height: 150px;
 }
 
 /* ===== 按鈕 ===== */
@@ -337,7 +338,7 @@ installBtn.addEventListener('click', async () => {
 // ===== ✅ Service Worker 註冊 =====
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/join-dc-Divination/sw.js')
+    navigator.serviceWorker.register('./sw.js')
       .then(reg => console.log('✅ SW 註冊成功:', reg.scope))
       .catch(err => console.log('❌ SW 註冊失敗:', err));
   });
