@@ -78,19 +78,22 @@ h1, .subtitle, .btn, .fortune, .advice, footer {
   letter-spacing: 1px;
 }
 
-/* ===== 標題、按鈕 ===== */
-h1 {
-  font-size: 1.3rem;
+/* ===== 首頁標題與副標題 ===== */
+#page1 h1 {
+  font-size: clamp(1.6rem, 6vw, 2rem);
   color: var(--gold);
   margin-bottom: 1rem;
   text-align: center;
   text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
 }
-.subtitle {
-  font-size: 0.9rem;
+
+#page1 .subtitle {
+  font-size: clamp(1rem, 4vw, 1.3rem);
   color: rgba(46,34,22,0.8);
   text-align: center;
 }
+
+/* ===== 按鈕 ===== */
 .btn {
   background: linear-gradient(180deg, #e9d089 0%, #b9852a 100%);
   border: none;
@@ -98,7 +101,7 @@ h1 {
   border-radius: 8px;
   color: #fff;
   font-weight: 400;
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 3vw, 1rem);
   letter-spacing: 1px;
   cursor: pointer;
   margin-top: 12px;
@@ -108,6 +111,7 @@ h1 {
   transform: translateY(-2px);
   box-shadow: 0 6px 14px rgba(185,135,40,0.28);
 }
+
 footer {
   position: absolute;
   bottom: 8px;
@@ -137,22 +141,25 @@ footer {
   text-align: center;
 }
 .carrot-thumb {
-  width: 150px;
-  height: 150px;
+  width: clamp(120px, 20vw, 150px);
+  height: clamp(120px, 20vw, 150px);
   object-fit: contain;
 }
 .fortune {
-  font-size: 1rem;
+  font-size: clamp(1rem, 4vw, 1.3rem);
   color: var(--ink);
   margin-top: 10px;
 }
-.fortune strong { color: var(--gold); }
+.fortune strong {
+  color: var(--gold);
+}
 .advice {
-  margin-top: 8px;
-  color: rgba(46,34,22,0.85);
-  font-size: 0.95rem;
-  line-height: 1.45;
-  max-width: 460px;
+  margin-top: 10px;
+  color: rgba(46,34,22,0.9);
+  font-size: clamp(0.9rem, 3.5vw, 1.2rem);
+  line-height: 1.5;
+  max-width: 480px;
+  text-shadow: 0 1px 1px rgba(255,255,255,0.2);
 }
 
 /* ===== 淡入淡出動畫 ===== */
@@ -206,7 +213,7 @@ const apiUrl = "https://carrot-bot-production.up.railway.app/api/web_fortune";
 const userId = "657882539331158016";
 const username = "湯姆瑞斗";
 
-// ===== 分頁切換（含動畫） =====
+// ===== 分頁切換 =====
 function transitionPage(currentId, nextId) {
   const current = document.getElementById(currentId);
   const next = document.getElementById(nextId);
