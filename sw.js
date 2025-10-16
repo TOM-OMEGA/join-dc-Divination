@@ -1,4 +1,4 @@
-const CACHE_NAME = 'divination-v3'; // ⚡ 更新版本號
+const CACHE_NAME = 'divination-v4'; // ⚡ 更新版本號
 const urlsToCache = [
   '/join-dc-Divination/',
   '/join-dc-Divination/index.html',
