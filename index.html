@@ -297,22 +297,16 @@ drawBtn.addEventListener('click', async () => {
   }
 });
 
-// ===== ✅ Service Worker 註冊 =====
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js')
-  .then(() => console.log('✅ SW 註冊成功'))
-  .catch(err => console.log('❌ SW failed', err));
-}
-
 // ===== 📲 PWA 安裝提示（手機可見） =====
 let deferredPrompt;
+const installBtn = document.getElementById('installBtn');
 
 // 當瀏覽器偵測到 PWA 可安裝時
 window.addEventListener('beforeinstallprompt', (e) => {
+  console.log('📲 beforeinstallprompt 被觸發');
   e.preventDefault();
   deferredPrompt = e;
-  console.log('📲 beforeinstallprompt 被觸發');
-  
+
   // 顯示安裝按鈕
   installBtn.style.display = 'inline-block';
 });
@@ -325,20 +319,24 @@ installBtn.addEventListener('click', async () => {
   }
   deferredPrompt.prompt();
   const { outcome } = await deferredPrompt.userChoice;
-  console.log('PWA 安裝結果：', outcome);
+  console.log('✅ 使用者選擇：', outcome);
   deferredPrompt = null;
   installBtn.style.display = 'none';
 });
 
-// ===== 🔄 額外保險：在頁面互動後再次檢查 =====
-window.addEventListener('load', async () => {
-  // 若安裝按鈕尚未出現，嘗試重新喚起事件
-  if ('getInstalledRelatedApps' in navigator) {
-    const related = await navigator.getInstalledRelatedApps();
-    if (related.length === 0) {
-      console.log('🕵️ 嘗試等待 beforeinstallprompt');
-    }
-  }
+// ===== ✅ Service Worker 註冊 =====
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then((reg) => console.log('✅ SW 註冊成功:', reg.scope))
+      .catch((err) => console.log('❌ SW 註冊失敗:', err));
+  });
+}
+
+// ===== 🔍 額外檢查（保險） =====
+window.addEventListener('appinstalled', () => {
+  console.log('🎉 App 已成功安裝！');
+  installBtn.style.display = 'none';
 });
 </script>
 </body>
