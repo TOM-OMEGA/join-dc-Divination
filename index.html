@@ -20,7 +20,7 @@
 <meta name="full-screen" content="yes">
 <meta name="x5-fullscreen" content="true">
 
-<!-- 中世紀字體 -->
+<!-- 🏰 英文字體：中世紀風格 -->
 <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
 
 <style>
@@ -30,13 +30,34 @@
   --gold: #b9872b;
 }
 
+/* ===== 字體設定 ===== */
+
+/* 🎴 載入自訂中文字體 */
+@font-face {
+  font-family: 'MyChineseFont';
+  src: url('fonts/MyChineseFont.woff2') format('woff2');
+  font-display: swap;
+}
+
+/* 🏰 全站字體邏輯：
+   - 中文 → MyChineseFont
+   - 英文與數字 → Uncial Antiqua */
+body {
+  font-family: 'MyChineseFont', 'Uncial Antiqua', serif;
+}
+
+/* 只針對英文字與數字使用中世紀風格 */
+*:lang(en),
+.latin-text {
+  font-family: 'Uncial Antiqua', 'MyChineseFont', serif;
+}
+
 /* ===== 背景 ===== */
 html, body {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
-  font-family: "Uncial Antiqua", serif;
   font-weight: 400;
   letter-spacing: 0.5px;
   background: url('images/medieval-carrot-placeholder.jpg') no-repeat center center;
@@ -73,7 +94,6 @@ html, body {
 
 /* ===== 統一字體風格 ===== */
 h1, .subtitle, .btn, .fortune, .advice, footer {
-  font-family: "Uncial Antiqua", serif;
   font-weight: 400;
   letter-spacing: 1px;
 }
@@ -180,7 +200,7 @@ footer {
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
-/* ----- 只針對能量提醒的文字上色（改為和 fortune strong 同色） ----- */
+/* ===== 紫蘿蔔能量提醒上色 ===== */
 .energy-reminder span {
   color: var(--gold);
 }
