@@ -10,7 +10,7 @@
 
 <!-- ✅ PWA 與行動裝置設定 -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, orientation=landscape">
-<link rel="manifest" href="./manifest.json">
+<link rel="manifest" href="/join-dc-Divination/manifest.json">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -28,6 +28,7 @@
   --paper: #f3ead5;
   --ink: #2e2316;
   --gold: #b9872b;
+  --purple: #7A4DC3;
 }
 
 /* ===== 背景 ===== */
@@ -173,6 +174,14 @@ footer {
   transform: scale(1);
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
+
+/* ===== 顏色統一修正 ===== */
+#page2 h1 {
+  color: var(--purple);
+}
+.energy-reminder span {
+  color: var(--purple);
+}
 </style>
 </head>
 
@@ -254,7 +263,7 @@ drawBtn.addEventListener('click', async () => {
     adviceText.style.display = 'block';
     adviceText.innerHTML = `
       <p><strong style="color:var(--gold)">${escapeHtml(data.fortune)}</strong></p>
-      <p>${escapeHtml(data.advice)}</p>
+      <p class="energy-reminder">紫蘿蔔能量提醒：<span>${escapeHtml(data.advice)}</span></p>
     `;
     drawBtn.textContent = '再抽一次 ✨';
   } catch (err) {
