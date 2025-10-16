@@ -326,7 +326,7 @@ installBtn.addEventListener('click', async () => {
 // ===== ✅ Service Worker 註冊 =====
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js')
+    navigator.serviceWorker.register('/join-dc-Divination/sw.js')
       .then((reg) => console.log('✅ SW 註冊成功:', reg.scope))
       .catch((err) => console.log('❌ SW 註冊失敗:', err));
   });
