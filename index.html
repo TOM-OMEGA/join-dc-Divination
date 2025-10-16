@@ -2,22 +2,20 @@
 <html lang="zh-TW">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no" />
 <title>中世紀占卜祭壇 · 加入 Discord</title>
 
-<!-- ✅ PWA 基本設定 -->
+<!-- ✅ 行動裝置與 PWA 設定 -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, orientation=landscape">
 <link rel="manifest" href="/join-dc-Divination/manifest.json">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="命運之蔔">
-<!-- 固定橫向 -->
 <meta name="screen-orientation" content="landscape">
 <meta name="x5-orientation" content="landscape">
 <meta name="full-screen" content="yes">
 <meta name="x5-fullscreen" content="true">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
 
@@ -30,16 +28,20 @@
 
 /* ===== 全頁背景 ===== */
 html, body {
+  width: 100%;
   height: 100%;
-  margin: 0;
+  margin: 0 !important;
+  padding: 0;
   font-family: "Uncial Antiqua", serif;
-  background: url('images/medieval-carrot-placeholder.jpg') no-repeat center center fixed;
-  background-size: cover;
+  background: url('images/medieval-carrot-placeholder.jpg') center center / cover no-repeat;
   color: var(--ink);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  touch-action: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 /* ===== 主要容器 ===== */
@@ -297,25 +299,17 @@ drawBtn.addEventListener('click', async () => {
   }
 });
 
-// ===== 📲 PWA 安裝提示（手機可見） =====
+// ===== 📲 PWA 安裝提示 =====
 let deferredPrompt;
-
-// 當瀏覽器偵測到 PWA 可安裝時
 window.addEventListener('beforeinstallprompt', (e) => {
   console.log('📲 beforeinstallprompt 被觸發');
   e.preventDefault();
   deferredPrompt = e;
-
-  // 顯示安裝按鈕
   installBtn.style.display = 'inline-block';
 });
 
-// 手動點擊安裝
 installBtn.addEventListener('click', async () => {
-  if (!deferredPrompt) {
-    alert("請重新載入頁面再試。");
-    return;
-  }
+  if (!deferredPrompt) return alert("請重新載入頁面再試。");
   deferredPrompt.prompt();
   const { outcome } = await deferredPrompt.userChoice;
   console.log('✅ 使用者選擇：', outcome);
@@ -327,12 +321,11 @@ installBtn.addEventListener('click', async () => {
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/join-dc-Divination/sw.js')
-      .then((reg) => console.log('✅ SW 註冊成功:', reg.scope))
-      .catch((err) => console.log('❌ SW 註冊失敗:', err));
+      .then(reg => console.log('✅ SW 註冊成功:', reg.scope))
+      .catch(err => console.log('❌ SW 註冊失敗:', err));
   });
 }
 
-// ===== 🔍 額外檢查（保險） =====
 window.addEventListener('appinstalled', () => {
   console.log('🎉 App 已成功安裝！');
   installBtn.style.display = 'none';
