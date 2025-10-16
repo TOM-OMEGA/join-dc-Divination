@@ -233,13 +233,13 @@ const adviceText = document.getElementById('adviceText');
 const backBtn = document.getElementById('backBtn');
 const carrotThumb = document.getElementById('carrotThumb');
 
-function escapeHtml(s){
+function escapeHtml(s) {
   return String(s||'').replace(/[&<>"']/g, c => ({
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
   }[c]));
 }
 
-// 進入占卜畫面
+// ===== 首頁 → 占卜畫面 =====
 joinedBtn.addEventListener('click', () => {
   fortuneLine.innerHTML = '按下 <strong>占卜今日運勢</strong> 來喚醒命運之蔔';
   adviceText.style.display = 'none';
@@ -248,15 +248,16 @@ joinedBtn.addEventListener('click', () => {
   drawBtn.textContent = '占卜今日運勢 ✨';
   if (carrotThumb) carrotThumb.style.display = '';
 
+  homePanel.style.transition = 'opacity 0.5s ease';
   homePanel.style.opacity = 0;
   setTimeout(() => {
     homePanel.style.display = 'none';
     divinationPanel.classList.add('show');
     divinationPanel.setAttribute('aria-hidden', 'false');
-  }, 300);
+  }, 500);
 });
 
-// 返回首頁
+// ===== 返回首頁 =====
 backBtn.addEventListener('click', () => {
   divinationPanel.classList.remove('show');
   divinationPanel.setAttribute('aria-hidden', 'true');
@@ -266,7 +267,7 @@ backBtn.addEventListener('click', () => {
   }, 260);
 });
 
-// 占卜功能
+// ===== 占卜功能 =====
 drawBtn.addEventListener('click', async () => {
   drawBtn.disabled = true;
   drawBtn.textContent = '占卜中... 🔮';
@@ -296,28 +297,48 @@ drawBtn.addEventListener('click', async () => {
   }
 });
 
-// ✅ Service Worker 註冊
+// ===== ✅ Service Worker 註冊 =====
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js')
   .then(() => console.log('✅ SW 註冊成功'))
-  .catch(err => console.log('SW failed', err));
+  .catch(err => console.log('❌ SW failed', err));
 }
 
-// ✅ PWA 安裝提示
+// ===== 📲 PWA 安裝提示（手機可見） =====
 let deferredPrompt;
+
+// 當瀏覽器偵測到 PWA 可安裝時
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
+  console.log('📲 beforeinstallprompt 被觸發');
+  
+  // 顯示安裝按鈕
   installBtn.style.display = 'inline-block';
 });
 
+// 手動點擊安裝
 installBtn.addEventListener('click', async () => {
-  if (!deferredPrompt) return;
+  if (!deferredPrompt) {
+    alert("請重新載入頁面再試。");
+    return;
+  }
   deferredPrompt.prompt();
   const { outcome } = await deferredPrompt.userChoice;
   console.log('PWA 安裝結果：', outcome);
   deferredPrompt = null;
   installBtn.style.display = 'none';
+});
+
+// ===== 🔄 額外保險：在頁面互動後再次檢查 =====
+window.addEventListener('load', async () => {
+  // 若安裝按鈕尚未出現，嘗試重新喚起事件
+  if ('getInstalledRelatedApps' in navigator) {
+    const related = await navigator.getInstalledRelatedApps();
+    if (related.length === 0) {
+      console.log('🕵️ 嘗試等待 beforeinstallprompt');
+    }
+  }
 });
 </script>
 </body>
