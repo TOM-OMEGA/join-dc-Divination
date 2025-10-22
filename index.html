@@ -31,35 +31,19 @@
 }
 
 /* ===== 字體設定 ===== */
-
-/* 🎴 載入自訂中文字體 */
 @font-face {
   font-family: 'MyChineseFont';
   src: url('fonts/MyChineseFont.woff') format('woff');
   font-display: swap;
 }
 
-/* 🏰 全站字體邏輯：
-   - 中文 → MyChineseFont
-   - 英文與數字 → Uncial Antiqua */
-body {
-  font-family: 'MyChineseFont', 'Uncial Antiqua', serif;
-}
-
-/* 只針對英文字與數字使用中世紀風格 */
-*:lang(en),
-.latin-text {
-  font-family: 'Uncial Antiqua', 'MyChineseFont', serif;
-}
-
-/* ===== 背景 ===== */
+/* ===== 基本 ===== */
 html, body {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
-  font-weight: 400;
-  letter-spacing: 0.5px;
+  font-family: 'MyChineseFont', 'Uncial Antiqua', serif;
   background: url('images/medieval-carrot-placeholder.jpg') no-repeat center center;
   background-size: contain;
   background-color: #000;
@@ -68,9 +52,10 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
+  letter-spacing: 0.5px;
 }
 
-/* ===== 頁面結構 ===== */
+/* ===== 分頁結構 ===== */
 .page {
   position: absolute;
   top: 0;
@@ -92,13 +77,22 @@ html, body {
   transform: scale(1);
 }
 
-/* ===== 統一字體風格 ===== */
-h1, .subtitle, .btn, .fortune, .advice, footer {
+/* ===== 無障礙隱藏文字 ===== */
+.sr-only {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
+
+/* ===== 文字共用樣式 ===== */
+h1, .subtitle, .fortune, .advice, footer {
   font-weight: 400;
   letter-spacing: 1px;
 }
 
-/* ===== 首頁標題與副標題 ===== */
+/* ===== 首頁 ===== */
 #page1 h1 {
   font-size: clamp(1.6rem, 6vw, 2rem);
   color: var(--gold);
@@ -106,43 +100,10 @@ h1, .subtitle, .btn, .fortune, .advice, footer {
   text-align: center;
   text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
 }
-
 #page1 .subtitle {
   font-size: clamp(1rem, 4vw, 1.3rem);
   color: rgba(46,34,22,0.8);
   text-align: center;
-}
-
-/* ===== 第二頁標題 ===== */
-#page2 h1 {
-  color: var(--gold);
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-}
-  
-/* ===== 按鈕 ===== */
-.btn {
-  background: linear-gradient(180deg, #e9d089 0%, #b9852a 100%);
-  border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
-  color: #fff;
-  font-weight: 400;
-  font-size: clamp(0.9rem, 3vw, 1rem);
-  letter-spacing: 1px;
-  cursor: pointer;
-  margin-top: 12px;
-  transition: transform .16s ease, box-shadow .16s ease;
-}
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(185,135,40,0.28);
-}
-
-footer {
-  position: absolute;
-  bottom: 8px;
-  font-size: 0.75rem;
-  color: rgba(46,34,22,0.6);
 }
 
 /* ===== QR 區 ===== */
@@ -154,56 +115,48 @@ footer {
   margin-bottom: 10px;
   box-shadow: 0 3px 8px rgba(0,0,0,0.4);
 }
-.qr img {
-  width: 100%;
-  height: 100%;
+.qr img { width:100%; height:100%; object-fit:cover; }
+
+/* ===== 按鈕共享樣式（使用圖片） ===== */
+.btn {
+  width: 200px;            /* 可依你的圖片尺寸微調 */
+  height: 64px;            /* 可依你的圖片尺寸微調 */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;      /* 圖片上有文字就隱藏，文字由圖片呈現 */
+  padding: 0;
+  margin: 10px 6px;
+  transition: transform 0.12s ease, filter 0.12s ease;
 }
+.btn:hover { transform: translateY(-4px); filter: brightness(1.06); }
+.btn:active { transform: translateY(-1px) scale(0.98); }
+
+/* ===== 各按鈕背景圖（請確認檔名） ===== */
+.btn--start   { background-image: url('images/btn-start.png'); }
+.btn--next    { background-image: url('images/btn-next.png'); }
+.btn--draw    { background-image: url('images/btn-draw.png'); }
+.btn--back    { background-image: url('images/btn-back.png'); }
+.btn--retry   { background-image: url('images/btn-retry.png'); }
 
 /* ===== 占卜畫面 ===== */
-.divination {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-.carrot-thumb {
-  width: clamp(120px, 20vw, 150px);
-  height: clamp(120px, 20vw, 150px);
-  object-fit: contain;
-}
-.fortune {
-  font-size: clamp(1rem, 4vw, 1.3rem);
-  color: var(--ink);
-  margin-top: 10px;
-}
-.fortune strong {
-  color: var(--gold);
-}
-.advice {
-  margin-top: 10px;
-  color: rgba(46,34,22,0.9);
-  font-size: clamp(0.9rem, 3.5vw, 1.2rem);
-  line-height: 1.5;
-  max-width: 480px;
-  text-shadow: 0 1px 1px rgba(255,255,255,0.2);
-}
+.divination { display:flex; flex-direction:column; align-items:center; text-align:center; }
+.carrot-thumb { width: clamp(120px, 20vw, 150px); height: clamp(120px, 20vw, 150px); object-fit:contain; }
+.fortune { font-size: clamp(1rem, 4vw, 1.3rem); color: var(--ink); margin-top: 10px; }
+.fortune strong { color: var(--gold); }
+.advice { margin-top: 10px; color: rgba(46,34,22,0.9); font-size: clamp(0.9rem, 3.5vw, 1.2rem); line-height:1.5; max-width:480px; }
 
-/* ===== 淡入淡出動畫 ===== */
-.fade-out {
-  opacity: 0 !important;
-  transform: scale(0.95);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-.fade-in {
-  opacity: 1 !important;
-  transform: scale(1);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
+/* ===== 動畫 ===== */
+.fade-out { opacity:0 !important; transform: scale(0.95); transition: opacity .6s, transform .6s; }
+.fade-in  { opacity:1 !important; transform: scale(1); transition: opacity .6s, transform .6s; }
 
-/* ===== 紫蘿蔔能量提醒上色 ===== */
-.energy-reminder span {
-  color: var(--gold);
-}
+/* ===== footer ===== */
+footer { position:absolute; bottom:8px; font-size:0.75rem; color: rgba(46,34,22,0.6); }
 </style>
 </head>
 
@@ -212,7 +165,10 @@ footer {
 <div id="page1" class="page active">
   <h1>命運之蔔 · 森林占卜祭壇</h1>
   <div class="subtitle">探索命運的儀式，從加入開始</div>
-  <button class="btn" id="startBtn">我要加入</button>
+  <!-- start 使用 btn--start 圖 -->
+  <button id="startBtn" class="btn btn--start" aria-label="我要加入">
+    <span class="sr-only">我要加入</span>
+  </button>
   <footer>© 2025 命運之蔔</footer>
 </div>
 
@@ -222,8 +178,14 @@ footer {
   <div class="qr">
     <img src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=https://discord.gg/mar4qT9XYn" alt="Discord QR">
   </div>
-  <button class="btn" id="joinedBtn">我已加入</button>
-  <button id="installBtn" class="btn" style="display:none;">📲 安裝 App</button>
+  <!-- next 使用 btn--next 圖 -->
+  <button id="joinedBtn" class="btn btn--next" aria-label="我已加入">
+    <span class="sr-only">我已加入</span>
+  </button>
+  <!-- 安裝按鈕也用圖片（如果你有圖可以改成 btn--next 或其他） -->
+  <button id="installBtn" class="btn btn--retry" style="display:none" aria-label="安裝 App">
+    <span class="sr-only">安裝 App</span>
+  </button>
 </div>
 
 <!-- ===== 第3頁：占卜畫面 ===== -->
@@ -232,9 +194,15 @@ footer {
     <img id="carrotThumb" class="carrot-thumb" src="images/carrot-thumb.png" alt="胡蘿蔔插畫" onerror="this.style.display='none'">
     <div class="fortune" id="fortuneLine">按下 <strong>占卜今日運勢</strong> 來喚醒命運之蔔</div>
     <div class="advice" id="adviceText" style="display:none"></div>
-    <div>
-      <button id="drawBtn" class="btn">占卜今日運勢 ✨</button>
-      <button id="backBtn" class="btn">返回首頁</button>
+    <div style="margin-top:14px;">
+      <!-- draw 使用 btn--draw -->
+      <button id="drawBtn" class="btn btn--draw" aria-label="占卜今日運勢">
+        <span class="sr-only">占卜今日運勢</span>
+      </button>
+      <!-- back 使用 btn--back -->
+      <button id="backBtn" class="btn btn--back" aria-label="返回首頁">
+        <span class="sr-only">返回首頁</span>
+      </button>
     </div>
   </div>
 </div>
@@ -244,7 +212,7 @@ const apiUrl = "https://carrot-bot-production.up.railway.app/api/web_fortune";
 const userId = "657882539331158016";
 const username = "湯姆瑞斗";
 
-// ===== 分頁切換 =====
+/* 分頁切換 */
 function transitionPage(currentId, nextId) {
   const current = document.getElementById(currentId);
   const next = document.getElementById(nextId);
@@ -253,14 +221,14 @@ function transitionPage(currentId, nextId) {
   setTimeout(() => {
     current.classList.remove("active", "fade-out");
     next.classList.add("active", "fade-in");
-    setTimeout(() => next.classList.remove("fade-in"), 600);
+    setTimeout(()=> next.classList.remove("fade-in"), 600);
   }, 500);
 }
-document.getElementById('startBtn').onclick = () => transitionPage('page1', 'page2');
-document.getElementById('joinedBtn').onclick = () => transitionPage('page2', 'page3');
-document.getElementById('backBtn').onclick = () => transitionPage('page3', 'page1');
+document.getElementById('startBtn').onclick = () => transitionPage('page1','page2');
+document.getElementById('joinedBtn').onclick = () => transitionPage('page2','page3');
+document.getElementById('backBtn').onclick = () => transitionPage('page3','page1');
 
-// ===== 占卜功能 =====
+/* 占卜功能（維持你原本邏輯） */
 const drawBtn = document.getElementById('drawBtn');
 const fortuneLine = document.getElementById('fortuneLine');
 const adviceText = document.getElementById('adviceText');
@@ -273,7 +241,8 @@ function escapeHtml(s) {
 
 drawBtn.addEventListener('click', async () => {
   drawBtn.disabled = true;
-  drawBtn.textContent = '占卜中... 🔮';
+  // 因為按鈕是圖片，所以我們暫時以 title 提示或 aria-live 而不更改按鈕文字
+  drawBtn.setAttribute('aria-busy', 'true');
   fortuneLine.innerHTML = '占卜中... 請稍候';
   adviceText.style.display = 'none';
   try {
@@ -287,18 +256,23 @@ drawBtn.addEventListener('click', async () => {
       <p><strong style="color:var(--gold)">${escapeHtml(data.fortune)}</strong></p>
       <p class="energy-reminder">紫蘿蔔能量提醒：<span>${escapeHtml(data.advice)}</span></p>
     `;
-    drawBtn.textContent = '再抽一次 ✨';
+    // 將 draw 按鈕換成「再抽一次」圖（若你想換圖，也可以在這裡改 class）
+    // 例如切換到 btn--retry 圖：
+    drawBtn.classList.remove('btn--draw');
+    drawBtn.classList.add('btn--retry');
+    drawBtn.setAttribute('aria-label','再抽一次');
   } catch (err) {
+    console.error(err);
     fortuneLine.innerHTML = '⚠️ 占卜失敗，請稍後重試';
     adviceText.style.display = 'block';
     adviceText.innerHTML = '<p>魔力干擾過強，無法從祭壇讀取命運。</p>';
-    drawBtn.textContent = '再試一次';
   } finally {
     drawBtn.disabled = false;
+    drawBtn.removeAttribute('aria-busy');
   }
 });
 
-// ===== 📲 PWA 安裝提示 =====
+/* PWA 安裝提示（保留你原本邏輯） */
 let deferredPrompt;
 const installBtn = document.getElementById('installBtn');
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -318,7 +292,7 @@ window.addEventListener('appinstalled', () => {
   installBtn.style.display = 'none';
 });
 
-// ===== Service Worker =====
+/* 註冊 Service Worker */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
