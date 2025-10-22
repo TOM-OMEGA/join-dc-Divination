@@ -4,11 +4,11 @@
 <meta charset="utf-8" />
 <title>命運之蔔 · 森林占卜祭壇</title>
 
-<!-- 🧿 網站圖示 -->
+<!-- 網站圖示 -->
 <link rel="icon" href="images/favicon.ico" type="image/x-icon">
 <link rel="apple-touch-icon" href="images/icon-192.png">
 
-<!-- ✅ PWA 與行動裝置設定 -->
+<!-- PWA 設定 -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#000000">
@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="命運之蔔">
 
-<!-- 🏰 字體 -->
+<!-- 字體 -->
 <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
 
 <style>
@@ -30,46 +30,41 @@
   --advice-font-size: clamp(1rem, 4vw, 1.4rem);
   --advice-color: rgba(46, 34, 22, 0.9);
   --reminder-color: #B9872B;
-  --bg-transition-duration: 1s;
 }
 
-/* ===== 中文字體 ===== */
+/* 中文字體 */
 @font-face {
   font-family: 'MyChineseFont';
   src: url('fonts/MyChineseFont.woff') format('woff');
   font-display: swap;
 }
 
-/* ===== 基本設定 ===== */
+/* 基本設定 */
 html, body {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
   font-family: 'MyChineseFont', 'Uncial Antiqua', serif;
-  background-color: #000;
   color: var(--ink);
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-image var(--bg-transition-duration) ease-in-out, filter 0.5s ease-in-out;
-  background-size: cover;
-  background-position: center center;
 }
 
-/* ===== 背景淡入效果 ===== */
-.bg-fade {
-  opacity: 0;
-  transition: opacity var(--bg-transition-duration) ease-in-out;
+/* 背景圖片層 */
+#bgLayer {
   position: fixed;
-  top:0; left:0; width:100%; height:100%;
+  top:0; left:0;
+  width:100%; height:100%;
+  object-fit: cover;
   z-index: -1;
-  background-size: cover;
-  background-position: center center;
+  opacity: 1;
+  transition: opacity 0.8s ease-in-out;
 }
 
-/* ===== 分頁 ===== */
+/* 分頁 */
 .page {
   position: absolute;
   top: 0; left: 0;
@@ -89,46 +84,48 @@ html, body {
   transform: scale(1);
 }
 
-/* ===== 首頁 ===== */
-#page1 h1 { font-size: 55pt; color: #4D2B0A; margin-bottom: 1rem; text-align: center; }
-#page1 .subtitle { font-size: 35pt; color: #333; text-align: center; }
+/* 首頁 */
+#page1 h1 { font-size:55pt; color:#4D2B0A; margin-bottom:1rem; text-align:center; }
+#page1 .subtitle { font-size:35pt; color:#333; text-align:center; }
 
-/* ===== 第二頁 ===== */
-#page2 h1 { font-size: clamp(2.6rem, 10vw, 3.6rem); color: #4D2B0A; text-align:center; margin-bottom:1rem; font-weight:600; }
-.qr img { width: clamp(240px, 60vw, 400px); height:auto; border-radius:12px; box-shadow:0 0 12px rgba(0,0,0,0.3); }
+/* 第二頁 */
+#page2 h1 { font-size:clamp(2.6rem,10vw,3.6rem); color:#4D2B0A; text-align:center; margin-bottom:1rem; font-weight:600; }
+.qr img { width: clamp(240px,60vw,400px); height:auto; border-radius:12px; box-shadow:0 0 12px rgba(0,0,0,0.3); }
 
-/* ===== 第三頁 ===== */
+/* 第三頁 */
 .divination { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; width:100%; height:100%; box-sizing:border-box; }
-#page3 .fortune { font-size: var(--fortune-font-size); color: var(--fortune-color); text-align:center; margin-top:10px; font-weight:500; letter-spacing:1px; text-shadow:1px 1px 3px rgba(0,0,0,0.3); }
+
+#page3 .fortune { font-size:var(--fortune-font-size); color:var(--fortune-color); text-align:center; margin-top:10px; font-weight:500; letter-spacing:1px; text-shadow:1px 1px 3px rgba(0,0,0,0.3); }
 #page3 .fortune strong { color: var(--gold); font-weight:700; }
-#page3 .advice { margin-top:18px; font-size: var(--advice-font-size); color: var(--advice-color); line-height:1.7; max-width:600px; text-align:center; background:rgba(255,255,255,0.45); padding:14px 20px; border-radius:12px; box-shadow:0 0 12px rgba(0,0,0,0.15); }
+
+#page3 .advice { margin-top:18px; font-size:var(--advice-font-size); color:var(--advice-color); line-height:1.7; max-width:600px; text-align:center; background:rgba(255,255,255,0.45); padding:14px 20px; border-radius:12px; box-shadow:0 0 12px rgba(0,0,0,0.15); }
 .energy-reminder { font-size:1.1em; font-weight:bold; color:var(--reminder-color); text-shadow:0 0 6px rgba(255,215,0,0.4); margin-bottom:8px; }
 
-/* ===== 按鈕 ===== */
-.btn { width:200px; height:64px; background-repeat:no-repeat; background-position:center; background-size:contain; background-color:transparent; border:none; cursor:pointer; margin:10px 6px; transition: transform 0.12s ease, filter 0.12s ease; }
-.btn:hover { transform: translateY(-4px); filter: brightness(1.06); }
-.btn:active { transform: translateY(-1px) scale(0.98); }
-.btn--start { background-image: url('images/btn-start.png'); }
-.btn--next { background-image: url('images/btn-next.png'); }
-.btn--draw { background-image: url('images/btn-draw.png'); }
-.btn--back { background-image: url('images/btn-back.png'); }
-.btn--retry { background-image: url('images/btn-retry.png'); }
+/* 按鈕 */
+.btn { width:200px;height:64px; background-repeat:no-repeat; background-position:center; background-size:contain; background-color:transparent; border:none; cursor:pointer; margin:10px 6px; transition: transform 0.12s ease, filter 0.12s ease; }
+.btn:hover{transform:translateY(-4px);filter:brightness(1.06);}
+.btn:active{transform:translateY(-1px) scale(0.98);}
+.btn--start{background-image:url('images/btn-start.png');}
+.btn--next{background-image:url('images/btn-next.png');}
+.btn--draw{background-image:url('images/btn-draw.png');}
+.btn--back{background-image:url('images/btn-back.png');}
+.btn--retry{background-image:url('images/btn-retry.png');}
 
-.carrot-thumb { width: clamp(120px, 20vw, 150px); height: clamp(120px, 20vw, 150px); object-fit:contain; }
+.carrot-thumb{width:clamp(120px,20vw,150px);height:clamp(120px,20vw,150px);object-fit:contain;}
 
-/* ===== 動畫 ===== */
-.fade-out { opacity: 0 !important; transform: scale(0.95); transition: opacity .6s, transform .6s; }
-.fade-in { opacity: 1 !important; transform: scale(1); transition: opacity .6s, transform .6s; }
+/* 動畫 */
+.fade-out { opacity:0 !important; transform:scale(0.95); transition:opacity .6s, transform .6s; }
+.fade-in { opacity:1 !important; transform:scale(1); transition:opacity .6s, transform .6s; }
 
 footer { position:absolute; bottom:8px; font-size:0.75rem; color:rgba(46,34,22,0.6); }
 </style>
 </head>
+
 <body>
+<!-- 背景圖層 -->
+<img id="bgLayer" src="images/medieval-carrot-placeholder.jpg" alt="背景">
 
-<!-- 背景層 -->
-<div id="bgLayer" class="bg-fade" style="background-image:url('images/medieval-carrot-placeholder.jpg'); opacity:1;"></div>
-
-<!-- ===== 第1頁 ===== -->
+<!-- 第1頁 -->
 <div id="page1" class="page active">
   <h1>命運之蔔 · 森林占卜祭壇</h1>
   <div class="subtitle">探索命運的儀式，從加入開始</div>
@@ -136,19 +133,19 @@ footer { position:absolute; bottom:8px; font-size:0.75rem; color:rgba(46,34,22,0
   <footer>© 2025 命運之蔔</footer>
 </div>
 
-<!-- ===== 第2頁 ===== -->
+<!-- 第2頁 -->
 <div id="page2" class="page">
   <h1>掃描 QRCODE 加入 Discord</h1>
   <div class="qr">
-    <img loading="lazy" src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=https://discord.gg/mar4qT9XYn" alt="Discord QR">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=https://discord.gg/mar4qT9XYn" alt="Discord QR">
   </div>
   <button id="joinedBtn" class="btn btn--next"><span class="sr-only">我已加入</span></button>
 </div>
 
-<!-- ===== 第3頁 ===== -->
+<!-- 第3頁 -->
 <div id="page3" class="page">
   <div class="divination">
-    <img loading="lazy" id="carrotThumb" class="carrot-thumb" src="images/carrot-thumb.png" alt="胡蘿蔔插畫">
+    <img id="carrotThumb" class="carrot-thumb" src="images/carrot-thumb.png" alt="胡蘿蔔插畫">
     <div class="fortune" id="fortuneLine">按下 <strong>占卜運勢</strong> 挖取你的命運之蔔</div>
     <div class="advice" id="adviceText" style="display:none"></div>
     <div style="margin-top:14px; display:flex; justify-content:center; gap:10px;">
@@ -166,92 +163,84 @@ const username = "湯姆瑞斗";
 function transitionPage(currentId, nextId) {
   const current = document.getElementById(currentId);
   const next = document.getElementById(nextId);
-  if (!current || !next) return;
+  if(!current||!next) return;
   current.classList.add("fade-out");
-  setTimeout(() => {
-    current.classList.remove("active", "fade-out");
-    next.classList.add("active", "fade-in");
-    setTimeout(() => next.classList.remove("fade-in"), 600);
-  }, 500);
+  setTimeout(()=>{
+    current.classList.remove("active","fade-out");
+    next.classList.add("active","fade-in");
+    setTimeout(()=>next.classList.remove("fade-in"),600);
+  },500);
 }
 
-document.getElementById('startBtn').onclick = () => transitionPage('page1','page2');
-document.getElementById('joinedBtn').onclick = () => transitionPage('page2','page3');
+document.getElementById('startBtn').onclick = ()=>transitionPage('page1','page2');
+document.getElementById('joinedBtn').onclick = ()=>transitionPage('page2','page3');
 
 const drawBtn = document.getElementById('drawBtn');
 const fortuneLine = document.getElementById('fortuneLine');
 const adviceText = document.getElementById('adviceText');
 const bgLayer = document.getElementById('bgLayer');
 
-document.getElementById('backBtn').onclick = () => {
-  fortuneLine.innerHTML = '按下 <strong>占卜運勢</strong> 挖取你的命運之蔔';
-  adviceText.style.display = 'none';
+document.getElementById('backBtn').onclick = ()=>{
+  fortuneLine.innerHTML='按下 <strong>占卜運勢</strong> 挖取你的命運之蔔';
+  adviceText.style.display='none';
   drawBtn.classList.remove('btn--retry');
   drawBtn.classList.add('btn--draw');
-  fadeBackground('images/medieval-carrot-placeholder.jpg');
+  bgLayer.src='images/medieval-carrot-placeholder.jpg';
+  bgLayer.style.opacity=1;
   transitionPage('page3','page1');
 };
 
-function escapeHtml(s) {
-  return String(s||'').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
-}
+function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
-// 背景淡入函數
-function fadeBackground(imageUrl){
-  const newBg = new Image();
-  newBg.src = imageUrl;
-  newBg.onload = () => {
-    bgLayer.style.opacity = 0;
-    setTimeout(() => {
-      bgLayer.style.backgroundImage = `url('${imageUrl}')`;
-      bgLayer.style.opacity = 1;
-    }, 300);
-  };
-}
+drawBtn.addEventListener('click', async ()=>{
+  drawBtn.disabled=true;
+  fortuneLine.innerHTML='🔮 占卜中... 魔力正在聚集中...';
+  adviceText.style.display='none';
 
-drawBtn.addEventListener('click', async () => {
-  drawBtn.disabled = true;
-  fortuneLine.innerHTML = '🔮 占卜中... 魔力正在聚集中...';
-  adviceText.style.display = 'none';
-
-  try {
-    const url = `${apiUrl}?user_id=${encodeURIComponent(userId)}&username=${encodeURIComponent(username)}&force_random=true&t=${Date.now()}`;
-    const res = await fetch(url, { cache: 'no-store' });
-    if (!res.ok) throw new Error('API 錯誤：' + res.status);
+  try{
+    const url=`${apiUrl}?user_id=${encodeURIComponent(userId)}&username=${encodeURIComponent(username)}&force_random=true&t=${Date.now()}`;
+    const res = await fetch(url,{cache:'no-store'});
+    if(!res.ok) throw new Error('API 錯誤：'+res.status);
     const data = await res.json();
     const fortune = data.fortune || "";
 
-    let bgImage = "images/fortune_default.png";
-    if (fortune.includes("大吉")) bgImage = "images/大吉.jpg";
-    else if (fortune.includes("中吉")) bgImage = "images/中吉.jpg";
-    else if (fortune.includes("小吉")) bgImage = "images/小吉.jpg";
-    else if (fortune.includes("吉")) bgImage = "images/吉.jpg";
-    else if (fortune.includes("凶")) bgImage = "images/凶.jpg";
+    let bgImage="images/fortune_default.png";
+    if(fortune.includes("大吉")) bgImage="images/大吉.jpg";
+    else if(fortune.includes("中吉")) bgImage="images/中吉.jpg";
+    else if(fortune.includes("小吉")) bgImage="images/小吉.jpg";
+    else if(fortune.includes("吉")) bgImage="images/吉.jpg";
+    else if(fortune.includes("凶")) bgImage="images/凶.jpg";
 
-    fadeBackground(bgImage);
+    // 背景淡入切換
+    const tempImg = new Image();
+    tempImg.src = bgImage;
+    tempImg.onload = ()=>{
+      bgLayer.style.opacity=0;
+      setTimeout(()=>{
+        bgLayer.src=bgImage;
+        bgLayer.style.opacity=1;
+      },200);
+    }
 
-    fortuneLine.innerHTML = `📜 占卜結果：<strong>${escapeHtml(fortune)}</strong>`;
-    adviceText.style.display = 'block';
-    adviceText.innerHTML = `<p class="energy-reminder">✨ 胡蘿蔔能量提醒：</p><p><span>${escapeHtml(data.advice)}</span></p>`;
-
+    fortuneLine.innerHTML=`📜 占卜結果：<strong>${escapeHtml(fortune)}</strong>`;
+    adviceText.style.display='block';
+    adviceText.innerHTML=`<p class="energy-reminder">✨ 胡蘿蔔能量提醒：</p><p><span>${escapeHtml(data.advice)}</span></p>`;
     drawBtn.classList.remove('btn--draw');
     drawBtn.classList.add('btn--retry');
-  } catch (err) {
+  }catch(err){
     console.error(err);
-    fortuneLine.innerHTML = '⚠️ 占卜失敗，請稍後重試';
-    adviceText.style.display = 'block';
-    adviceText.innerHTML = '<p>魔力干擾過強，無法從祭壇讀取命運。</p>';
-  } finally {
-    drawBtn.disabled = false;
-  }
+    fortuneLine.innerHTML='⚠️ 占卜失敗，請稍後重試';
+    adviceText.style.display='block';
+    adviceText.innerHTML='<p>魔力干擾過強，無法從祭壇讀取命運。</p>';
+  }finally{ drawBtn.disabled=false; }
 });
 
-// ✅ Service Worker
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
+// Service Worker
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
     navigator.serviceWorker.register('./sw.js?v=6')
-      .then(reg => console.log('✅ SW 註冊成功:', reg.scope))
-      .catch(err => console.log('❌ SW 註冊失敗:', err));
+      .then(reg=>console.log('✅ SW 註冊成功:',reg.scope))
+      .catch(err=>console.log('❌ SW 註冊失敗:',err));
   });
 }
 </script>
