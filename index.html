@@ -37,7 +37,7 @@
   font-display: swap;
 }
 
-/* ===== 基本 ===== */
+/* ===== 基本設定 ===== */
 html, body {
   width: 100%;
   height: 100%;
@@ -86,20 +86,21 @@ h1, .subtitle, .fortune, .advice, footer {
   position: absolute !important;
   width: 1px; height: 1px;
   padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0,0,0,0);
+  overflow: hidden;
+  clip: rect(0,0,0,0);
   white-space: nowrap; border: 0;
 }
 
 /* ===== 首頁 ===== */
 #page1 h1 {
-  font-size: clamp(2.6rem, 10vw, 3.6rem);
+  font-size: 55pt;
   color: #4D2B0A;
   margin-bottom: 1rem;
   text-align: center;
 }
 #page1 .subtitle {
-  font-size: clamp(1.8rem, 6vw, 2.4rem);
-  color: #333;
+  font-size: 35pt;
+  color: #333333;
   text-align: center;
 }
 
@@ -112,53 +113,38 @@ h1, .subtitle, .fortune, .advice, footer {
   font-weight: 600;
 }
 
-/* ===== 第三頁（結果頁） ===== */
-#page3 {
-  align-items: flex-start;
+/* ===== 第三頁 ===== */
+.divination {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  padding-left: 80px;
-  text-align: left;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
 }
 #page3 .fortune {
   font-size: clamp(1.8rem, 6vw, 2.4rem);
   color: #4D2B0A;
+  text-align: center;
   margin-top: 10px;
   font-weight: 500;
-  text-align: left;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 }
 #page3 .fortune strong {
   color: #B9872B;
   font-weight: 700;
 }
 #page3 .advice {
-  margin-top: 10px;
-  color: rgba(46,34,22,0.9);
-  font-size: clamp(1rem, 3.5vw, 1.3rem);
+  margin-top: 14px;
+  color: rgba(46, 34, 22, 0.9);
+  font-size: clamp(1rem, 4vw, 1.4rem);
   line-height: 1.6;
   max-width: 600px;
-  text-align: left;
-  font-family: 'MyChineseFont';
+  text-align: center;
 }
-
-/* ===== 按鈕列 ===== */
-#page3 .button-row {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-/* ===== QR ===== */
-.qr {
-  width: 130px; height: 130px;
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 10px;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.4);
-}
-.qr img { width:100%; height:100%; object-fit:cover; }
 
 /* ===== 按鈕 ===== */
 .btn {
@@ -169,23 +155,16 @@ h1, .subtitle, .fortune, .advice, footer {
   background-color: transparent;
   border: none;
   cursor: pointer;
+  margin: 10px 6px;
   transition: transform 0.12s ease, filter 0.12s ease;
 }
 .btn:hover { transform: translateY(-4px); filter: brightness(1.06); }
 .btn:active { transform: translateY(-1px) scale(0.98); }
-
 .btn--start { background-image: url('images/btn-start.png'); }
-.btn--next  { background-image: url('images/btn-next.png'); }
-.btn--draw  { background-image: url('images/btn-draw.png'); }
-.btn--back  { background-image: url('images/btn-back.png'); }
+.btn--next { background-image: url('images/btn-next.png'); }
+.btn--draw { background-image: url('images/btn-draw.png'); }
+.btn--back { background-image: url('images/btn-back.png'); }
 .btn--retry { background-image: url('images/btn-retry.png'); }
-
-.divination {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-}
 
 .carrot-thumb {
   width: clamp(120px, 20vw, 150px);
@@ -193,24 +172,27 @@ h1, .subtitle, .fortune, .advice, footer {
   object-fit: contain;
 }
 
+/* ===== 動畫 ===== */
 .fade-out { opacity: 0 !important; transform: scale(0.95); transition: opacity .6s, transform .6s; }
-.fade-in  { opacity: 1 !important; transform: scale(1); transition: opacity .6s, transform .6s; }
+.fade-in { opacity: 1 !important; transform: scale(1); transition: opacity .6s, transform .6s; }
 
 footer {
   position: absolute;
   bottom: 8px;
   font-size: 0.75rem;
-  color: rgba(46,34,22,0.6);
+  color: rgba(46, 34, 22, 0.6);
 }
 </style>
 </head>
-<body>
 
+<body>
 <!-- ===== 第1頁 ===== -->
 <div id="page1" class="page active">
   <h1>命運之蔔 · 森林占卜祭壇</h1>
   <div class="subtitle">探索命運的儀式，從加入開始</div>
-  <button id="startBtn" class="btn btn--start" aria-label="我要加入"><span class="sr-only">我要加入</span></button>
+  <button id="startBtn" class="btn btn--start" aria-label="我要加入">
+    <span class="sr-only">我要加入</span>
+  </button>
   <footer>© 2025 命運之蔔</footer>
 </div>
 
@@ -220,7 +202,9 @@ footer {
   <div class="qr">
     <img src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=https://discord.gg/mar4qT9XYn" alt="Discord QR">
   </div>
-  <button id="joinedBtn" class="btn btn--next" aria-label="我已加入"><span class="sr-only">我已加入</span></button>
+  <button id="joinedBtn" class="btn btn--next" aria-label="我已加入">
+    <span class="sr-only">我已加入</span>
+  </button>
 </div>
 
 <!-- ===== 第3頁 ===== -->
@@ -229,7 +213,7 @@ footer {
     <img id="carrotThumb" class="carrot-thumb" src="images/carrot-thumb.png" alt="胡蘿蔔插畫">
     <div class="fortune" id="fortuneLine">按下 <strong>占卜運勢</strong> 挖取你的命運之蔔</div>
     <div class="advice" id="adviceText" style="display:none"></div>
-    <div class="button-row">
+    <div style="margin-top:14px; display:flex; justify-content:center; gap:10px;">
       <button id="drawBtn" class="btn btn--draw" aria-label="占卜今日運勢"><span class="sr-only">占卜今日運勢</span></button>
       <button id="backBtn" class="btn btn--back" aria-label="返回首頁"><span class="sr-only">返回首頁</span></button>
     </div>
@@ -270,19 +254,21 @@ const fortuneLine = document.getElementById('fortuneLine');
 const adviceText = document.getElementById('adviceText');
 
 function escapeHtml(s) {
-  return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  return String(s||'').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 }
 
 drawBtn.addEventListener('click', async () => {
   drawBtn.disabled = true;
   fortuneLine.innerHTML = '🔮 占卜中... 魔力正在聚集中...';
   adviceText.style.display = 'none';
+
   try {
     const url = `${apiUrl}?user_id=${encodeURIComponent(userId)}&username=${encodeURIComponent(username)}&force_random=true&t=${Date.now()}`;
     const res = await fetch(url, { cache: 'no-store' });
     if (!res.ok) throw new Error('API 錯誤：' + res.status);
     const data = await res.json();
     const fortune = data.fortune || "";
+
     let bgImage = "images/fortune_default.png";
     if (fortune.includes("大吉")) bgImage = "images/大吉.jpg";
     else if (fortune.includes("中吉")) bgImage = "images/中吉.jpg";
@@ -290,14 +276,17 @@ drawBtn.addEventListener('click', async () => {
     else if (fortune.includes("吉")) bgImage = "images/吉.jpg";
     else if (fortune.includes("凶")) bgImage = "images/凶.jpg";
 
+    // 🌄 背景動畫切換
     document.body.style.backgroundImage = `url('${bgImage}')`;
     document.body.style.backgroundRepeat = "no-repeat";
     document.body.style.backgroundPosition = "center center";
     document.body.style.backgroundSize = "cover";
 
+    // 🎴 顯示結果
     fortuneLine.innerHTML = `📜 占卜結果：<strong>${escapeHtml(fortune)}</strong>`;
     adviceText.style.display = 'block';
     adviceText.innerHTML = `<p class="energy-reminder">✨ 胡蘿蔔能量提醒：</p><p><span>${escapeHtml(data.advice)}</span></p>`;
+
     drawBtn.classList.remove('btn--draw');
     drawBtn.classList.add('btn--retry');
   } catch (err) {
