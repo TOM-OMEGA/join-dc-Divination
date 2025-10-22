@@ -296,12 +296,11 @@ drawBtn.addEventListener('click', async () => {
     const fortune = data.fortune || "";
     let bgImage = "images/bg-default.jpg";
 
-    if (fortune.includes("大吉")) bgImage = "images/bg-great.png";
-    else if (fortune.includes("中吉")) bgImage = "images/bg-good.png";
-    else if (fortune.includes("小吉")) bgImage = "images/bg-small.png";
-    else if (fortune.includes("吉")) bgImage = "images/bg-luck.png";
-    else if (fortune.includes("凶")) bgImage = "images/bg-bad.png";
-    else if (fortune.includes("大凶")) bgImage = "images/bg-evil.png";
+    if (fortune.includes("大吉")) bgImage = "images/大吉.png";
+    else if (fortune.includes("中吉")) bgImage = "images/中吉.png";
+    else if (fortune.includes("小吉")) bgImage = "images/小吉.png";
+    else if (fortune.includes("吉")) bgImage = "images/吉.png";
+    else if (fortune.includes("凶")) bgImage = "images/凶.png";
 
     // 🎨 背景圖切換（有淡入效果）
     document.body.style.background = `url('${bgImage}') no-repeat center center`;
