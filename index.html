@@ -279,19 +279,43 @@ function escapeHtml(s) {
 drawBtn.addEventListener('click', async () => {
   drawBtn.disabled = true;
   drawBtn.setAttribute('aria-busy', 'true');
-  fortuneLine.innerHTML = '占卜中... 請稍候';
+  
+  // 🎴 占卜動畫效果
+  fortuneLine.innerHTML = '🔮 占卜中... 魔力正在聚集中...';
   adviceText.style.display = 'none';
+  document.body.style.transition = "background 1s ease";
+  document.body.style.background = "#000"; // 占卜時背景暫時變暗
+
   try {
     const url = `${apiUrl}?user_id=${encodeURIComponent(userId)}&username=${encodeURIComponent(username)}&force_random=true&t=${Date.now()}`;
     const res = await fetch(url, { cache: 'no-store' });
     if (!res.ok) throw new Error('API 錯誤：' + res.status);
     const data = await res.json();
-    fortuneLine.innerHTML = `📜 占卜時間：<strong>${new Date().toLocaleString('zh-TW')}</strong>`;
+
+    // 🧿 根據運勢決定背景圖
+    const fortune = data.fortune || "";
+    let bgImage = "images/bg-default.jpg";
+
+    if (fortune.includes("大吉")) bgImage = "images/bg-great.png";
+    else if (fortune.includes("中吉")) bgImage = "images/bg-good.png";
+    else if (fortune.includes("小吉")) bgImage = "images/bg-small.png";
+    else if (fortune.includes("吉")) bgImage = "images/bg-luck.png";
+    else if (fortune.includes("凶")) bgImage = "images/bg-bad.png";
+    else if (fortune.includes("大凶")) bgImage = "images/bg-evil.png";
+
+    // 🎨 背景圖切換（有淡入效果）
+    document.body.style.background = `url('${bgImage}') no-repeat center center`;
+    document.body.style.backgroundSize = "cover";
+
+    // 🎴 顯示結果
+    fortuneLine.innerHTML = `📜 占卜結果：<strong>${escapeHtml(fortune)}</strong>`;
     adviceText.style.display = 'block';
     adviceText.innerHTML = `
-      <p><strong style="color:var(--gold)">${escapeHtml(data.fortune)}</strong></p>
-      <p class="energy-reminder">紫蘿蔔能量提醒：<span>${escapeHtml(data.advice)}</span></p>
+      <p class="energy-reminder">✨ 胡蘿蔔能量提醒：</p>
+      <p><span>${escapeHtml(data.advice)}</span></p>
     `;
+
+    // 按鈕變更
     drawBtn.classList.remove('btn--draw');
     drawBtn.classList.add('btn--retry');
     drawBtn.setAttribute('aria-label','再抽一次');
