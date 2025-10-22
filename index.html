@@ -254,7 +254,17 @@ function transitionPage(currentId, nextId) {
 }
 document.getElementById('startBtn').onclick = () => transitionPage('page1','page2');
 document.getElementById('joinedBtn').onclick = () => transitionPage('page2','page3');
-document.getElementById('backBtn').onclick = () => transitionPage('page3','page1');
+document.getElementById('backBtn').onclick = () => {
+  // 重設占卜畫面
+  fortuneLine.innerHTML = '按下 <strong>占卜運勢</strong> 挖取你的命運之蔔';
+  adviceText.style.display = 'none';
+  drawBtn.classList.remove('btn--retry');
+  drawBtn.classList.add('btn--draw');
+  drawBtn.setAttribute('aria-label','占卜今日運勢');
+  
+  // 回首頁
+  transitionPage('page3','page1');
+};
 
 const drawBtn = document.getElementById('drawBtn');
 const fortuneLine = document.getElementById('fortuneLine');
