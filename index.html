@@ -94,16 +94,15 @@ h1, .subtitle, .fortune, .advice, footer {
 
 /* ===== 首頁 ===== */
 #page1 h1 {
-  font-size: 55pt;             /* ✅ 固定標題大小 */
-  color: #4D2B0A;              /* ✅ 指定顏色 */
+  font-size: clamp(1.6rem, 6vw, 2rem);
+  color: var(--gold);
   margin-bottom: 1rem;
   text-align: center;
   text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
 }
-
 #page1 .subtitle {
-  font-size: 35pt;             /* ✅ 固定副標題大小 */
-  color: #333333;              /* ✅ 指定顏色 */
+  font-size: clamp(1rem, 4vw, 1.3rem);
+  color: rgba(46,34,22,0.8);
   text-align: center;
 }
 
