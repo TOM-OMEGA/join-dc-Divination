@@ -94,18 +94,29 @@ h1, .subtitle, .fortune, .advice, footer {
 
 /* ===== 首頁 ===== */
 #page1 h1 {
-  font-size: clamp(3.2rem, 12vw, 4rem);
+  font-size: clamp(2.8rem, 10vw, 3.8rem);
   color: #4D2B0A;              /* ✅ 指定顏色 */;
   margin-bottom: 1rem;
   text-align: center;
   text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
 }
 #page1 .subtitle {
-  font-size: clamp(2rem, 8vw, 2.6rem);
+  font-size: clamp(1.8rem, 6vw, 2.4rem);
   color: #333333;              /* ✅ 指定顏色 */;
   text-align: center;
 }
 
+/* ===== 第二頁：掃描 QRCode ===== */
+#page2 h1 {
+  font-size: clamp(2.8rem, 10vw, 3.8rem);           /* ✅ 改字體大小 */
+  color: #4D2B0A;            /* ✅ 改顏色 */
+  text-align: center;
+  margin-bottom: 1rem;
+  text-shadow: center;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+}
+  
 /* ===== QR 區 ===== */
 .qr {
   width: 130px;
