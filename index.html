@@ -126,7 +126,7 @@ html, body {
 .fortune-text {
   font-family: 'HanyiSentyPagoda', serif;
   font-size: clamp(8rem, 12vw, 12rem);
-  margin-top: 15vh;
+  margin-top: 15vh;  /* 只推大字下移 */
   display: inline-block;
 }
 .fortune-text.大吉 { color: #4d2b0a; }
@@ -209,8 +209,13 @@ footer{position:absolute;bottom:8px;font-size:.75rem;color:rgba(46,34,22,0.6);}
 <div id="page3" class="page">
   <div class="divination">
     <img id="carrotThumb" class="carrot-thumb" src="./images/carrot-thumb.png">
-    <div class="fortune" id="fortuneLine">按下 <strong>占卜運勢</strong> 挖取你的命運之蔔</div>
+    <!-- 大字結果 -->
+    <div class="fortune" id="fortuneLine">
+      <span class="fortune-text">按下 <strong>占卜運勢</strong> 挖取你的命運之蔔</span>
+    </div>
+    <!-- 小建議文字 -->
     <div class="advice" id="adviceText" style="display:none"></div>
+
     <div class="button-row">
       <button id="drawBtn" class="btn btn--draw"></button>
       <button id="backBtn" class="btn btn--back"></button>
@@ -244,7 +249,7 @@ document.getElementById('backBtn').onclick=()=>{
   page3.classList.remove('left-align');
   carrotThumb.style.display='block';
   carrotThumb.classList.remove('fade-out');
-  fortuneLine.innerHTML='按下 <strong>占卜運勢</strong> 挖取你的命運之蔔';
+  fortuneLine.innerHTML='<span class="fortune-text">按下 <strong>占卜運勢</strong> 挖取你的命運之蔔</span>';
   adviceText.style.display='none';
   drawBtn.classList.remove('btn--retry');
   drawBtn.classList.add('btn--draw');
@@ -258,7 +263,7 @@ function escapeHtml(s){
 
 drawBtn.addEventListener('click',async()=>{
   drawBtn.disabled=true;
-  fortuneLine.innerHTML='🥕 挖取中... 正在拔出你的命運之蔔...';
+  fortuneLine.innerHTML='<span class="fortune-text">🥕 挖取中... 正在拔出你的命運之蔔...</span>';
   adviceText.style.display='none';
   try{
     const res=await fetch(`${apiUrl}?user_id=${userId}&username=${username}&force_random=true&t=${Date.now()}`,{cache:'no-store'});
@@ -278,13 +283,13 @@ drawBtn.addEventListener('click',async()=>{
 
     fortuneLine.innerHTML=`<span class="fortune-text ${className}">${fText}</span>`;
     adviceText.style.display='block';
-    adviceText.innerHTML=`<p><span>${escapeHtml(data.advice)}</span></p>`;
+    adviceText.innerHTML=`<p>${escapeHtml(data.advice)}</p>`;
 
     drawBtn.classList.replace('btn--draw','btn--retry');
     drawBtn.classList.remove('btn--retry');
     drawBtn.classList.add('btn--draw');
   }catch(e){
-    fortuneLine.innerHTML='⚠️ 占卜失敗，請稍後重試';
+    fortuneLine.innerHTML='<span class="fortune-text">⚠️ 占卜失敗，請稍後重試</span>';
     adviceText.style.display='block';
     adviceText.innerHTML='<p>魔力干擾過強，無法從祭壇讀取命運。</p>';
   }finally{ drawBtn.disabled=false; }
