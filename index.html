@@ -32,7 +32,6 @@
   font-display: swap;
 }
 
-/* 修正版 HanyiSentyPagoda，確保跨瀏覽器可載入 */
 @font-face {
   font-family: 'HanyiSentyPagoda';
   src: url('fonts/HanyiSentyPagoda-fixed.woff2') format('woff2'),
@@ -41,18 +40,6 @@
   font-weight: normal;
   font-style: normal;
   font-display: swap;
-}
-
-/* 測試時強制顯示字體是否正確載入 */
-@supports (font-family: 'HanyiSentyPagoda') {
-  body::after {
-    content: '🔤 HanyiSentyPagoda 已載入';
-    position: fixed;
-    bottom: 5px;
-    right: 10px;
-    font-size: 10px;
-    color: #ccc;
-  }
 }
 
 /* 全域 */
@@ -105,26 +92,17 @@ html, body {
   box-sizing:border-box;
   transition:all 0.6s ease;
 }
-
-/* 占卜後左移模式 */
 #page3.left-align {
   align-items:flex-start;
   justify-content:center;
   text-align:left;
   width:100%;
-  padding-left:40px; /* 桌面距離 */
-  box-sizing:border-box;
+  padding-left:40px;
   transition:padding-left 0.4s ease;
 }
-
-/* 手機橫式：強制留 80px 邊距 */
 @media screen and (max-width: 1024px) and (orientation: landscape) {
-  #page3.left-align {
-    padding-left:80px !important;
-  }
+  #page3.left-align { padding-left:80px !important; }
 }
-
-/* 手機直式：保持置中 */
 @media screen and (max-width: 768px) and (orientation: portrait) {
   #page3.left-align {
     align-items:center !important;
@@ -135,50 +113,28 @@ html, body {
 }
 
 /* 第3頁字體 */
-#page3 .fortune{
-  font-size: clamp(1.2rem, 4vw, 1.8rem);
-}
-
+#page3 .fortune{ font-size: clamp(1.2rem, 4vw, 1.8rem); }
 #page3 .advice{
   margin-top:10px;
   font-size:clamp(1.8rem,4vw,2.6rem);
   line-height:1.6;
   max-width:600px;
-  color: #4D2B0A;
+  color: #4b2d0a;
   font-family:'MyChineseFont';
-}
-
-/* 按鈕樣式 */
-.btn{
-  width:200px;height:64px;
-  background-repeat:no-repeat;background-position:center;background-size:contain;
-  background-color:transparent;border:0;padding:0;margin:10px 6px;cursor:pointer;
-  -webkit-appearance:none;-moz-appearance:none;appearance:none;
-  outline:none;transition:transform .12s ease,filter .12s ease;
-}
-.btn:hover{transform:translateY(-3px);filter:brightness(1.06);}
-.btn:active{transform:translateY(-1px) scale(.98);}
-.btn--start{background-image:url('images/btn-start.png');}
-.btn--next{background-image:url('images/btn-next.png');}
-.btn--draw{background-image:url('images/btn-draw.png');}
-.btn--back{background-image:url('images/btn-back.png');}
-.btn--retry{background-image:url('images/btn-retry.png');}
-
-#page3 .button-row{
-  display:flex;gap:10px;flex-direction:row;
-  align-items:center;justify-content:center;margin-top:20px;
-  transition:all 0.6s ease;
 }
 
 /* 占卜結果字體 */
 .fortune-text {
   font-family: 'HanyiSentyPagoda', serif;
   font-size: clamp(5rem, 12vw, 8rem);
-  color: #4D2B0A;
-  margin-top: 5vh; /* ← 這行往下移一些，比例會隨螢幕大小調整 */
+  margin-top: 5vh;
   display: inline-block;
 }
-.subtitle, .advice {font-size:clamp(1rem,3.5vw,1.3rem);}
+.fortune-text.大吉 { color: #4b2d0a; }
+.fortune-text.中吉 { color: #4b2d0a; }
+.fortune-text.小吉 { color: #4b2d0a; }
+.fortune-text.吉   { color: #4b2d0a; }
+.fortune-text.凶   { color: #4b2d0a; }
 
 .energy-reminder{
   font-family:'MyChineseFont';
@@ -188,23 +144,16 @@ html, body {
 }
 
 .carrot-thumb {
-  /* 自由調整大小比例 */
-  width: clamp(150px, 25vw, 220px);   /* ← 中間的 18vw 控制「反應速度」 */
+  width: clamp(150px, 25vw, 220px);
   height: clamp(150px, 25vw, 220px);
   object-fit: contain;
-
-  /* 平滑動畫淡出 */
   transition: opacity 0.6s ease, transform 0.4s ease;
 }
-
-.carrot-thumb.fade-out {
-  opacity: 0;
-  transform: scale(0.8); /* 抽籤後稍微縮小消失 */
-}
-.carrot-thumb.fade-out{opacity:0;}
+.carrot-thumb.fade-out { opacity:0; transform:scale(0.8); }
 
 .fade-out{opacity:0!important;transform:scale(.95);transition:opacity .6s,transform .6s;}
 .fade-in{opacity:1!important;transform:scale(1);transition:opacity .6s,transform .6s;}
+
 footer{position:absolute;bottom:8px;font-size:.75rem;color:rgba(46,34,22,0.6);}
 </style>
 </head>
@@ -233,7 +182,6 @@ footer{position:absolute;bottom:8px;font-size:.75rem;color:rgba(46,34,22,0.6);}
     <img id="carrotThumb" class="carrot-thumb" src="images/carrot-thumb.png">
     <div class="fortune" id="fortuneLine">按下 <strong>占卜運勢</strong> 挖取你的命運之蔔</div>
     <div class="advice" id="adviceText" style="display:none"></div>
-
     <div class="button-row">
       <button id="drawBtn" class="btn btn--draw"></button>
       <button id="backBtn" class="btn btn--back"></button>
@@ -263,7 +211,6 @@ function transitionPage(cur,next){
 
 document.getElementById('startBtn').onclick=()=>transitionPage('page1','page2');
 document.getElementById('joinedBtn').onclick=()=>transitionPage('page2','page3');
-
 document.getElementById('backBtn').onclick=()=>{
   page3.classList.remove('left-align');
   carrotThumb.style.display='block';
@@ -288,20 +235,20 @@ drawBtn.addEventListener('click',async()=>{
     const res=await fetch(`${apiUrl}?user_id=${userId}&username=${username}&force_random=true&t=${Date.now()}`,{cache:'no-store'});
     const data=await res.json();
     const fortune=data.fortune||"";
-    let fText="",bg="images/fortune_default.png",c="#b9872b";
-    if(fortune.includes("大吉")){fText="大吉";bg="images/大吉.jpg";c="#e0b52d";}
-    else if(fortune.includes("中吉")){fText="中吉";bg="images/中吉.jpg";c="#c7901e";}
-    else if(fortune.includes("小吉")){fText="小吉";bg="images/小吉.jpg";c="#a6741c";}
-    else if(fortune.includes("吉")){fText="吉";bg="images/吉.jpg";c="#d3a23a";}
-    else if(fortune.includes("凶")){fText="凶";bg="images/凶.jpg";c="#962828";}
+    let fText="", bg="images/fortune_default.png", className="";
+    if(fortune.includes("大吉")){ fText="大吉"; bg="images/大吉.jpg"; className="大吉"; }
+    else if(fortune.includes("中吉")){ fText="中吉"; bg="images/中吉.jpg"; className="中吉"; }
+    else if(fortune.includes("小吉")){ fText="小吉"; bg="images/小吉.jpg"; className="小吉"; }
+    else if(fortune.includes("吉")){ fText="吉"; bg="images/吉.jpg"; className="吉"; }
+    else if(fortune.includes("凶")){ fText="凶"; bg="images/凶.jpg"; className="凶"; }
 
     document.body.style.background=`url('${bg}') no-repeat center center/cover`;
-
     page3.classList.add('left-align');
     carrotThumb.classList.add('fade-out');
     setTimeout(()=>carrotThumb.style.display='none',600);
 
-    fortuneLine.innerHTML=`<span class="fortune-text" style="color:${c}">${fText}</span>`;
+    // ← 使用 class 控制顏色
+    fortuneLine.innerHTML=`<span class="fortune-text ${className}">${fText}</span>`;
     adviceText.style.display='block';
     adviceText.innerHTML=`<p><span>${escapeHtml(data.advice)}</span></p>`;
 
@@ -312,10 +259,10 @@ drawBtn.addEventListener('click',async()=>{
     fortuneLine.innerHTML='⚠️ 占卜失敗，請稍後重試';
     adviceText.style.display='block';
     adviceText.innerHTML='<p>魔力干擾過強，無法從祭壇讀取命運。</p>';
-  }finally{drawBtn.disabled=false;}
+  }finally{ drawBtn.disabled=false; }
 });
 
-if('serviceWorker'in navigator){
+if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
     navigator.serviceWorker.register('./sw.js?v=8')
     .then(r=>console.log('✅ SW 註冊成功:',r.scope))
