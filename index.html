@@ -216,7 +216,7 @@ function escapeHtml(s){
 
 drawBtn.addEventListener('click',async()=>{
   drawBtn.disabled=true;
-  fortuneLine.innerHTML='🔮 占卜中... 魔力正在聚集中...';
+  fortuneLine.innerHTML='🥕 挖取中... 正在拔出你的命運之蔔...';
   adviceText.style.display='none';
   try{
     const res=await fetch(`${apiUrl}?user_id=${userId}&username=${username}&force_random=true&t=${Date.now()}`,{cache:'no-store'});
