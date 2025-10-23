@@ -62,7 +62,7 @@ html, body {
 .page.active {opacity:1;pointer-events:all;transform:scale(1);}
 
 /* 第1頁 */
-#page1 h1{font-size:clamp(2.6rem,10vw,3.6rem);color:#4D2B0A;margin-bottom:1rem;text-align:center;}
+#page1 h1{font-size:clamp(3.2rem,12vw,4.2rem);color:#4D2B0A;margin-bottom:1rem;text-align:center;}
 #page1 .subtitle{font-size:35pt;color:#333;text-align:center;}
 
 /* 第2頁 */
@@ -95,17 +95,17 @@ html, body {
   align-items:flex-start;
   justify-content:center;
   text-align:left;
-  padding-left:40px; /* 左移距離從80改為40 */
+  padding-left:0px; /* 左移距離從80改為40 */
   animation:slideLeft 0.8s ease forwards;
 }
 
 @keyframes slideLeft{
   0%{transform:translateX(0);}
-  100%{transform:translateX(-40px);} /* 同步改成40px */
+  100%{transform:translateX(-0px);} /* 同步改成40px */
 }
 
 #page3 .fortune {
-  font-size:clamp(1.8rem,6vw,2.4rem);
+  font-size:clamp(2.6rem,10vw,3.6rem);
   margin-top:10px;
   font-weight:600;
 }
