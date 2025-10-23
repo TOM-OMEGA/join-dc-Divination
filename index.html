@@ -13,9 +13,6 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="命運之蔔">
-<meta name="x5-orientation" content="landscape">
-<meta name="full-screen" content="yes">
-<meta name="x5-fullscreen" content="true">
 
 <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
 
@@ -29,7 +26,7 @@
 /* 字體設定 */
 @font-face {
   font-family: 'MyChineseFont';
-  src: url('fonts/MyChineseFont.woff') format('woff');
+  src: url('./fonts/MyChineseFont.woff') format('woff');
   font-display: swap;
 }
 
@@ -41,8 +38,8 @@
 
 /* 占卜結果字體 */
 .fortune-text {
-  font-family: 'HanyiSentyPagoda' !important; /* 強制使用塔字體 */
-  font-size: clamp(3rem, 10vw, 6rem);
+  font-family: 'HanyiSentyPagoda', 'MyChineseFont', serif !important;
+  font-size: clamp(5rem, 12vw, 8rem);
   color: #b9872b;
   text-align: left;
   line-height: 1.2;
@@ -105,16 +102,14 @@ html, body {
   justify-content:center;
   text-align:left;
   width:100%;
-  padding-left:40px; /* 桌面距離 */
+  padding-left:40px;
   box-sizing:border-box;
   transition:padding-left 0.4s ease;
 }
 
-/* 手機橫式：強制留 80px 邊距 */
+/* 手機橫式：強制留邊距 */
 @media screen and (max-width: 1024px) and (orientation: landscape) {
-  #page3.left-align {
-    padding-left:80px !important;
-  }
+  #page3.left-align { padding-left:80px !important; }
 }
 
 /* 手機直式：保持置中 */
@@ -128,10 +123,7 @@ html, body {
 }
 
 /* 第3頁字體 */
-#page3 .fortune{
-  font-size: clamp(1.2rem, 4vw, 1.8rem);
-}
-
+#page3 .fortune{ font-size: clamp(1.2rem, 4vw, 1.8rem); }
 #page3 .advice{
   margin-top:10px;
   font-size:clamp(1.8rem,4vw,2.6rem);
@@ -159,30 +151,9 @@ html, body {
 #page3 .button-row{
   display:flex;gap:10px;flex-direction:row;
   align-items:center;justify-content:center;margin-top:20px;
-  transition:all 0.6s ease;
 }
 
-/* 占卜結果字體 */
-.fortune-text {
-  font-family:'HanyiSentyPagoda',serif;
-  font-size:clamp(5rem,12vw,8rem);
-  color:#b9872b;
-}
-.subtitle, .advice {font-size:clamp(1rem,3.5vw,1.3rem);}
-
-.energy-reminder{
-  font-family:'MyChineseFont';
-  font-size:clamp(0.95rem,3.2vw,1.1rem);
-  color:var(--gold);
-  margin:0 0 6px 0;
-}
-
-.carrot-thumb{
-  width:clamp(120px,20vw,150px);
-  height:clamp(120px,20vw,150px);
-  object-fit:contain;
-  transition:opacity 0.6s ease;
-}
+.carrot-thumb{ width:clamp(120px,20vw,150px); height:clamp(120px,20vw,150px); object-fit:contain; transition:opacity 0.6s ease;}
 .carrot-thumb.fade-out{opacity:0;}
 
 .fade-out{opacity:0!important;transform:scale(.95);transition:opacity .6s,transform .6s;}
@@ -191,7 +162,6 @@ footer{position:absolute;bottom:8px;font-size:.75rem;color:rgba(46,34,22,0.6);}
 </style>
 </head>
 <body>
-
 <!-- 第1頁 -->
 <div id="page1" class="page active">
   <h1>命運之蔔 · 森林占卜祭壇</h1>
@@ -235,12 +205,8 @@ const page3=document.getElementById('page3');
 
 function transitionPage(cur,next){
   document.getElementById(cur)?.classList.add('fade-out');
-  setTimeout(()=>{
-    document.getElementById(cur)?.classList.remove('active','fade-out');
-    const n=document.getElementById(next);
-    n?.classList.add('active','fade-in');
-    setTimeout(()=>n?.classList.remove('fade-in'),600);
-  },500);
+  setTimeout(()=>{document.getElementById(cur)?.classList.remove('active','fade-out');
+  const n=document.getElementById(next); n?.classList.add('active','fade-in'); setTimeout(()=>n?.classList.remove('fade-in'),600);},500);
 }
 
 document.getElementById('startBtn').onclick=()=>transitionPage('page1','page2');
@@ -252,15 +218,12 @@ document.getElementById('backBtn').onclick=()=>{
   carrotThumb.classList.remove('fade-out');
   fortuneLine.innerHTML='按下 <strong>占卜運勢</strong> 挖取你的命運之蔔';
   adviceText.style.display='none';
-  drawBtn.classList.remove('btn--retry');
-  drawBtn.classList.add('btn--draw');
+  drawBtn.classList.remove('btn--retry'); drawBtn.classList.add('btn--draw');
   document.body.style.backgroundImage="url('images/medieval-carrot-placeholder.jpg')";
   transitionPage('page3','page1');
 };
 
-function escapeHtml(s){
-  return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
+function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 drawBtn.addEventListener('click',async()=>{
   drawBtn.disabled=true;
@@ -278,7 +241,6 @@ drawBtn.addEventListener('click',async()=>{
     else if(fortune.includes("凶")){fText="凶";bg="images/凶.jpg";c="#962828";}
 
     document.body.style.background=`url('${bg}') no-repeat center center/cover`;
-
     page3.classList.add('left-align');
     carrotThumb.classList.add('fade-out');
     setTimeout(()=>carrotThumb.style.display='none',600);
@@ -286,7 +248,6 @@ drawBtn.addEventListener('click',async()=>{
     fortuneLine.innerHTML=`<span class="fortune-text" style="color:${c}">${fText}</span>`;
     adviceText.style.display='block';
     adviceText.innerHTML=`<p><span>${escapeHtml(data.advice)}</span></p>`;
-
     drawBtn.classList.replace('btn--draw','btn--retry');
   }catch(e){
     fortuneLine.innerHTML='⚠️ 占卜失敗，請稍後重試';
@@ -295,7 +256,7 @@ drawBtn.addEventListener('click',async()=>{
   }finally{drawBtn.disabled=false;}
 });
 
-if('serviceWorker'in navigator){
+if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
     navigator.serviceWorker.register('./sw.js?v=8')
     .then(r=>console.log('✅ SW 註冊成功:',r.scope))
