@@ -29,7 +29,9 @@
 /* 字體設定 */
 @font-face {
   font-family: 'MyChineseFont';
-  src: url('fonts/MyChineseFont.woff') format('woff');
+  src: url('fonts/MyChineseFont.woff2') format('woff2'),
+       url('fonts/MyChineseFont.woff') format('woff'),
+       url('fonts/MyChineseFont.ttf') format('truetype');
   font-display: swap;
 }
 
@@ -105,14 +107,9 @@ html, body {
   transition:padding-left 0.4s ease;
 }
 
-/* 手機橫式：強制留 80px 邊距 */
 @media screen and (max-width: 1024px) and (orientation: landscape) {
-  #page3.left-align {
-    padding-left:80px !important;
-  }
+  #page3.left-align { padding-left:80px !important; }
 }
-
-/* 手機直式：保持置中 */
 @media screen and (max-width: 768px) and (orientation: portrait) {
   #page3.left-align {
     align-items:center !important;
@@ -137,7 +134,7 @@ html, body {
 
 /* 占卜結果字體 */
 .fortune-text {
-  font-family: 'HanyiSentyPagoda', serif !important;
+  font-family:'HanyiSentyPagoda', serif !important;
   font-size:clamp(5rem,12vw,8rem);
   color:#b9872b;
   text-align:left;
@@ -294,8 +291,8 @@ drawBtn.addEventListener('click',async()=>{
   }finally{drawBtn.disabled=false;}
 });
 
-// 強制載入塔字體
-document.fonts.load('10pt "HanyiSentyPagoda"').then(loaded => {
+// 強制載入塔字體並檢查
+document.fonts.load('10pt "HanyiSentyPagoda"').then(()=>{
   if(document.fonts.check('10pt "HanyiSentyPagoda"')){
     console.log('✅ HanyiSentyPagoda 已成功載入');
   } else {
