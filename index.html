@@ -29,19 +29,13 @@
 /* 字體設定 */
 @font-face {
   font-family: 'MyChineseFont';
-  src: url('fonts/MyChineseFont.woff2') format('woff2'),
-       url('fonts/MyChineseFont.woff') format('woff'),
-       url('fonts/MyChineseFont.ttf') format('truetype');
+  src: url('fonts/MyChineseFont.woff') format('woff');
   font-display: swap;
 }
 
 @font-face {
   font-family: 'HanyiSentyPagoda';
-  src: url('fonts/HanyiSentyPagoda.woff2') format('woff2'),
-       url('fonts/HanyiSentyPagoda.woff') format('woff'),
-       url('fonts/HanyiSentyPagoda.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
+  src: url('fonts/HanyiSentyPagoda.woff') format('woff');
   font-display: swap;
 }
 
@@ -107,9 +101,14 @@ html, body {
   transition:padding-left 0.4s ease;
 }
 
+/* 手機橫式：強制留 80px 邊距 */
 @media screen and (max-width: 1024px) and (orientation: landscape) {
-  #page3.left-align { padding-left:80px !important; }
+  #page3.left-align {
+    padding-left:80px !important;
+  }
 }
+
+/* 手機直式：保持置中 */
 @media screen and (max-width: 768px) and (orientation: portrait) {
   #page3.left-align {
     align-items:center !important;
@@ -119,7 +118,7 @@ html, body {
   }
 }
 
-/* 第3頁一般字體 */
+/* 第3頁字體 */
 #page3 .fortune{
   font-size: clamp(1.2rem, 4vw, 1.8rem);
 }
@@ -130,15 +129,6 @@ html, body {
   line-height:1.6;
   max-width:600px;
   font-family:'MyChineseFont';
-}
-
-/* 占卜結果字體 */
-.fortune-text {
-  font-family:'HanyiSentyPagoda', serif !important;
-  font-size:clamp(5rem,12vw,8rem);
-  color:#b9872b;
-  text-align:left;
-  line-height:1.2;
 }
 
 /* 按鈕樣式 */
@@ -163,6 +153,12 @@ html, body {
   transition:all 0.6s ease;
 }
 
+/* 占卜結果字體 */
+.fortune-text {
+  font-family:'HanyiSentyPagoda',serif;
+  font-size:clamp(5rem,12vw,8rem);
+  color:#b9872b;
+}
 .subtitle, .advice {font-size:clamp(1rem,3.5vw,1.3rem);}
 
 .energy-reminder{
@@ -278,7 +274,6 @@ drawBtn.addEventListener('click',async()=>{
     carrotThumb.classList.add('fade-out');
     setTimeout(()=>carrotThumb.style.display='none',600);
 
-    // 強制使用塔字體
     fortuneLine.innerHTML=`<span class="fortune-text" style="color:${c}">${fText}</span>`;
     adviceText.style.display='block';
     adviceText.innerHTML=`<p><span>${escapeHtml(data.advice)}</span></p>`;
@@ -289,15 +284,6 @@ drawBtn.addEventListener('click',async()=>{
     adviceText.style.display='block';
     adviceText.innerHTML='<p>魔力干擾過強，無法從祭壇讀取命運。</p>';
   }finally{drawBtn.disabled=false;}
-});
-
-// 強制載入塔字體並檢查
-document.fonts.load('10pt "HanyiSentyPagoda"').then(()=>{
-  if(document.fonts.check('10pt "HanyiSentyPagoda"')){
-    console.log('✅ HanyiSentyPagoda 已成功載入');
-  } else {
-    console.log('❌ HanyiSentyPagoda 無法載入，請確認字體檔案路徑與格式');
-  }
 });
 
 if('serviceWorker'in navigator){
