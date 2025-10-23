@@ -111,12 +111,28 @@ html, body {
   }
 }
 
-/* 第3頁文字 */
-#page3 .fortune {
-  font-size: clamp(1.2rem, 4vw, 1.8rem);
-  position: relative;
-  min-height: 2.5em; /* 預留空間 */
+/* 第3頁文字與結果 */
+#page3 .fortune-container{
+  position:relative;
+  min-height:100px; /* 預留空間給大字 */
 }
+.fortune-text-container{
+  position:absolute;
+  top:-15vh; /* 大字上浮 */
+  left:50%;
+  transform:translateX(-50%);
+  font-family:'HanyiSentyPagoda', serif;
+  font-size:clamp(8rem,12vw,12rem);
+  pointer-events:none;
+  white-space:nowrap;
+}
+.fortune-text-container.大吉{ color:#4d2b0a; }
+.fortune-text-container.中吉{ color:#4d2b0a; }
+.fortune-text-container.小吉{ color:#4d2b0a; }
+.fortune-text-container.吉{ color:#4d2b0a; }
+.fortune-text-container.凶{ color:#4d2b0a; }
+
+#page3 .fortune{ font-size: clamp(1.2rem, 4vw, 1.8rem); z-index:1; }
 #page3 .advice{
   margin-top:10px;
   font-size:clamp(1.8rem,4vw,2.6rem);
@@ -124,16 +140,6 @@ html, body {
   max-width:600px;
   color: #4b2d0a;
   font-family:'MyChineseFont';
-}
-
-/* 占卜結果大字 */
-.fortune-text {
-  display: inline-block;
-  font-family: 'HanyiSentyPagoda', serif;
-  font-size: clamp(8rem, 12vw, 12rem);
-  color: #4d2b0a;
-  line-height:1;
-  transform: translateY(-1.5em); /* 上浮，不影響小建議 */
 }
 
 /* PNG 按鈕 */
@@ -203,7 +209,10 @@ footer{position:absolute;bottom:8px;font-size:.75rem;color:rgba(46,34,22,0.6);}
 <div id="page3" class="page">
   <div class="divination">
     <img id="carrotThumb" class="carrot-thumb" src="./images/carrot-thumb.png">
-    <div class="fortune" id="fortuneLine">按下 <strong>占卜運勢</strong> 挖取你的命運之蔔</div>
+    <div class="fortune-container">
+      <div class="fortune" id="fortuneLine">按下 <strong>占卜運勢</strong> 挖取你的命運之蔔</div>
+      <div class="fortune-text-container" id="fortuneResult"></div>
+    </div>
     <div class="advice" id="adviceText" style="display:none"></div>
     <div class="button-row">
       <button id="drawBtn" class="btn btn--draw"></button>
@@ -221,6 +230,7 @@ const fortuneLine=document.getElementById('fortuneLine');
 const adviceText=document.getElementById('adviceText');
 const carrotThumb=document.getElementById('carrotThumb');
 const page3=document.getElementById('page3');
+const fortuneResult=document.getElementById('fortuneResult');
 
 function transitionPage(cur,next){
   document.getElementById(cur)?.classList.add('fade-out');
@@ -239,6 +249,7 @@ document.getElementById('backBtn').onclick=()=>{
   carrotThumb.style.display='block';
   carrotThumb.classList.remove('fade-out');
   fortuneLine.innerHTML='按下 <strong>占卜運勢</strong> 挖取你的命運之蔔';
+  fortuneResult.innerHTML='';
   adviceText.style.display='none';
   drawBtn.classList.remove('btn--retry');
   drawBtn.classList.add('btn--draw');
@@ -254,6 +265,7 @@ drawBtn.addEventListener('click',async()=>{
   drawBtn.disabled=true;
   fortuneLine.innerHTML='🥕 挖取中... 正在拔出你的命運之蔔...';
   adviceText.style.display='none';
+  fortuneResult.innerHTML='';
   try{
     const res=await fetch(`${apiUrl}?user_id=${userId}&username=${username}&force_random=true&t=${Date.now()}`,{cache:'no-store'});
     const data=await res.json();
@@ -270,10 +282,11 @@ drawBtn.addEventListener('click',async()=>{
     carrotThumb.classList.add('fade-out');
     setTimeout(()=>carrotThumb.style.display='none',600);
 
-    // 大字只上浮，不影響下面小建議與按鈕
-    fortuneLine.innerHTML=`<span class="fortune-text ${className}">${fText}</span>`;
+    fortuneResult.innerHTML=fText;
+    fortuneResult.className=`fortune-text-container ${className}`;
+
     adviceText.style.display='block';
-    adviceText.innerHTML=`<p>${escapeHtml(data.advice)}</p>`;
+    adviceText.innerHTML=`<p><span>${escapeHtml(data.advice)}</span></p>`;
 
     drawBtn.classList.replace('btn--draw','btn--retry');
     drawBtn.classList.remove('btn--retry');
