@@ -31,7 +31,6 @@
        url('fonts/MyChineseFont.woff') format('woff');
   font-display: swap;
 }
-
 @font-face {
   font-family: 'HanyiSentyPagoda';
   src: url('fonts/HanyiSentyPagoda-fixed.woff2') format('woff2'),
@@ -46,7 +45,7 @@
 html, body {
   width:100%;height:100%;margin:0;padding:0;
   font-family:'MyChineseFont','Uncial Antiqua',serif;
-  background:url('images/medieval-carrot-placeholder.jpg') no-repeat center center;
+  background:url('./images/medieval-carrot-placeholder.jpg') no-repeat center center;
   background-size:contain;
   background-color:#000;
   color:var(--ink);
@@ -65,11 +64,11 @@ html, body {
 .page.active {opacity:1;pointer-events:all;transform:scale(1);}
 
 /* 第1頁 */
-#page1 h1{font-size:clamp(3.0rem,12vw,3.8rem);color:#4D2B0A;margin-bottom:1rem;text-align:center;}
+#page1 h1{font-size:clamp(3.0rem,12vw,3.8rem);color:#4d2b0a;margin-bottom:1rem;text-align:center;}
 #page1 .subtitle{font-size:35pt;color:#333;text-align:center;}
 
 /* 第2頁 */
-#page2 h1{font-size:clamp(2.8rem,10vw,3.6rem);color:#4D2B0A;text-align:center;margin-bottom:1rem;}
+#page2 h1{font-size:clamp(2.8rem,10vw,3.6rem);color:#4d2b0a;text-align:center;margin-bottom:1rem;}
 .qr {
   width:130px; height:130px; border-radius:8px; overflow:hidden;
   margin-bottom:10px; box-shadow:0 3px 8px rgba(0,0,0,0.4);
@@ -130,17 +129,50 @@ html, body {
   margin-top: 5vh;
   display: inline-block;
 }
-.fortune-text.大吉 { color: #4b2d0a; }
-.fortune-text.中吉 { color: #4b2d0a; }
-.fortune-text.小吉 { color: #4b2d0a; }
-.fortune-text.吉   { color: #4b2d0a; }
-.fortune-text.凶   { color: #4b2d0a; }
+.fortune-text.大吉 { color: #4d2b0a; }
+.fortune-text.中吉 { color: #4d2b0a; }
+.fortune-text.小吉 { color: #4d2b0a; }
+.fortune-text.吉   { color: #4d2b0a; }
+.fortune-text.凶   { color: #4d2b0a; }
 
 .energy-reminder{
   font-family:'MyChineseFont';
   font-size:clamp(0.95rem,3.2vw,1.1rem);
   color:var(--gold);
   margin:0 0 6px 0;
+}
+
+/* PNG 按鈕 */
+.btn{
+  width:200px; height:64px;
+  display:inline-block;
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:contain;
+  background-color:transparent;
+  border:0;
+  padding:0;
+  margin:10px 6px;
+  cursor:pointer;
+  z-index:10;
+}
+.btn:hover{transform:translateY(-3px) scale(1.02); filter:brightness(1.06);}
+.btn:active{transform:translateY(-1px) scale(.98);}
+.btn--start{background-image:url('./images/btn-start.png');}
+.btn--next{background-image:url('./images/btn-next.png');}
+.btn--draw{background-image:url('./images/btn-draw.png');}
+.btn--back{background-image:url('./images/btn-back.png');}
+.btn--retry{background-image:url('./images/btn-retry.png');}
+
+/* 按鈕 row */
+#page3 .button-row{
+  display:flex;
+  gap:10px;
+  flex-direction:row;
+  align-items:center;
+  justify-content:center;
+  margin-top:20px;
+  min-height:64px;
 }
 
 .carrot-thumb {
@@ -159,7 +191,6 @@ footer{position:absolute;bottom:8px;font-size:.75rem;color:rgba(46,34,22,0.6);}
 </head>
 <body>
 
-<!-- 第1頁 -->
 <div id="page1" class="page active">
   <h1>命運之蔔 · 森林占卜祭壇</h1>
   <div class="subtitle">探索命運的儀式，從加入開始</div>
@@ -167,7 +198,6 @@ footer{position:absolute;bottom:8px;font-size:.75rem;color:rgba(46,34,22,0.6);}
   <footer>© 2025 命運之蔔</footer>
 </div>
 
-<!-- 第2頁 -->
 <div id="page2" class="page">
   <h1>掃描 QRCODE 加入 Discord</h1>
   <div class="qr">
@@ -176,10 +206,9 @@ footer{position:absolute;bottom:8px;font-size:.75rem;color:rgba(46,34,22,0.6);}
   <button id="joinedBtn" class="btn btn--next"></button>
 </div>
 
-<!-- 第3頁 -->
 <div id="page3" class="page">
   <div class="divination">
-    <img id="carrotThumb" class="carrot-thumb" src="images/carrot-thumb.png">
+    <img id="carrotThumb" class="carrot-thumb" src="./images/carrot-thumb.png">
     <div class="fortune" id="fortuneLine">按下 <strong>占卜運勢</strong> 挖取你的命運之蔔</div>
     <div class="advice" id="adviceText" style="display:none"></div>
     <div class="button-row">
@@ -219,7 +248,7 @@ document.getElementById('backBtn').onclick=()=>{
   adviceText.style.display='none';
   drawBtn.classList.remove('btn--retry');
   drawBtn.classList.add('btn--draw');
-  document.body.style.backgroundImage="url('images/medieval-carrot-placeholder.jpg')";
+  document.body.style.backgroundImage="url('./images/medieval-carrot-placeholder.jpg')";
   transitionPage('page3','page1');
 };
 
@@ -235,19 +264,18 @@ drawBtn.addEventListener('click',async()=>{
     const res=await fetch(`${apiUrl}?user_id=${userId}&username=${username}&force_random=true&t=${Date.now()}`,{cache:'no-store'});
     const data=await res.json();
     const fortune=data.fortune||"";
-    let fText="", bg="images/fortune_default.png", className="";
-    if(fortune.includes("大吉")){ fText="大吉"; bg="images/大吉.jpg"; className="大吉"; }
-    else if(fortune.includes("中吉")){ fText="中吉"; bg="images/中吉.jpg"; className="中吉"; }
-    else if(fortune.includes("小吉")){ fText="小吉"; bg="images/小吉.jpg"; className="小吉"; }
-    else if(fortune.includes("吉")){ fText="吉"; bg="images/吉.jpg"; className="吉"; }
-    else if(fortune.includes("凶")){ fText="凶"; bg="images/凶.jpg"; className="凶"; }
+    let fText="", bg="./images/fortune_default.png", className="";
+    if(fortune.includes("大吉")){ fText="大吉"; bg="./images/大吉.jpg"; className="大吉"; }
+    else if(fortune.includes("中吉")){ fText="中吉"; bg="./images/中吉.jpg"; className="中吉"; }
+    else if(fortune.includes("小吉")){ fText="小吉"; bg="./images/小吉.jpg"; className="小吉"; }
+    else if(fortune.includes("吉")){ fText="吉"; bg="./images/吉.jpg"; className="吉"; }
+    else if(fortune.includes("凶")){ fText="凶"; bg="./images/凶.jpg"; className="凶"; }
 
     document.body.style.background=`url('${bg}') no-repeat center center/cover`;
     page3.classList.add('left-align');
     carrotThumb.classList.add('fade-out');
     setTimeout(()=>carrotThumb.style.display='none',600);
 
-    // ← 使用 class 控制顏色
     fortuneLine.innerHTML=`<span class="fortune-text ${className}">${fText}</span>`;
     adviceText.style.display='block';
     adviceText.innerHTML=`<p><span>${escapeHtml(data.advice)}</span></p>`;
