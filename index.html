@@ -6,188 +6,178 @@
 
 <link rel="icon" href="images/favicon.ico" type="image/x-icon">
 <link rel="apple-touch-icon" href="images/icon-192.png">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, orientation=landscape">
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="命運之蔔">
+<meta name="x5-orientation" content="landscape">
+<meta name="full-screen" content="yes">
 <meta name="x5-fullscreen" content="true">
 
 <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
 
 <style>
-:root {
-  --paper: #f3ead5;
-  --ink: #2e2316;
-  --gold: #b9872b;
+:root{
+  --paper:#f3ead5;
+  --ink:#2e2316;
+  --gold:#b9872b;
 }
 
-/* ===== 字體設定 ===== */
+/* 字體設定 */
 @font-face {
   font-family: 'MyChineseFont';
   src: url('fonts/MyChineseFont.woff') format('woff');
   font-display: swap;
 }
+
 @font-face {
   font-family: 'HanyiSentyPagoda';
   src: url('fonts/HanyiSentyPagoda.woff') format('woff');
   font-display: swap;
 }
 
-/* ===== 全域 ===== */
+/* 全域 */
 html, body {
-  width: 100%; height: 100%;
-  margin: 0; padding: 0;
-  font-family: 'MyChineseFont','Uncial Antiqua',serif;
-  background: url('images/medieval-carrot-placeholder.jpg') no-repeat center center;
-  background-size: contain;
-  background-color: #000;
-  color: var(--ink);
-  overflow: hidden;
-  display: flex; align-items: center; justify-content: center;
-  transition: background-image 1s ease-in-out;
+  width:100%;height:100%;margin:0;padding:0;
+  font-family:'MyChineseFont','Uncial Antiqua',serif;
+  background:url('images/medieval-carrot-placeholder.jpg') no-repeat center center;
+  background-size:contain;
+  background-color:#000;
+  color:var(--ink);
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  transition:background-image 1s ease-in-out;
 }
 
-/* ===== 頁面共通 ===== */
+/* 頁面共通 */
 .page {
-  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-  display: flex; align-items: center; justify-content: center; flex-direction: column;
-  opacity: 0; pointer-events: none; transform: scale(0.97);
-  transition: opacity .8s ease, transform .8s ease;
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  opacity:0;pointer-events:none;transform:scale(0.97);
+  transition:opacity .8s ease,transform .8s ease;
 }
-.page.active {opacity: 1; pointer-events: all; transform: scale(1);}
+.page.active {opacity:1;pointer-events:all;transform:scale(1);}
 
-/* ===== 第1頁 ===== */
-#page1 h1 {
-  font-size: 55pt;
-  color: #4D2B0A;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-#page1 .subtitle {
-  font-size: 35pt;
-  color: #333;
-  text-align: center;
-}
+/* 第1頁 */
+#page1 h1{font-size:clamp(3.0rem,12vw,3.8rem);color:#4D2B0A;margin-bottom:1rem;text-align:center;}
+#page1 .subtitle{font-size:35pt;color:#333;text-align:center;}
 
-/* ===== 第2頁 ===== */
-#page2 h1 {
-  font-size: clamp(2.8rem, 10vw, 3.6rem);
-  color: #4D2B0A;
-  text-align: center;
-  margin-bottom: 1rem;
-}
+/* 第2頁 */
+#page2 h1{font-size:clamp(2.8rem,10vw,3.6rem);color:#4D2B0A;text-align:center;margin-bottom:1rem;}
 .qr {
-  width: 130px; height: 130px;
-  border-radius: 8px; overflow: hidden;
-  margin-bottom: 10px;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.4);
-  flex-shrink: 0;
+  width:130px; height:130px; border-radius:8px; overflow:hidden;
+  margin-bottom:10px; box-shadow:0 3px 8px rgba(0,0,0,0.4);
+  flex-shrink:0;
 }
 .qr img {
-  width: 100%; height: 100%;
-  object-fit: cover;
+  width:100%; height:100%; max-width:100%; max-height:100%;
+  object-fit:cover;
 }
 
-/* ===== 第3頁 ===== */
+/* 第3頁 */
 #page3 {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  width: 100%; height: 100%;
-  transition: all 0.6s ease;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  width:100%;
+  height:100%;
+  box-sizing:border-box;
+  transition:all 0.6s ease;
 }
 
-/* 結果出現後：左移模式 */
-#page3.left-align {
-  align-items: flex-start;
-  justify-content: center;
-  text-align: left;
-  padding-left: 80px; /* 桌面預設 */
-  animation: slideLeft 0.8s ease forwards;
-}
-@keyframes slideLeft {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-40px); }
+/* 左移模式（結果出現後） */
+#page3.left-align{
+  align-items:flex-start;
+  justify-content:center;
+  text-align:left;
+  padding-left:40px; /* 桌面預設 */
+  animation:slideLeft 0.8s ease forwards;
 }
 
-/* RWD 手機 / 平板位置修正 */
-@media (max-width: 1024px) {
-  #page3.left-align {
-    padding-left: 50px;
-  }
+@keyframes slideLeft{
+  0%{transform:translateX(0);}
+  100%{transform:translateX(-40px);}
 }
-@media (max-width: 768px) {
-  #page3.left-align {
-    align-items: center;
-    text-align: center;
-    padding-left: 0;
+
+/* 手機板調整 */
+@media (max-width: 768px){
+  #page3.left-align{
+    padding-left:0px;
   }
-  @keyframes slideLeft {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(0); }
+  @keyframes slideLeft{
+    0%{transform:translateX(0);}
+    100%{transform:translateX(0px);}
   }
 }
 
-/* 占卜畫面字體 */
-#page3 .fortune {
+#page3 .fortune{
   font-size: clamp(1.2rem, 4vw, 1.8rem);
 }
-#page3 .advice {
-  margin-top: 10px;
-  font-size: clamp(1rem, 3.5vw, 1.3rem);
-  line-height: 1.6;
-  max-width: 600px;
-  font-family: 'MyChineseFont';
+
+#page3 .advice{
+  margin-top:10px;
+  font-size:clamp(1rem,3.5vw,1.3rem);
+  line-height:1.6;
+  max-width:600px;
+  font-family:'MyChineseFont';
 }
 
-/* 按鈕樣式 */
-.btn {
-  width: 200px; height: 64px;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  background-color: transparent;
-  border: 0; padding: 0; margin: 10px 6px;
-  cursor: pointer;
-  outline: none;
-  transition: transform .12s ease, filter .12s ease;
+.btn{
+  width:200px;height:64px;
+  background-repeat:no-repeat;background-position:center;background-size:contain;
+  background-color:transparent;border:0;padding:0;margin:10px 6px;cursor:pointer;
+  -webkit-appearance:none;-moz-appearance:none;appearance:none;
+  outline:none;transition:transform .12s ease,filter .12s ease;
 }
-.btn:hover { transform: translateY(-3px); filter: brightness(1.06); }
-.btn:active { transform: translateY(-1px) scale(.98); }
-.btn--start { background-image: url('images/btn-start.png'); }
-.btn--next { background-image: url('images/btn-next.png'); }
-.btn--draw { background-image: url('images/btn-draw.png'); }
-.btn--back { background-image: url('images/btn-back.png'); }
-.btn--retry { background-image: url('images/btn-retry.png'); }
+.btn:hover{transform:translateY(-3px);filter:brightness(1.06);}
+.btn:active{transform:translateY(-1px) scale(.98);}
+.btn--start{background-image:url('images/btn-start.png');}
+.btn--next{background-image:url('images/btn-next.png');}
+.btn--draw{background-image:url('images/btn-draw.png');}
+.btn--back{background-image:url('images/btn-back.png');}
+.btn--retry{background-image:url('images/btn-retry.png');}
 
-#page3 .button-row {
-  display: flex; gap: 10px;
-  align-items: center; justify-content: center;
-  margin-top: 20px;
+#page3 .button-row{
+  display:flex;gap:10px;flex-direction:row;
+  align-items:center;justify-content:center;margin-top:20px;
+  transition:all 0.6s ease;
 }
 
 /* 占卜結果字體 */
 .fortune-text {
-  font-family: 'HanyiSentyPagoda','MyChineseFont','Uncial Antiqua',serif;
-  font-size: clamp(3rem, 10vw, 6rem);
-  color: #b9872b;
+  font-family:'HanyiSentyPagoda','MyChineseFont','Uncial Antiqua',serif;
+  font-size:clamp(3rem,10vw,6rem);
+  color:#b9872b;
+}
+.subtitle, .advice {font-size:clamp(1rem,3.5vw,1.3rem);}
+
+.energy-reminder{
+  font-family:'MyChineseFont';
+  font-size:clamp(0.95rem,3.2vw,1.1rem);
+  color:var(--gold);
+  margin:0 0 6px 0;
 }
 
-footer {
-  position: absolute;
-  bottom: 8px;
-  font-size: .75rem;
-  color: rgba(46,34,22,0.6);
+.carrot-thumb{
+  width:clamp(120px,20vw,150px);
+  height:clamp(120px,20vw,150px);
+  object-fit:contain;
+  transition:opacity 0.6s ease;
 }
+.carrot-thumb.fade-out{opacity:0;}
+
+.fade-out{opacity:0!important;transform:scale(.95);transition:opacity .6s,transform .6s;}
+.fade-in{opacity:1!important;transform:scale(1);transition:opacity .6s,transform .6s;}
+footer{position:absolute;bottom:8px;font-size:.75rem;color:rgba(46,34,22,0.6);}
 </style>
 </head>
-
 <body>
+
 <!-- 第1頁 -->
 <div id="page1" class="page active">
   <h1>命運之蔔 · 森林占卜祭壇</h1>
@@ -220,37 +210,37 @@ footer {
 </div>
 
 <script>
-const apiUrl = "https://carrot-bot-production.up.railway.app/api/web_fortune";
-const userId = "657882539331158016";
-const username = "湯姆瑞斗";
+const apiUrl="https://carrot-bot-production.up.railway.app/api/web_fortune";
+const userId="657882539331158016";
+const username="湯姆瑞斗";
+const drawBtn=document.getElementById('drawBtn');
+const fortuneLine=document.getElementById('fortuneLine');
+const adviceText=document.getElementById('adviceText');
+const carrotThumb=document.getElementById('carrotThumb');
+const page3=document.getElementById('page3');
 
-const drawBtn = document.getElementById('drawBtn');
-const fortuneLine = document.getElementById('fortuneLine');
-const adviceText = document.getElementById('adviceText');
-const carrotThumb = document.getElementById('carrotThumb');
-const page3 = document.getElementById('page3');
-
-function transitionPage(cur, next) {
+function transitionPage(cur,next){
   document.getElementById(cur)?.classList.add('fade-out');
-  setTimeout(() => {
+  setTimeout(()=>{
     document.getElementById(cur)?.classList.remove('active','fade-out');
-    const n = document.getElementById(next);
+    const n=document.getElementById(next);
     n?.classList.add('active','fade-in');
-    setTimeout(() => n?.classList.remove('fade-in'), 600);
-  }, 500);
+    setTimeout(()=>n?.classList.remove('fade-in'),600);
+  },500);
 }
 
-document.getElementById('startBtn').onclick = () => transitionPage('page1','page2');
-document.getElementById('joinedBtn').onclick = () => transitionPage('page2','page3');
+document.getElementById('startBtn').onclick=()=>transitionPage('page1','page2');
+document.getElementById('joinedBtn').onclick=()=>transitionPage('page2','page3');
 
-document.getElementById('backBtn').onclick = () => {
+document.getElementById('backBtn').onclick=()=>{
   page3.classList.remove('left-align');
-  carrotThumb.style.display = 'block';
+  carrotThumb.style.display='block';
   carrotThumb.classList.remove('fade-out');
-  fortuneLine.innerHTML = '按下 <strong>占卜運勢</strong> 挖取你的命運之蔔';
-  adviceText.style.display = 'none';
-  drawBtn.classList.replace('btn--retry','btn--draw');
-  document.body.style.backgroundImage = "url('images/medieval-carrot-placeholder.jpg')";
+  fortuneLine.innerHTML='按下 <strong>占卜運勢</strong> 挖取你的命運之蔔';
+  adviceText.style.display='none';
+  drawBtn.classList.remove('btn--retry');
+  drawBtn.classList.add('btn--draw');
+  document.body.style.backgroundImage="url('images/medieval-carrot-placeholder.jpg')";
   transitionPage('page3','page1');
 };
 
@@ -258,46 +248,44 @@ function escapeHtml(s){
   return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-drawBtn.addEventListener('click', async () => {
-  drawBtn.disabled = true;
-  fortuneLine.innerHTML = '🥕 挖取中... 正在拔出你的命運之蔔...';
-  adviceText.style.display = 'none';
-  try {
-    const res = await fetch(`${apiUrl}?user_id=${userId}&username=${username}&force_random=true&t=${Date.now()}`, {cache:'no-store'});
-    const data = await res.json();
-    const fortune = data.fortune || "";
-    let fText = "", bg = "images/fortune_default.png", c = "#b9872b";
-    if (fortune.includes("大吉")) { fText="大吉"; bg="images/大吉.jpg"; c="#e0b52d"; }
-    else if (fortune.includes("中吉")) { fText="中吉"; bg="images/中吉.jpg"; c="#c7901e"; }
-    else if (fortune.includes("小吉")) { fText="小吉"; bg="images/小吉.jpg"; c="#a6741c"; }
-    else if (fortune.includes("吉")) { fText="吉"; bg="images/吉.jpg"; c="#d3a23a"; }
-    else if (fortune.includes("凶")) { fText="凶"; bg="images/凶.jpg"; c="#962828"; }
+drawBtn.addEventListener('click',async()=>{
+  drawBtn.disabled=true;
+  fortuneLine.innerHTML='🥕 挖取中... 正在拔出你的命運之蔔...';
+  adviceText.style.display='none';
+  try{
+    const res=await fetch(`${apiUrl}?user_id=${userId}&username=${username}&force_random=true&t=${Date.now()}`,{cache:'no-store'});
+    const data=await res.json();
+    const fortune=data.fortune||"";
+    let fText="",bg="images/fortune_default.png",c="#b9872b";
+    if(fortune.includes("大吉")){fText="大吉";bg="images/大吉.jpg";c="#e0b52d";}
+    else if(fortune.includes("中吉")){fText="中吉";bg="images/中吉.jpg";c="#c7901e";}
+    else if(fortune.includes("小吉")){fText="小吉";bg="images/小吉.jpg";c="#a6741c";}
+    else if(fortune.includes("吉")){fText="吉";bg="images/吉.jpg";c="#d3a23a";}
+    else if(fortune.includes("凶")){fText="凶";bg="images/凶.jpg";c="#962828";}
 
-    document.body.style.background = `url('${bg}') no-repeat center center/cover`;
+    document.body.style.background=`url('${bg}') no-repeat center center/cover`;
 
     page3.classList.add('left-align');
     carrotThumb.classList.add('fade-out');
     setTimeout(()=>carrotThumb.style.display='none',600);
 
-    fortuneLine.innerHTML = `<span class="fortune-text" style="color:${c}">${fText}</span>`;
-    adviceText.style.display = 'block';
-    adviceText.innerHTML = `<p><span>${escapeHtml(data.advice)}</span></p>`;
+    fortuneLine.innerHTML=`<span class="fortune-text" style="color:${c}">${fText}</span>`;
+    adviceText.style.display='block';
+    adviceText.innerHTML=`<p><span>${escapeHtml(data.advice)}</span></p>`;
 
     drawBtn.classList.replace('btn--draw','btn--retry');
-  } catch(e) {
-    fortuneLine.innerHTML = '⚠️ 占卜失敗，請稍後重試';
-    adviceText.style.display = 'block';
-    adviceText.innerHTML = '<p>魔力干擾過強，無法從祭壇讀取命運。</p>';
-  } finally {
-    drawBtn.disabled = false;
-  }
+  }catch(e){
+    fortuneLine.innerHTML='⚠️ 占卜失敗，請稍後重試';
+    adviceText.style.display='block';
+    adviceText.innerHTML='<p>魔力干擾過強，無法從祭壇讀取命運。</p>';
+  }finally{drawBtn.disabled=false;}
 });
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js?v=9')
-      .then(r => console.log('✅ SW 註冊成功:', r.scope))
-      .catch(e => console.log('❌ SW 註冊失敗:', e));
+if('serviceWorker'in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./sw.js?v=8')
+    .then(r=>console.log('✅ SW 註冊成功:',r.scope))
+    .catch(e=>console.log('❌ SW 註冊失敗:',e));
   });
 }
 </script>
