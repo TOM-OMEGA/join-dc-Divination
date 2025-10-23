@@ -35,7 +35,9 @@
 
 @font-face {
   font-family: 'HanyiSentyPagoda';
-  src: local('HanyiSentyPagoda'), url('fonts/HanyiSentyPagoda.ttf') format('truetype');
+  src: url('fonts/HanyiSentyPagoda.woff2') format('woff2'),
+       url('fonts/HanyiSentyPagoda.woff') format('woff'),
+       url('fonts/HanyiSentyPagoda.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -135,7 +137,7 @@ html, body {
 
 /* 占卜結果字體 */
 .fortune-text {
-  font-family:'HanyiSentyPagoda' !important;
+  font-family: 'HanyiSentyPagoda', serif !important;
   font-size:clamp(5rem,12vw,8rem);
   color:#b9872b;
   text-align:left;
@@ -293,7 +295,13 @@ drawBtn.addEventListener('click',async()=>{
 });
 
 // 強制載入塔字體
-document.fonts.load('10pt "HanyiSentyPagoda"').then(()=>console.log("HanyiSentyPagoda 已載入"));
+document.fonts.load('10pt "HanyiSentyPagoda"').then(loaded => {
+  if(document.fonts.check('10pt "HanyiSentyPagoda"')){
+    console.log('✅ HanyiSentyPagoda 已成功載入');
+  } else {
+    console.log('❌ HanyiSentyPagoda 無法載入，請確認字體檔案路徑與格式');
+  }
+});
 
 if('serviceWorker'in navigator){
   window.addEventListener('load',()=>{
