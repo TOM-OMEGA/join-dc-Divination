@@ -35,8 +35,17 @@
 
 @font-face {
   font-family: 'HanyiSentyPagoda';
-  src: url('fonts/HanyiSentyPagoda.woff') format('woff');
+  src: url('./fonts/HanyiSentyPagoda.woff') format('woff');
   font-display: swap;
+}
+
+/* 占卜結果字體 */
+.fortune-text {
+  font-family: 'HanyiSentyPagoda' !important; /* 強制使用塔字體 */
+  font-size: clamp(3rem, 10vw, 6rem);
+  color: #b9872b;
+  text-align: left;
+  line-height: 1.2;
 }
 
 /* 全域 */
