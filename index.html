@@ -144,6 +144,7 @@ html, body {
   font-size:clamp(1.8rem,4vw,2.6rem);
   line-height:1.6;
   max-width:600px;
+  color: #4D2B0A;
   font-family:'MyChineseFont';
 }
 
@@ -171,9 +172,11 @@ html, body {
 
 /* 占卜結果字體 */
 .fortune-text {
-  font-family:'HanyiSentyPagoda',serif;
-  font-size:clamp(5rem,12vw,8rem);
-  color:#b9872b;
+  font-family: 'HanyiSentyPagoda', serif;
+  font-size: clamp(5rem, 12vw, 8rem);
+  color: #4D2B0A;
+  margin-top: 5vh; /* ← 這行往下移一些，比例會隨螢幕大小調整 */
+  display: inline-block;
 }
 .subtitle, .advice {font-size:clamp(1rem,3.5vw,1.3rem);}
 
