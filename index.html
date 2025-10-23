@@ -90,45 +90,35 @@ html, body {
   transition:all 0.6s ease;
 }
 
-/* 左移模式（結果出現後） */
-#page3.left-align{
+/* 占卜後左移模式 */
+#page3.left-align {
   align-items:flex-start;
   justify-content:center;
   text-align:left;
-  padding-left:40px; /* 桌面預設 */
-  animation:slideLeft 0.8s ease forwards;
+  width:100%;
+  padding-left:40px; /* 桌面距離 */
+  box-sizing:border-box;
+  transition:padding-left 0.4s ease;
 }
 
-@keyframes slideLeft{
-  0%{transform:translateX(0);}
-  100%{transform:translateX(-40px);}
-}
-
-/* 手機橫式：靠左但保留空間 */
+/* 手機橫式：強制留 60px 邊距 */
 @media screen and (max-width: 1024px) and (orientation: landscape) {
   #page3.left-align {
-    padding-left:50px; /* 手機橫式往右一點 */
-  }
-  @keyframes slideLeft {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50px); }
+    padding-left:60px !important;
   }
 }
 
 /* 手機直式：保持置中 */
 @media screen and (max-width: 768px) and (orientation: portrait) {
   #page3.left-align {
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding-left: 0;
-  }
-  @keyframes slideLeft {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(0); }
+    align-items:center !important;
+    justify-content:center !important;
+    text-align:center !important;
+    padding-left:0 !important;
   }
 }
 
+/* 第3頁字體 */
 #page3 .fortune{
   font-size: clamp(1.2rem, 4vw, 1.8rem);
 }
@@ -141,6 +131,7 @@ html, body {
   font-family:'MyChineseFont';
 }
 
+/* 按鈕樣式 */
 .btn{
   width:200px;height:64px;
   background-repeat:no-repeat;background-position:center;background-size:contain;
