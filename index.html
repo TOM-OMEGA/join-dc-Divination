@@ -184,11 +184,19 @@ html, body {
   margin:0 0 6px 0;
 }
 
-.carrot-thumb{
-  width:clamp(120px,20vw,150px);
-  height:clamp(120px,20vw,150px);
-  object-fit:contain;
-  transition:opacity 0.6s ease;
+.carrot-thumb {
+  /* 自由調整大小比例 */
+  width: clamp(150px, 25vw, 220px);   /* ← 中間的 18vw 控制「反應速度」 */
+  height: clamp(150px, 25vw, 220px);
+  object-fit: contain;
+
+  /* 平滑動畫淡出 */
+  transition: opacity 0.6s ease, transform 0.4s ease;
+}
+
+.carrot-thumb.fade-out {
+  opacity: 0;
+  transform: scale(0.8); /* 抽籤後稍微縮小消失 */
 }
 .carrot-thumb.fade-out{opacity:0;}
 
