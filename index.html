@@ -17,8 +17,6 @@
 <meta name="full-screen" content="yes">
 <meta name="x5-fullscreen" content="true">
 
-<link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
-
 <style>
 :root{
   --paper:#f3ead5;
@@ -279,6 +277,8 @@ drawBtn.addEventListener('click',async()=>{
     adviceText.innerHTML=`<p><span>${escapeHtml(data.advice)}</span></p>`;
 
     drawBtn.classList.replace('btn--draw','btn--retry');
+    drawBtn.classList.remove('btn--retry');
+    drawBtn.classList.add('btn--draw');
   }catch(e){
     fortuneLine.innerHTML='⚠️ 占卜失敗，請稍後重試';
     adviceText.style.display='block';
