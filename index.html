@@ -177,17 +177,21 @@ document.getElementById('backBtn').onclick=()=>{
   const fortuneLine=document.getElementById('fortuneLine');
   const adviceText=document.getElementById('adviceText');
   const drawBtn=document.getElementById('drawBtn');
+  const carrotThumb=document.getElementById('carrotThumb');
   fortuneLine.innerHTML='按下 <strong>占卜運勢</strong> 挖取你的命運之蔔';
   adviceText.style.display='none';
   drawBtn.classList.remove('btn--retry');
   drawBtn.classList.add('btn--draw');
   document.body.style.backgroundImage="url('images/medieval-carrot-placeholder.jpg')";
+  // 🪄 返回首頁時顯示胡蘿蔔
+  carrotThumb.style.display='block';
   transitionPage('page3','page1');
 };
 
 const drawBtn=document.getElementById('drawBtn');
 const fortuneLine=document.getElementById('fortuneLine');
 const adviceText=document.getElementById('adviceText');
+const carrotThumb=document.getElementById('carrotThumb');
 
 function escapeHtml(s){
   return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -217,10 +221,13 @@ drawBtn.addEventListener('click',async()=>{
     document.body.style.backgroundPosition="center center";
     document.body.style.backgroundSize="cover";
 
-    /* 顯示只保留運勢文字，可改字型顏色 */
+    // 🪄 抽出結果後隱藏胡蘿蔔
+    carrotThumb.style.display='none';
+
+    // ✅ 顯示結果與小提示（不再出現「✨ 胡蘿蔔能量提醒」）
     fortuneLine.innerHTML=`<span class="fortune-text" style="color:${textColor}">${fortuneText}</span>`;
     adviceText.style.display='block';
-    adviceText.innerHTML=`<p class="energy-reminder">✨ 胡蘿蔔能量提醒：</p><p><span>${escapeHtml(data.advice)}</span></p>`;
+    adviceText.innerHTML = `<p><span>${escapeHtml(data.advice)}</span></p>`;
 
     drawBtn.classList.remove('btn--draw');
     drawBtn.classList.add('btn--retry');
@@ -236,7 +243,7 @@ drawBtn.addEventListener('click',async()=>{
 
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('./sw.js?v=4')
+    navigator.serviceWorker.register('./sw.js?v=5')
     .then(reg=>console.log('✅ SW 註冊成功:',reg.scope))
     .catch(err=>console.log('❌ SW 註冊失敗:',err));
   });
