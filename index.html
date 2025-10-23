@@ -111,7 +111,7 @@ html, body {
   }
 }
 
-/* 第3頁字體 */
+/* 第3頁文字與建議 */
 #page3 .fortune{ font-size: clamp(1.2rem, 4vw, 1.8rem); }
 #page3 .advice{
   margin-top:10px;
@@ -122,24 +122,16 @@ html, body {
   font-family:'MyChineseFont';
 }
 
-/* 占卜結果字體 */
+/* 占卜結果字體，浮動不推動其他元素 */
 .fortune-text {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
   font-family: 'HanyiSentyPagoda', serif;
   font-size: clamp(8rem, 12vw, 12rem);
-  margin-top: 15vh;
-  display: inline-block;
-}
-.fortune-text.大吉 { color: #4d2b0a; }
-.fortune-text.中吉 { color: #4d2b0a; }
-.fortune-text.小吉 { color: #4d2b0a; }
-.fortune-text.吉   { color: #4d2b0a; }
-.fortune-text.凶   { color: #4d2b0a; }
-
-.energy-reminder{
-  font-family:'MyChineseFont';
-  font-size:clamp(0.95rem,3.2vw,1.1rem);
-  color:var(--gold);
-  margin:0 0 6px 0;
+  color:#4d2b0a;
+  white-space: nowrap;
 }
 
 /* PNG 按鈕 */
@@ -191,6 +183,7 @@ footer{position:absolute;bottom:8px;font-size:.75rem;color:rgba(46,34,22,0.6);}
 </head>
 <body>
 
+<!-- 第1頁 -->
 <div id="page1" class="page active">
   <h1>命運之蔔 · 森林占卜祭壇</h1>
   <div class="subtitle">探索命運的儀式，從加入開始</div>
@@ -198,6 +191,7 @@ footer{position:absolute;bottom:8px;font-size:.75rem;color:rgba(46,34,22,0.6);}
   <footer>© 2025 命運之蔔</footer>
 </div>
 
+<!-- 第2頁 -->
 <div id="page2" class="page">
   <h1>掃描 QRCODE 加入 Discord</h1>
   <div class="qr">
@@ -206,12 +200,12 @@ footer{position:absolute;bottom:8px;font-size:.75rem;color:rgba(46,34,22,0.6);}
   <button id="joinedBtn" class="btn btn--next"></button>
 </div>
 
+<!-- 第3頁 -->
 <div id="page3" class="page">
-  <div class="divination">
+  <div class="divination" style="position:relative;">
     <img id="carrotThumb" class="carrot-thumb" src="./images/carrot-thumb.png">
-    <!-- 初始提示文字，不套 fortune-text -->
-    <div class="fortune" id="fortuneLine">
-      按下 <strong>占卜運勢</strong> 挖取你的命運之蔔
+    <div class="fortune" id="fortuneLine" style="position:relative;height:150px;">
+      <!-- 大字結果會浮在這裡，不占原本高度 -->
     </div>
     <div class="advice" id="adviceText" style="display:none"></div>
     <div class="button-row">
@@ -247,7 +241,7 @@ document.getElementById('backBtn').onclick=()=>{
   page3.classList.remove('left-align');
   carrotThumb.style.display='block';
   carrotThumb.classList.remove('fade-out');
-  fortuneLine.innerHTML='按下 <strong>占卜運勢</strong> 挖取你的命運之蔔';
+  fortuneLine.innerHTML='';
   adviceText.style.display='none';
   drawBtn.classList.remove('btn--retry');
   drawBtn.classList.add('btn--draw');
@@ -259,7 +253,7 @@ function escapeHtml(s){
   return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-drawBtn.addEventListener('click',async()=>{
+drawBtn.addEventListener('click', async()=>{
   drawBtn.disabled=true;
   fortuneLine.innerHTML='🥕 挖取中... 正在拔出你的命運之蔔...';
   adviceText.style.display='none';
@@ -279,7 +273,7 @@ drawBtn.addEventListener('click',async()=>{
     carrotThumb.classList.add('fade-out');
     setTimeout(()=>carrotThumb.style.display='none',600);
 
-    // 只有結果字套 fortune-text
+    // 使用絕對定位，大字不推動小建議或按鈕
     fortuneLine.innerHTML=`<span class="fortune-text ${className}">${fText}</span>`;
     adviceText.style.display='block';
     adviceText.innerHTML=`<p>${escapeHtml(data.advice)}</p>`;
