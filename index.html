@@ -27,14 +27,32 @@
 /* 字體設定 */
 @font-face {
   font-family: 'MyChineseFont';
-  src: url('fonts/MyChineseFont.woff') format('woff');
+  src: url('fonts/MyChineseFont.woff2') format('woff2'),
+       url('fonts/MyChineseFont.woff') format('woff');
   font-display: swap;
 }
 
+/* 修正版 HanyiSentyPagoda，確保跨瀏覽器可載入 */
 @font-face {
   font-family: 'HanyiSentyPagoda';
-  src: url('fonts/HanyiSentyPagoda.woff') format('woff');
+  src: url('fonts/HanyiSentyPagoda-fixed.woff2') format('woff2'),
+       url('fonts/HanyiSentyPagoda-fixed.woff') format('woff'),
+       url('fonts/HanyiSentyPagoda-fixed.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
   font-display: swap;
+}
+
+/* 測試時強制顯示字體是否正確載入 */
+@supports (font-family: 'HanyiSentyPagoda') {
+  body::after {
+    content: '🔤 HanyiSentyPagoda 已載入';
+    position: fixed;
+    bottom: 5px;
+    right: 10px;
+    font-size: 10px;
+    color: #ccc;
+  }
 }
 
 /* 全域 */
