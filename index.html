@@ -18,8 +18,9 @@
   /* 第三頁文字與間距 */
   --fortune-offset:-5vh;       /* 大吉文字垂直位移 */
   --fortune-left-offset:20px;  /* 大吉文字距左邊偏移 */
-  --fortune-gap:-10px;         /* 大吉與建議文字間距 */
-  --advice-gap:50px;          /* 建議文字與按鈕間距 */
+  --fortune-gap:-10px;         /* 大吉文字與建議文字間距 */
+  --advice-gap:50px;           /* 建議文字與按鈕行間距 */
+  --draw-btn-gap:50px;         /* fortuneLine 或建議文字到按鈕行的距離 */
 
   /* 胡蘿蔔圖片大小 */
   --carrot-size-min:150px;
@@ -102,7 +103,9 @@ html, body{
 }
 .button-row{
   display:flex; flex-direction:row; align-items:center; justify-content:center;
-  gap:10px; margin-top:var(--advice-gap); min-height:64px;
+  gap:10px;
+  margin-top:var(--draw-btn-gap); /* <- 使用新變數控制間距 */
+  min-height:64px;
 }
 
 /* 按鈕樣式 */
