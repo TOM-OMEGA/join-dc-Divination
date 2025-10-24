@@ -18,20 +18,12 @@
 <meta name="x5-fullscreen" content="true">
 
 <style>
-:root{
-  --paper:#f3ead5;
-  --ink:#2e2316;
-  --gold:#b9872b;
-
-  /* 可調整變數 */
-  --fortune-font-min:5rem;
-  --fortune-font-vw:12vw;
-  --fortune-font-max:8rem;
-  --fortune-margin-top:5vh;
-  --advice-top-gap:18px;
-  --advice-button-gap:18px;
-  --page3-padding-left-desktop:40px;
-  --page3-padding-left-mobile-landscape:80px;
+:root {
+  --fortune-margin-top: 5vh; /* 大吉上下位置 */
+  --advice-top-gap: 18px;    /* 大吉與小建議間距 */
+  --advice-button-gap: 18px; /* 小建議與按鈕間距 */
+  --page3-padding-left-desktop: 40px; /* 桌機左邊距離 */
+  --page3-padding-left-mobile-landscape: 80px; /* 手機橫向左距 */
 }
 
 @font-face {
@@ -75,90 +67,81 @@ html, body {
 .qr img{width:100%;height:100%;object-fit:cover;}
 
 /* 第3頁 */
-#page3{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  width:100%;
-  height:100%;
-  transition:all 0.6s ease;
+#page3 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  transition: all 0.6s ease;
 }
 
-/* 左對齊模式（只影響結果部分） */
-#page3.left-align .result-area .fortune-text {
-  text-align:left;
-  align-self:flex-start;
-  padding-left:var(--page3-padding-left-desktop);
-}
-@media screen and (max-width:1024px) and (orientation:landscape){
-  #page3.left-align .result-area .fortune-text { padding-left:var(--page3-padding-left-mobile-landscape)!important; }
-}
-@media screen and (max-width:768px) and (orientation:portrait){
-  #page3.left-align .result-area .fortune-text { align-self:center!important; text-align:center!important; padding-left:0!important; }
+/* 🟤 左對齊模式：整個結果區靠左排列 */
+#page3.left-align .result-area {
+  align-items: flex-start;
+  justify-content: flex-start;
+  text-align: left;
+  padding-left: var(--page3-padding-left-desktop);
 }
 
-/* 結構 */
-.divination{ position:relative; width:100%; max-width:940px; }
-
-.centeredIntro{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:100%;
-  font-size:clamp(1.2rem,4vw,1.6rem);
-  text-align:center;
-  color:var(--ink);
+/* 🟠 手機橫向模式（稍微增加左邊距離） */
+@media screen and (max-width: 1024px) and (orientation: landscape) {
+  #page3.left-align .result-area {
+    padding-left: var(--page3-padding-left-mobile-landscape) !important;
+  }
 }
 
-.loading-overlay{
-  position:absolute;
-  inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  pointer-events:none;
-  z-index:5;
-  font-size:clamp(1.2rem,4.5vw,1.8rem);
-  color:var(--ink);
-  text-shadow:0 2px 6px rgba(0,0,0,0.5);
+/* 🟢 手機直式置中顯示 */
+@media screen and (max-width: 768px) and (orientation: portrait) {
+  #page3.left-align .result-area {
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    padding-left: 0 !important;
+  }
 }
 
-.result-area{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:var(--advice-top-gap);
-  width:100%;
+/* 結果區基本結構 */
+.result-area {
+  display: flex;
+  flex-direction: column;
+  gap: var(--advice-top-gap);
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.fortune-text{
-  font-family:'HanyiSentyPagoda','MyChineseFont',serif;
-  font-size:clamp(var(--fortune-font-min),var(--fortune-font-vw),var(--fortune-font-max));
-  line-height:1;
-  transform:translateY(var(--fortune-margin-top));
-  display:inline-block;
-  color:#4d2b0a;
+/* 大吉（塔字體） */
+.fortune-text {
+  font-family: 'HanyiSentyPagoda', 'MyChineseFont', serif;
+  font-size: clamp(var(--fortune-font-min), var(--fortune-font-vw), var(--fortune-font-max));
+  line-height: 1;
+  transform: translateY(var(--fortune-margin-top));
+  display: inline-block;
+  color: #4d2b0a;
 }
 
-.advice{
-  margin:0;
-  font-size:clamp(1rem,3.5vw,1.3rem);
-  line-height:1.6;
-  max-width:600px;
-  color:#4b2d0a;
-  font-family:'MyChineseFont';
+/* 小建議 */
+.advice {
+  margin: 0;
+  font-size: clamp(1rem, 3.5vw, 1.3rem);
+  line-height: 1.6;
+  max-width: 600px;
+  color: #4b2d0a;
+  font-family: 'MyChineseFont';
+  margin-top: 0;
 }
 
-.button-row{
-  display:flex;
-  gap:10px;
-  margin-top:var(--advice-button-gap);
-  align-items:center;
-  justify-content:center;
+/* 按鈕列 */
+.button-row {
+  display: flex;
+  gap: 10px;
+  margin-top: var(--advice-button-gap);
+  align-items: center;
+  justify-content: flex-start;
 }
+
 
 /* 胡蘿蔔圖 */
 .carrot-thumb{
