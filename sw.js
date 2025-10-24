@@ -1,5 +1,5 @@
 // ⚡ 版本號（每次修改要 +1 才會強制更新快取）
-const CACHE_NAME = 'divination-v7';
+const CACHE_NAME = 'divination-v9';
 
 // 📦 要快取的資源清單
 const urlsToCache = [
@@ -8,7 +8,7 @@ const urlsToCache = [
   '/join-dc-Divination/manifest.json',
 
   // 🎨 圖片與按鈕
-  '/join-dc-Divination/images/medieval-carrot-placeholder.jpg',
+  '/join-dc-Divination/images/medieval-carrot-placeholder.webp',
   '/join-dc-Divination/images/carrot-thumb.png',
   '/join-dc-Divination/images/icon-192.png',
   '/join-dc-Divination/images/icon-512.png',
@@ -19,16 +19,16 @@ const urlsToCache = [
   '/join-dc-Divination/images/btn-back.png',
   '/join-dc-Divination/images/btn-retry.png',
 
-  '/join-dc-Divination/images/大吉.jpg',
-  '/join-dc-Divination/images/中吉.jpg',
-  '/join-dc-Divination/images/小吉.jpg',
-  '/join-dc-Divination/images/吉.jpg',
-  '/join-dc-Divination/images/凶.jpg',
+  '/join-dc-Divination/images/大吉.webp',
+  '/join-dc-Divination/images/中吉.webp',
+  '/join-dc-Divination/images/小吉.webp',
+  '/join-dc-Divination/images/吉.webp',
+  '/join-dc-Divination/images/凶.webp',
 
   // 🆕 字體快取
-  '/join-dc-Divination/fonts/HanyiSentyPagoda.ttf',
-  '/join-dc-Divination/fonts/HanyiSentyPagoda.woff',
-  '/join-dc-Divination/fonts/HanyiSentyPagoda.woff2',
+  '/join-dc-Divination/fonts/HanyiSentyPagoda-fixed.ttf',
+  '/join-dc-Divination/fonts/HanyiSentyPagoda-fixed.woff',
+  '/join-dc-Divination/fonts/HanyiSentyPagoda-fixed.woff2',
   '/join-dc-Divination/fonts/MyChineseFont.woff'
 ];
 
