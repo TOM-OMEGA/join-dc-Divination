@@ -16,10 +16,10 @@
   --gold:#b9872b;
 
   /* 第三頁文字與間距 */
-  --fortune-offset:-5vh;       /* fortuneLine 垂直位移 */
-  --fortune-left-offset:20px;  /* fortuneLine 距左邊偏移 */
-  --fortune-gap:10px;          /* fortuneLine 到建議文字間距 */
-  --draw-btn-gap:10px;         /* fortuneLine 或建議文字到按鈕行的距離 */
+  --fortune-offset:-5vh;       /* 大吉文字垂直位移 */
+  --fortune-left-offset:20px;  /* 大吉文字距左邊偏移 */
+  --fortune-gap:-10px;         /* 大吉文字與建議文字間距 */
+  --draw-btn-gap:10px;         /* fortune/advice 到按鈕距離 */
 
   /* 胡蘿蔔圖片大小 */
   --carrot-size-min:150px;
@@ -28,14 +28,6 @@
   /* 按鈕大小 */
   --btn-width:200px;
   --btn-height:64px;
-}
-
-/* 手機橫屏時調整距離 */
-@media screen and (max-width: 1024px) and (orientation: landscape) {
-  :root {
-    --draw-btn-gap:10px;   /* fortuneLine/建議文字到按鈕距離 */
-    --fortune-gap:15px;    /* fortuneLine 到建議文字距離 */
-  }
 }
 
 /* 字體設定 */
@@ -87,12 +79,14 @@ html, body{
 /* 第3頁內容 */
 .fortune-container{position:relative; min-height:120px;}
 .fortune-text-container{
-  position:absolute; top:var(--fortune-offset);
-  left:var(--fortune-left-offset);
-  transform:translateX(0);
+  position:absolute;
+  top: var(--fortune-offset);
+  left: var(--fortune-left-offset);
+  transform: translateX(0);
   font-family:'HanyiSentyPagoda', serif;
-  font-size:clamp(8rem,12vw,12rem);
-  pointer-events:none; white-space:nowrap;
+  font-size: clamp(8rem,12vw,12rem);
+  pointer-events:none; 
+  white-space:nowrap;
 }
 .fortune-text-container.大吉,
 .fortune-text-container.中吉,
@@ -101,21 +95,32 @@ html, body{
 .fortune-text-container.凶{color:#4d2b0a;}
 
 .fortune{font-size:clamp(1.2rem,4vw,1.8rem); z-index:1;}
-.advice{
-  margin-top:var(--fortune-gap);
-  font-size:clamp(1.8rem,4vw,2.6rem);
-  line-height:1.6; max-width:600px;
-  color:#4b2d0a;
-  font-family:'MyChineseFont';
+
+/* 新容器: fortune-block 管理文字與間距 */
+.fortune-block{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap: var(--draw-btn-gap); /* fortune/advice 到按鈕距離 */
+  margin-bottom:0;
 }
+
+.advice{
+  margin:0;
+  font-size: clamp(1.8rem,4vw,2.6rem);
+  line-height: 1.6; max-width:600px;
+  color: #4b2d0a;
+  font-family:'MyChineseFont';
+  text-align:center;
+}
+
+/* 按鈕 */
 .button-row{
   display:flex; flex-direction:row; align-items:center; justify-content:center;
   gap:10px;
-  margin-top:var(--draw-btn-gap); /* <- 使用新變數控制間距 */
   min-height:64px;
 }
 
-/* 按鈕樣式 */
 .btn{
   width:var(--btn-width); height:var(--btn-height);
   display:inline-block; background-repeat:no-repeat; background-position:center; background-size:contain;
@@ -161,11 +166,15 @@ footer{position:absolute; bottom:8px; font-size:.75rem; color:rgba(46,34,22,0.6)
 <div id="page3" class="page">
   <div class="divination">
     <img id="carrotThumb" class="carrot-thumb" src="./images/carrot-thumb.png">
-    <div class="fortune-container">
-      <div class="fortune" id="fortuneLine">按下 <strong>占卜運勢</strong> 挖取你的命運之蔔</div>
+
+    <div class="fortune-block">
+      <div class="fortune" id="fortuneLine">
+        按下 <strong>占卜運勢</strong> 挖取你的命運之蔔
+      </div>
       <div class="fortune-text-container" id="fortuneResult"></div>
+      <div class="advice" id="adviceText" style="display:none"></div>
     </div>
-    <div class="advice" id="adviceText" style="display:none"></div>
+
     <div class="button-row">
       <button id="drawBtn" class="btn btn--draw"></button>
       <button id="backBtn" class="btn btn--back"></button>
