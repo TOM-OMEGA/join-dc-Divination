@@ -87,16 +87,16 @@ html, body {
 }
 
 /* 左對齊模式（只影響結果部分） */
-#page3.left-align .result-area {
-  align-items:flex-start;
+#page3.left-align .result-area .fortune-text {
   text-align:left;
+  align-self:flex-start;
   padding-left:var(--page3-padding-left-desktop);
 }
 @media screen and (max-width:1024px) and (orientation:landscape){
-  #page3.left-align .result-area { padding-left:var(--page3-padding-left-mobile-landscape)!important; }
+  #page3.left-align .result-area .fortune-text { padding-left:var(--page3-padding-left-mobile-landscape)!important; }
 }
 @media screen and (max-width:768px) and (orientation:portrait){
-  #page3.left-align .result-area { align-items:center!important; text-align:center!important; padding-left:0!important; }
+  #page3.left-align .result-area .fortune-text { align-self:center!important; text-align:center!important; padding-left:0!important; }
 }
 
 /* 結構 */
@@ -126,9 +126,9 @@ html, body {
 }
 
 .result-area{
-  display:none;
+  display:flex;
   flex-direction:column;
-  align-items:center; /* 預設置中 */
+  align-items:center;
   justify-content:center;
   gap:var(--advice-top-gap);
   width:100%;
@@ -157,7 +157,7 @@ html, body {
   gap:10px;
   margin-top:var(--advice-button-gap);
   align-items:center;
-  justify-content:center; /* 保持置中 */
+  justify-content:center;
 }
 
 /* 胡蘿蔔圖 */
@@ -250,7 +250,7 @@ backBtn.onclick=()=>{
   page3.classList.remove('left-align');
   centeredIntro.style.display='flex';
   loadingOverlay.style.display='none';
-  resultArea.style.display='none';
+  resultArea.style.display='flex';
   adviceText.style.display='none';
   fortuneLineLeft.innerHTML='';
   carrotThumb.style.display='block';
@@ -266,7 +266,9 @@ drawBtn.addEventListener('click',async()=>{
   drawBtn.disabled=true;
   centeredIntro.style.display='none';
   loadingOverlay.style.display='flex';
-  resultArea.style.display='none';
+  resultArea.style.display='flex'; // 🔸 保留按鈕顯示
+  adviceText.style.display='none';
+  fortuneLineLeft.innerHTML='';
   try{
     const res=await fetch(`${apiUrl}?user_id=${userId}&username=${username}&force_random=true&t=${Date.now()}`,{cache:'no-store'});
     const data=await res.json();
@@ -284,8 +286,7 @@ drawBtn.addEventListener('click',async()=>{
     adviceText.innerHTML=`<p>${escapeHtml(data.advice||'')}</p>`;
     carrotThumb.classList.add('fade-out');
     setTimeout(()=>carrotThumb.style.display='none',600);
-    loadingOverlay.style.display='none';
-    resultArea.style.display='flex';
+    loadingOverlay.style.display='none'; // 🔸 抽籤完成後隱藏
     drawBtn.classList.replace('btn--draw','btn--retry');
   }catch(e){
     loadingOverlay.style.display='none';
