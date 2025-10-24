@@ -27,14 +27,13 @@
   --fortune-font-min:5rem;
   --fortune-font-vw:12vw;
   --fortune-font-max:8rem;
-  --fortune-margin-top:5vh;    /* 調整大吉往下的量（負值會往上） */
-  --advice-top-gap:18px;      /* 大吉與小建議間距 */
-  --advice-button-gap:18px;   /* 小建議與按鈕間距 */
+  --fortune-margin-top:5vh;
+  --advice-top-gap:18px;
+  --advice-button-gap:18px;
   --page3-padding-left-desktop:40px;
   --page3-padding-left-mobile-landscape:80px;
 }
 
-/* 字型（請保留你上傳的字檔） */
 @font-face {
   font-family: 'MyChineseFont';
   src: url('fonts/MyChineseFont.woff2') format('woff2'),
@@ -62,7 +61,6 @@ html, body {
   transition:background-image 1s ease-in-out;
 }
 
-/* 頁面共通 */
 .page{position:absolute;top:0;left:0;width:100%;height:100%;
   display:flex;align-items:center;justify-content:center;flex-direction:column;
   opacity:0;pointer-events:none;transform:scale(0.97);
@@ -70,14 +68,13 @@ html, body {
 }
 .page.active{opacity:1;pointer-events:all;transform:scale(1);}
 
-/* page1 / page2 保持原樣 */
 #page1 h1{font-size:clamp(3.0rem,12vw,3.8rem);color:#4D2B0A;margin-bottom:1rem;text-align:center;}
 #page1 .subtitle{font-size:35pt;color:#333;text-align:center;}
 #page2 h1{font-size:clamp(2.8rem,10vw,3.6rem);color:#4D2B0A;text-align:center;margin-bottom:1rem;}
-.qr { width:130px;height:130px;border-radius:8px;overflow:hidden;margin-bottom:10px;box-shadow:0 3px 8px rgba(0,0,0,0.4);flex-shrink:0;}
+.qr { width:130px;height:130px;border-radius:8px;overflow:hidden;margin-bottom:10px;box-shadow:0 3px 8px rgba(0,0,0,0.4);}
 .qr img{width:100%;height:100%;object-fit:cover;}
 
-/* 第3頁（主要變更） */
+/* 第3頁 */
 #page3{
   display:flex;
   flex-direction:column;
@@ -86,82 +83,66 @@ html, body {
   text-align:center;
   width:100%;
   height:100%;
-  box-sizing:border-box;
   transition:all 0.6s ease;
 }
 
-/* 當結果出現時，整個 page3 轉為左對齊並保留 padding（不會影響置中 loading） */
-#page3.left-align{
+/* 左對齊模式（只影響結果部分） */
+#page3.left-align .result-area {
   align-items:flex-start;
-  justify-content:center;
   text-align:left;
   padding-left:var(--page3-padding-left-desktop);
 }
-
-/* 手機橫向（保留更大的左距） */
-@media screen and (max-width: 1024px) and (orientation: landscape) {
-  #page3.left-align { padding-left:var(--page3-padding-left-mobile-landscape) !important; }
+@media screen and (max-width:1024px) and (orientation:landscape){
+  #page3.left-align .result-area { padding-left:var(--page3-padding-left-mobile-landscape)!important; }
 }
-/* 手機直式：結果仍保持居中（不改動） */
-@media screen and (max-width: 768px) and (orientation: portrait) {
-  #page3.left-align { align-items:center !important; justify-content:center !important; text-align:center !important; padding-left:0 !important;}
+@media screen and (max-width:768px) and (orientation:portrait){
+  #page3.left-align .result-area { align-items:center!important; text-align:center!important; padding-left:0!important; }
 }
 
-/* .divination 當作相對容器，內部使用絕對定位顯示置中 loading */
-.divination{ position:relative; width:100%; max-width:940px; box-sizing:border-box; }
+/* 結構 */
+.divination{ position:relative; width:100%; max-width:940px; }
 
-/* 預設（置中）訊息（在未抽或回首頁時顯示） */
 .centeredIntro{
   display:flex;
   align-items:center;
   justify-content:center;
   width:100%;
-  padding:12px 16px;
-  box-sizing:border-box;
   font-size:clamp(1.2rem,4vw,1.6rem);
-  color:var(--ink);
   text-align:center;
+  color:var(--ink);
 }
 
-/* loading 覆蓋層：絕對置中、點擊不攔截（pointer-events:none）*/
 .loading-overlay{
   position:absolute;
   inset:0;
-  display:none; /* JS 控制顯示 */
+  display:none;
   align-items:center;
   justify-content:center;
   pointer-events:none;
   z-index:5;
   font-size:clamp(1.2rem,4.5vw,1.8rem);
   color:var(--ink);
-  text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  text-shadow:0 2px 6px rgba(0,0,0,0.5);
 }
 
-/* 結果區（大吉 + 小建議 + 按鈕）-- 預設隱藏，抽完顯示 */
 .result-area{
   display:none;
-  width:100%;
-  box-sizing:border-box;
-  /* 使用 flex column 讓小建議與按鈕獨立排列 */
-  display:flex;
   flex-direction:column;
-  align-items:flex-start; /* 左對齊 */
+  align-items:center; /* 預設置中 */
+  justify-content:center;
   gap:var(--advice-top-gap);
-  margin-top:0;
+  width:100%;
 }
 
-/* 大吉等字（固定使用塔字體，左對齊） */
 .fortune-text{
   font-family:'HanyiSentyPagoda','MyChineseFont',serif;
-  font-size: clamp(var(--fortune-font-min), var(--fortune-font-vw), var(--fortune-font-max));
+  font-size:clamp(var(--fortune-font-min),var(--fortune-font-vw),var(--fortune-font-max));
   line-height:1;
-  margin:0;
-  /* 讓它不會推擠下方元素：使用 transform 做視覺上的「移動」 */
-  transform: translateY(var(--fortune-margin-top));
+  transform:translateY(var(--fortune-margin-top));
   display:inline-block;
+  color:#4d2b0a;
 }
 
-/* 小建議（獨立） */
 .advice{
   margin:0;
   font-size:clamp(1rem,3.5vw,1.3rem);
@@ -169,16 +150,14 @@ html, body {
   max-width:600px;
   color:#4b2d0a;
   font-family:'MyChineseFont';
-  margin-top:0;
 }
 
-/* 按鈕欄（小建議與按鈕的間距可由變數控制） */
 .button-row{
   display:flex;
   gap:10px;
   margin-top:var(--advice-button-gap);
   align-items:center;
-  justify-content:flex-start;
+  justify-content:center; /* 保持置中 */
 }
 
 /* 胡蘿蔔圖 */
@@ -188,199 +167,139 @@ html, body {
   object-fit:contain;
   transition:opacity .6s ease, transform .4s ease;
 }
-.carrot-thumb.fade-out{opacity:0; transform:scale(.88);}
+.carrot-thumb.fade-out{opacity:0;transform:scale(.88);}
 
-/* 其餘按鈕背景圖（保留你原本按鈕 class） */
 .btn{
-  width:200px;height:64px;background-repeat:no-repeat;background-position:center;background-size:contain;background-color:transparent;border:0;padding:0;margin:0;cursor:pointer;appearance:none;outline:none;
+  width:200px;height:64px;
+  background-repeat:no-repeat;background-position:center;background-size:contain;
+  background-color:transparent;border:0;padding:0;margin:0;cursor:pointer;
 }
-.btn--start { background-image:url('./images/btn-start.png'); }
-.btn--next  { background-image:url('./images/btn-next.png'); }
-.btn--draw  { background-image:url('./images/btn-draw.png'); }
-.btn--back  { background-image:url('./images/btn-back.png'); }
-.btn--retry { background-image:url('./images/btn-retry.png'); }
+.btn--start{background-image:url('./images/btn-start.png');}
+.btn--next{background-image:url('./images/btn-next.png');}
+.btn--draw{background-image:url('./images/btn-draw.png');}
+.btn--back{background-image:url('./images/btn-back.png');}
+.btn--retry{background-image:url('./images/btn-retry.png');}
 
 footer{position:absolute;bottom:8px;font-size:.75rem;color:rgba(46,34,22,0.6);}
 </style>
 </head>
 <body>
 
-<!-- 第1頁 -->
 <div id="page1" class="page active">
   <h1>命運之蔔 · 森林占卜祭壇</h1>
   <div class="subtitle">探索命運的儀式，從加入開始</div>
-  <button id="startBtn" class="btn btn--start" aria-label="我要加入"></button>
+  <button id="startBtn" class="btn btn--start"></button>
   <footer>© 2025 命運之蔔</footer>
 </div>
 
-<!-- 第2頁 -->
 <div id="page2" class="page">
   <h1>掃描 QRCODE 加入 Discord</h1>
   <div class="qr">
-    <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=https://discord.gg/mar4qT9XYn" alt="Discord QR">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=https://discord.gg/mar4qT9XYn">
   </div>
-  <button id="joinedBtn" class="btn btn--next" aria-label="我已加入"></button>
+  <button id="joinedBtn" class="btn btn--next"></button>
 </div>
 
-<!-- 第3頁 -->
 <div id="page3" class="page">
   <div class="divination">
-    <img id="carrotThumb" class="carrot-thumb" src="./images/carrot-thumb.png" alt="胡蘿蔔插畫">
-
-    <!-- 置中預設訊息（顯示在未抽時） -->
+    <img id="carrotThumb" class="carrot-thumb" src="./images/carrot-thumb.png">
     <div id="centeredIntro" class="centeredIntro">按下 <strong>占卜運勢</strong> 挖取你的命運之蔔</div>
+    <div id="loadingOverlay" class="loading-overlay">🥕 挖取中... 正在聚集魔力...</div>
 
-    <!-- loading 覆蓋層（抽籤時顯示，置中） -->
-    <div id="loadingOverlay" class="loading-overlay" aria-hidden="true">🥕 挖取中... 正在聚集魔力...</div>
-
-    <!-- 結果區：大吉（靠左） / 小建議 / 按鈕 -->
-    <div id="resultArea" class="result-area" role="region" aria-live="polite">
-      <div id="fortuneLineLeft"><!-- fortune-text 會被插入在這 --></div>
+    <div id="resultArea" class="result-area">
+      <div id="fortuneLineLeft"></div>
       <div id="adviceText" class="advice" style="display:none"></div>
       <div class="button-row">
-        <button id="drawBtn" class="btn btn--draw" aria-label="占卜今日運勢"></button>
-        <button id="backBtn" class="btn btn--back" aria-label="返回首頁"></button>
+        <button id="drawBtn" class="btn btn--draw"></button>
+        <button id="backBtn" class="btn btn--back"></button>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-const apiUrl = "https://carrot-bot-production.up.railway.app/api/web_fortune";
-const userId = "657882539331158016";
-const username = "湯姆瑞斗";
+const apiUrl="https://carrot-bot-production.up.railway.app/api/web_fortune";
+const userId="657882539331158016";
+const username="湯姆瑞斗";
+const startBtn=document.getElementById('startBtn');
+const joinedBtn=document.getElementById('joinedBtn');
+const page3=document.getElementById('page3');
+const centeredIntro=document.getElementById('centeredIntro');
+const loadingOverlay=document.getElementById('loadingOverlay');
+const resultArea=document.getElementById('resultArea');
+const fortuneLineLeft=document.getElementById('fortuneLineLeft');
+const adviceText=document.getElementById('adviceText');
+const carrotThumb=document.getElementById('carrotThumb');
+const drawBtn=document.getElementById('drawBtn');
+const backBtn=document.getElementById('backBtn');
 
-/* 元件 */
-const startBtn = document.getElementById('startBtn');
-const joinedBtn = document.getElementById('joinedBtn');
-const page1 = document.getElementById('page1');
-const page2 = document.getElementById('page2');
-const page3 = document.getElementById('page3');
-
-const centeredIntro = document.getElementById('centeredIntro');
-const loadingOverlay = document.getElementById('loadingOverlay');
-const resultArea = document.getElementById('resultArea');
-const fortuneLineLeft = document.getElementById('fortuneLineLeft');
-const adviceText = document.getElementById('adviceText');
-const carrotThumb = document.getElementById('carrotThumb');
-const drawBtn = document.getElementById('drawBtn');
-const backBtn = document.getElementById('backBtn');
-
-function transitionPage(currentId,nextId){
-  const current=document.getElementById(currentId);
-  const next=document.getElementById(nextId);
-  if(!current||!next) return;
-  current.classList.add('fade-out');
+function transitionPage(cur,next){
+  const c=document.getElementById(cur),n=document.getElementById(next);
+  if(!c||!n)return;
+  c.classList.add('fade-out');
   setTimeout(()=>{
-    current.classList.remove('active','fade-out');
-    next.classList.add('active','fade-in');
-    setTimeout(()=>next.classList.remove('fade-in'),600);
+    c.classList.remove('active','fade-out');
+    n.classList.add('active','fade-in');
+    setTimeout(()=>n.classList.remove('fade-in'),600);
   },500);
 }
 
-startBtn.onclick = ()=> transitionPage('page1','page2');
-joinedBtn.onclick = ()=> transitionPage('page2','page3');
-
-/* 返回還原置中初始狀態 */
-backBtn.onclick = ()=>{
-  // 隱藏結果區、顯示置中說明與胡蘿蔔
+startBtn.onclick=()=>transitionPage('page1','page2');
+joinedBtn.onclick=()=>transitionPage('page2','page3');
+backBtn.onclick=()=>{
   page3.classList.remove('left-align');
-  resultArea.style.display = 'none';
-  centeredIntro.style.display = 'flex';
-  adviceText.style.display = 'none';
-  fortuneLineLeft.innerHTML = '';
-  carrotThumb.style.display = 'block';
+  centeredIntro.style.display='flex';
+  loadingOverlay.style.display='none';
+  resultArea.style.display='none';
+  adviceText.style.display='none';
+  fortuneLineLeft.innerHTML='';
+  carrotThumb.style.display='block';
   carrotThumb.classList.remove('fade-out');
-
-  // 按鈕樣式還原
-  drawBtn.classList.remove('btn--retry');
-  drawBtn.classList.add('btn--draw');
-
-  // 還原背景
-  document.body.style.backgroundImage = "url('./images/medieval-carrot-placeholder.jpg')";
-
+  drawBtn.classList.replace('btn--retry','btn--draw');
+  document.body.style.backgroundImage="url('./images/medieval-carrot-placeholder.jpg')";
   transitionPage('page3','page1');
 };
 
-/* 工具：XSS-safe */
-function escapeHtml(s){
-  return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
+function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
-/* 抽籤按鈕行為：
- - 點下時顯示 loadingOverlay（置中）
- - 成功後 hideloader、顯示 resultArea（左對齊）並隱藏置中 intro
- - 大吉只顯示在左側，不會推擠下方 advice（我們用 transform 來視覺移動）
-*/
-drawBtn.addEventListener('click', async ()=>{
-  drawBtn.disabled = true;
-
-  // 顯示 loading（置中），隱藏置中說明（避免重疊）
-  loadingOverlay.style.display = 'flex';
-  centeredIntro.style.display = 'none';
-
-  // 隱藏結果區直到有結果
-  resultArea.style.display = 'none';
-  adviceText.style.display = 'none';
-
-  try {
-    const url = `${apiUrl}?user_id=${encodeURIComponent(userId)}&username=${encodeURIComponent(username)}&force_random=true&t=${Date.now()}`;
-    const res = await fetch(url, { cache: 'no-store' });
-    if(!res.ok) throw new Error('API 錯誤：' + res.status);
-    const data = await res.json();
-    const fortune = data.fortune || "";
-
-    // 判斷運勢
-    let fText = "", bg = "images/fortune_default.png", colorClass = '';
-    if(fortune.includes("大吉")){ fText="大吉"; bg="images/大吉.jpg"; colorClass="大吉"; }
-    else if(fortune.includes("中吉")){ fText="中吉"; bg="images/中吉.jpg"; colorClass="中吉"; }
-    else if(fortune.includes("小吉")){ fText="小吉"; bg="images/小吉.jpg"; colorClass="小吉"; }
-    else if(fortune.includes("吉")){ fText="吉"; bg="images/吉.jpg"; colorClass="吉"; }
-    else if(fortune.includes("凶")){ fText="凶"; bg="images/凶.jpg"; colorClass="凶"; }
-    else { fText = escapeHtml(fortune) || "未知"; }
-
-    // 設背景
-    document.body.style.background = `url('${bg}') no-repeat center center/cover`;
-
-    // 顯示結果區（左對齊）
+drawBtn.addEventListener('click',async()=>{
+  drawBtn.disabled=true;
+  centeredIntro.style.display='none';
+  loadingOverlay.style.display='flex';
+  resultArea.style.display='none';
+  try{
+    const res=await fetch(`${apiUrl}?user_id=${userId}&username=${username}&force_random=true&t=${Date.now()}`,{cache:'no-store'});
+    const data=await res.json();
+    const fortune=data.fortune||"";
+    let fText="",bg="images/fortune_default.png",cls="";
+    if(fortune.includes("大吉")){fText="大吉";bg="images/大吉.jpg";cls="大吉";}
+    else if(fortune.includes("中吉")){fText="中吉";bg="images/中吉.jpg";cls="中吉";}
+    else if(fortune.includes("小吉")){fText="小吉";bg="images/小吉.jpg";cls="小吉";}
+    else if(fortune.includes("吉")){fText="吉";bg="images/吉.jpg";cls="吉";}
+    else if(fortune.includes("凶")){fText="凶";bg="images/凶.jpg";cls="凶";}
+    document.body.style.background=`url('${bg}') no-repeat center center/cover`;
     page3.classList.add('left-align');
-    resultArea.style.display = 'flex';       // 顯示整個結果區（左對齊）
-    fortuneLineLeft.innerHTML = `<span class="fortune-text ${colorClass}">${escapeHtml(fText)}</span>`;
-
-    // 顯示小建議
-    adviceText.style.display = 'block';
-    adviceText.innerHTML = `<p>${escapeHtml(data.advice || '')}</p>`;
-
-    // 隱藏胡蘿蔔（淡出）
+    fortuneLineLeft.innerHTML=`<span class="fortune-text ${cls}">${fText}</span>`;
+    adviceText.style.display='block';
+    adviceText.innerHTML=`<p>${escapeHtml(data.advice||'')}</p>`;
     carrotThumb.classList.add('fade-out');
-    setTimeout(()=> carrotThumb.style.display = 'none', 600);
-
-    // 隱藏 loading
-    loadingOverlay.style.display = 'none';
-
-    // 調整按鈕樣式為 retry
+    setTimeout(()=>carrotThumb.style.display='none',600);
+    loadingOverlay.style.display='none';
+    resultArea.style.display='flex';
     drawBtn.classList.replace('btn--draw','btn--retry');
-
-  } catch(err){
-    console.error(err);
-    // 顯示錯誤並保留 loading 隱藏
-    loadingOverlay.style.display = 'none';
-    centeredIntro.style.display = 'flex';
-    fortuneLineLeft.innerHTML = '';
-    resultArea.style.display = 'none';
-    adviceText.style.display = 'block';
-    adviceText.innerHTML = `<p>魔力干擾過強，無法從祭壇讀取命運。</p>`;
-  } finally {
-    drawBtn.disabled = false;
-  }
+  }catch(e){
+    loadingOverlay.style.display='none';
+    centeredIntro.style.display='flex';
+    adviceText.style.display='block';
+    adviceText.innerHTML='<p>魔力干擾過強，無法從祭壇讀取命運。</p>';
+  }finally{drawBtn.disabled=false;}
 });
 
-/* Service worker（保留） */
-if('serviceWorker' in navigator){
+if('serviceWorker'in navigator){
   window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('./sw.js?v=9')
-      .then(reg=>console.log('✅ SW 註冊成功:',reg.scope))
-      .catch(err=>console.log('❌ SW 註冊失敗:',err));
+    navigator.serviceWorker.register('./sw.js?v=10')
+    .then(r=>console.log('✅ SW 註冊成功:',r.scope))
+    .catch(e=>console.log('❌ SW 註冊失敗:',e));
   });
 }
 </script>
