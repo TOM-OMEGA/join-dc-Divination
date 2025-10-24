@@ -38,7 +38,7 @@
 html, body{
   width:100%; height:100%; margin:0; padding:0;
   font-family:'MyChineseFont','Uncial Antiqua',serif;
-  background:url('./images/medieval-carrot-placeholder.jpg') no-repeat center center;
+  background:url('./images/medieval-carrot-placeholder.webp') no-repeat center center;
   background-size:contain; background-color:#000;
   color:var(--ink);
   overflow:hidden;
@@ -216,7 +216,7 @@ document.getElementById('backBtn').onclick = ()=>{
   adviceText.style.display='none';
   drawBtn.classList.remove('btn--retry');
   drawBtn.classList.add('btn--draw');
-  document.body.style.backgroundImage="url('./images/medieval-carrot-placeholder.jpg')";
+  document.body.style.backgroundImage="url('./images/medieval-carrot-placeholder.webp')";
   transitionPage('page3','page1');
 };
 
@@ -233,11 +233,11 @@ drawBtn.addEventListener('click', async ()=>{
     const data = await res.json();
     const fortune = data.fortune||"";
     let fText="", bg="./images/fortune_default.png", className="";
-    if(fortune.includes("大吉")){fText="大吉"; bg="./images/大吉.jpg"; className="大吉";}
-    else if(fortune.includes("中吉")){fText="中吉"; bg="./images/中吉.jpg"; className="中吉";}
-    else if(fortune.includes("小吉")){fText="小吉"; bg="./images/小吉.jpg"; className="小吉";}
-    else if(fortune.includes("吉")){fText="吉"; bg="./images/吉.jpg"; className="吉";}
-    else if(fortune.includes("凶")){fText="凶"; bg="./images/凶.jpg"; className="凶";}
+    if(fortune.includes("大吉")){fText="大吉"; bg="./images/大吉.webp"; className="大吉";}
+    else if(fortune.includes("中吉")){fText="中吉"; bg="./images/中吉.webp"; className="中吉";}
+    else if(fortune.includes("小吉")){fText="小吉"; bg="./images/小吉.webp"; className="小吉";}
+    else if(fortune.includes("吉")){fText="吉"; bg="./images/吉.webp"; className="吉";}
+    else if(fortune.includes("凶")){fText="凶"; bg="./images/凶.webp"; className="凶";}
 
     document.body.style.background=`url('${bg}') no-repeat center center/cover`;
     page3.classList.add('left-align');
