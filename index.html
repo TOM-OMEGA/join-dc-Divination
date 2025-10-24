@@ -18,8 +18,15 @@
 <meta name="x5-fullscreen" content="true">
 
 <style>
-:root {
-  --fortune-advice-gap: -10px;
+:root{
+  --paper:#f3ead5;
+  --ink:#2e2316;
+  --gold:#b9872b;
+
+  /* 🪄 調整區 */
+  --fortune-offset:-15vh;   /* 大吉字的垂直位移，越小越上 */
+  --fortune-gap: 10px;      /* 大吉與小建議間距 */
+  --advice-gap: 10px;       /* 小建議與按鈕間距 */
 }
 
 /* 字體設定 */
@@ -109,50 +116,44 @@ html, body {
   }
 }
 
-/* 第3頁字體 */
-#page3 .fortune{ font-size: clamp(1.2rem, 4vw, 1.8rem); }
+/* 第3頁內容 */
+#page3 .fortune-container{
+  position:relative;
+  min-height:120px;
+}
+.fortune-text-container{
+  position:absolute;
+  top:var(--fortune-offset);
+  left:50%;
+  transform:translateX(-50%);
+  font-family:'HanyiSentyPagoda', serif;
+  font-size:clamp(8rem,12vw,12rem);
+  pointer-events:none;
+  white-space:nowrap;
+}
+.fortune-text-container.大吉,
+.fortune-text-container.中吉,
+.fortune-text-container.小吉,
+.fortune-text-container.吉,
+.fortune-text-container.凶 { color:#4d2b0a; }
+
+#page3 .fortune{ font-size: clamp(1.2rem, 4vw, 1.8rem); z-index:1; }
 #page3 .advice{
-  margin-top: var(--fortune-advice-gap); /* 🥕 改成變數控制 */
-  font-size:clamp(1.8rem,4vw,2.6rem);
-  line-height:1.6;
-  max-width:600px;
-  color: #4b2d0a;
-  font-family:'MyChineseFont';
-}
-
-/* 占卜結果區塊 */
-.divination {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  text-align: center;
-  padding-top: 15vh; /* 原本的 margin-top: 15vh 移到這裡 */
-  gap: var(--fortune-advice-gap, 10px); /* 控制運勢與建議距離 */
-  box-sizing: border-box;
-}
-
-/* 占卜結果字體 */
-.fortune-text {
-  font-family: 'HanyiSentyPagoda', serif;
-  font-size: clamp(8rem, 12vw, 12rem);
-  display: inline-block;
-  line-height: 1.1;
-}
-.fortune-text.大吉 { color: #4d2b0a; }
-.fortune-text.中吉 { color: #4d2b0a; }
-.fortune-text.小吉 { color: #4d2b0a; }
-.fortune-text.吉   { color: #4d2b0a; }
-.fortune-text.凶   { color: #4d2b0a; }
-
-/* 小建議文字 */
-#adviceText {
-  font-family:'MyChineseFont';
+  margin-top:var(--fortune-gap);
   font-size:clamp(1.8rem,4vw,2.6rem);
   line-height:1.6;
   max-width:600px;
   color:#4b2d0a;
-  text-align:center;
+  font-family:'MyChineseFont';
+}
+#page3 .button-row{
+  display:flex;
+  gap:10px;
+  flex-direction:row;
+  align-items:center;
+  justify-content:center;
+  margin-top:var(--advice-gap);
+  min-height:64px;
 }
 
 /* PNG 按鈕 */
@@ -177,17 +178,7 @@ html, body {
 .btn--back{background-image:url('./images/btn-back.png');}
 .btn--retry{background-image:url('./images/btn-retry.png');}
 
-/* 按鈕 row */
-#page3 .button-row{
-  display:flex;
-  gap:10px;
-  flex-direction:row;
-  align-items:center;
-  justify-content:center;
-  margin-top:20px;
-  min-height:64px;
-}
-
+/* PNG */
 .carrot-thumb {
   width: clamp(150px, 25vw, 220px);
   height: clamp(150px, 25vw, 220px);
@@ -222,9 +213,9 @@ footer{position:absolute;bottom:8px;font-size:.75rem;color:rgba(46,34,22,0.6);}
 <div id="page3" class="page">
   <div class="divination">
     <img id="carrotThumb" class="carrot-thumb" src="./images/carrot-thumb.png">
-    <!-- 初始提示文字，不套 fortune-text -->
-    <div class="fortune" id="fortuneLine">
-      按下 <strong>占卜運勢</strong> 挖取你的命運之蔔
+    <div class="fortune-container">
+      <div class="fortune" id="fortuneLine">按下 <strong>占卜運勢</strong> 挖取你的命運之蔔</div>
+      <div class="fortune-text-container" id="fortuneResult"></div>
     </div>
     <div class="advice" id="adviceText" style="display:none"></div>
     <div class="button-row">
@@ -243,6 +234,7 @@ const fortuneLine=document.getElementById('fortuneLine');
 const adviceText=document.getElementById('adviceText');
 const carrotThumb=document.getElementById('carrotThumb');
 const page3=document.getElementById('page3');
+const fortuneResult=document.getElementById('fortuneResult');
 
 function transitionPage(cur,next){
   document.getElementById(cur)?.classList.add('fade-out');
@@ -261,6 +253,7 @@ document.getElementById('backBtn').onclick=()=>{
   carrotThumb.style.display='block';
   carrotThumb.classList.remove('fade-out');
   fortuneLine.innerHTML='按下 <strong>占卜運勢</strong> 挖取你的命運之蔔';
+  fortuneResult.innerHTML='';
   adviceText.style.display='none';
   drawBtn.classList.remove('btn--retry');
   drawBtn.classList.add('btn--draw');
@@ -276,6 +269,7 @@ drawBtn.addEventListener('click',async()=>{
   drawBtn.disabled=true;
   fortuneLine.innerHTML='🥕 挖取中... 正在拔出你的命運之蔔...';
   adviceText.style.display='none';
+  fortuneResult.innerHTML='';
   try{
     const res=await fetch(`${apiUrl}?user_id=${userId}&username=${username}&force_random=true&t=${Date.now()}`,{cache:'no-store'});
     const data=await res.json();
@@ -292,14 +286,12 @@ drawBtn.addEventListener('click',async()=>{
     carrotThumb.classList.add('fade-out');
     setTimeout(()=>carrotThumb.style.display='none',600);
 
-    // 只有結果字套 fortune-text
-    fortuneLine.innerHTML=`<span class="fortune-text ${className}">${fText}</span>`;
-    adviceText.style.display='block';
-    adviceText.innerHTML=`<p>${escapeHtml(data.advice)}</p>`;
+    fortuneResult.innerHTML=fText;
+    fortuneResult.className=`fortune-text-container ${className}`;
 
-    drawBtn.classList.replace('btn--draw','btn--retry');
-    drawBtn.classList.remove('btn--retry');
-    drawBtn.classList.add('btn--draw');
+    adviceText.style.display='block';
+    adviceText.innerHTML=`<p><span>${escapeHtml(data.advice)}</span></p>`;
+
   }catch(e){
     fortuneLine.innerHTML='⚠️ 占卜失敗，請稍後重試';
     adviceText.style.display='block';
