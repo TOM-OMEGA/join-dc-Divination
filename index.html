@@ -265,11 +265,11 @@ drawBtn.addEventListener('click', async ()=>{
   }finally{drawBtn.disabled=false;}
 });
 
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('./sw.js?v=10', {updateViaCache: 'none'})
-    .then(r=>console.log('✅ SW 註冊成功:',r.scope))
-    .catch(e=>console.log('❌ SW 註冊失敗:',e));
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/join-dc-Divination/sw.js?v=10', { updateViaCache: 'none' })
+      .then(r => console.log('✅ SW 註冊成功:', r.scope))
+      .catch(e => console.log('❌ SW 註冊失敗:', e));
   });
 }
 </script>
