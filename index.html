@@ -265,16 +265,20 @@ function escapeHtml(s){
   return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-drawBtn.addEventListener('click',async()=>{
-  drawBtn.disabled=true;
+drawBtn.addEventListener('click', async () => {
+  drawBtn.disabled = true;
+
+  // 第三頁顯示 loading
   fortuneLine.innerHTML='🥕 挖取中... 正在拔出你的命運之蔔...';
   adviceText.style.display='none';
   fortuneResult.innerHTML='';
-  try{
-    const res=await fetch(`${apiUrl}?user_id=${userId}&username=${username}&force_random=true&t=${Date.now()}`,{cache:'no-store'});
-    const data=await res.json();
-    const fortune=data.fortune||"";
+
+  try {
+    const res = await fetch(`${apiUrl}?user_id=${userId}&username=${username}&force_random=true&t=${Date.now()}`, { cache:'no-store' });
+    const data = await res.json();
+    const fortune = data.fortune || "";
     let fText="", bg="./images/fortune_default.png", className="";
+
     if(fortune.includes("大吉")){ fText="大吉"; bg="./images/大吉.jpg"; className="大吉"; }
     else if(fortune.includes("中吉")){ fText="中吉"; bg="./images/中吉.jpg"; className="中吉"; }
     else if(fortune.includes("小吉")){ fText="小吉"; bg="./images/小吉.jpg"; className="小吉"; }
@@ -286,19 +290,23 @@ drawBtn.addEventListener('click',async()=>{
     carrotThumb.classList.add('fade-out');
     setTimeout(()=>carrotThumb.style.display='none',600);
 
+    // 🔹 抽完籤，loading 文字替換成結果
+    fortuneLine.innerHTML = ''; // 清掉 loading
     fortuneResult.innerHTML=fText;
     fortuneResult.className=`fortune-text-container ${className}`;
 
     adviceText.style.display='block';
     adviceText.innerHTML=`<p><span>${escapeHtml(data.advice)}</span></p>`;
 
-  }catch(e){
+  } catch(e) {
     fortuneLine.innerHTML='⚠️ 占卜失敗，請稍後重試';
     adviceText.style.display='block';
     adviceText.innerHTML='<p>魔力干擾過強，無法從祭壇讀取命運。</p>';
-  }finally{ drawBtn.disabled=false; }
+  } finally { 
+    drawBtn.disabled=false; 
+  }
 });
-
+  
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
     navigator.serviceWorker.register('./sw.js?v=8')
