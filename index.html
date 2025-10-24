@@ -27,6 +27,7 @@
   --fortune-offset:-5vh;   /* 大吉字的垂直位移，越小越上 */
   --fortune-gap: -10px;      /* 大吉與小建議間距 */
   --advice-gap: -10px;       /* 小建議與按鈕間距 */
+  --fortune-left-offset: 20px; /* 大吉/中吉等文字距左邊的偏移量，可自行調整 */
 }
 
 /* 字體設定 */
@@ -124,8 +125,8 @@ html, body {
 .fortune-text-container{
   position:absolute;
   top:var(--fortune-offset);
-  left:50%;
-  transform:translateX(-50%);
+  left:var(--fortune-left-offset); /* 使用變數控制左邊距 */
+  transform:translateX(0); /* 不再置中 */
   font-family:'HanyiSentyPagoda', serif;
   font-size:clamp(8rem,12vw,12rem);
   pointer-events:none;
