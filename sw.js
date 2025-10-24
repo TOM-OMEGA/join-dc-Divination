@@ -1,5 +1,5 @@
 // ⚡ 版本號（每次修改要 +1 才會強制更新快取）
-const CACHE_NAME = 'divination-v6';
+const CACHE_NAME = 'divination-v7';
 
 // 📦 要快取的資源清單
 const urlsToCache = [
@@ -7,7 +7,7 @@ const urlsToCache = [
   '/join-dc-Divination/index.html',
   '/join-dc-Divination/manifest.json',
 
-   // 🎨 圖片與按鈕
+  // 🎨 圖片與按鈕
   '/join-dc-Divination/images/medieval-carrot-placeholder.jpg',
   '/join-dc-Divination/images/carrot-thumb.png',
   '/join-dc-Divination/images/icon-192.png',
@@ -23,8 +23,8 @@ const urlsToCache = [
   '/join-dc-Divination/images/中吉.jpg',
   '/join-dc-Divination/images/小吉.jpg',
   '/join-dc-Divination/images/吉.jpg',
-  '/join-dc-Divination/images/凶.jpg'
-];
+  '/join-dc-Divination/images/凶.jpg',
+
   // 🆕 字體快取
   '/join-dc-Divination/fonts/HanyiSentyPagoda.ttf',
   '/join-dc-Divination/fonts/HanyiSentyPagoda.woff',
@@ -72,7 +72,6 @@ self.addEventListener('fetch', event => {
     url.includes('manifest.json') ||
     event.request.method !== 'GET'
   ) {
-    console.log('Service Worker: 跳過請求 =>', url);
     return;
   }
 
@@ -80,7 +79,6 @@ self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request, { ignoreSearch: true }).then(response => {
       if (response) {
-        console.log('Service Worker: 從快取載入 =>', url);
         return response;
       }
 
@@ -97,13 +95,12 @@ self.addEventListener('fetch', event => {
           const responseToCache = networkResponse.clone();
           caches.open(CACHE_NAME).then(cache => {
             cache.put(event.request, responseToCache);
-            console.log('Service Worker: 新增到快取 =>', url);
           });
 
           return networkResponse;
         })
-        .catch(err => {
-          console.warn('Service Worker: 離線且無快取 =>', url, err);
+        .catch(() => {
+          console.warn('Service Worker: 離線且無快取 =>', url);
         });
     })
   );
