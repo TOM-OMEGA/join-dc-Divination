@@ -16,10 +16,9 @@
   --gold:#b9872b;
 
   /* 第三頁文字與間距 */
-  --fortune-offset:-5vh;       /* 大吉文字垂直位移 */
-  --fortune-left-offset:20px;  /* 大吉文字距左邊偏移 */
-  --fortune-gap:-10px;         /* 大吉文字與建議文字間距 */
-  --advice-gap:10px;           /* 建議文字與按鈕行間距 */
+  --fortune-offset:-5vh;       /* fortuneLine 垂直位移 */
+  --fortune-left-offset:20px;  /* fortuneLine 距左邊偏移 */
+  --fortune-gap:10px;          /* fortuneLine 到建議文字間距 */
   --draw-btn-gap:10px;         /* fortuneLine 或建議文字到按鈕行的距離 */
 
   /* 胡蘿蔔圖片大小 */
@@ -29,6 +28,14 @@
   /* 按鈕大小 */
   --btn-width:200px;
   --btn-height:64px;
+}
+
+/* 手機橫屏時調整距離 */
+@media screen and (max-width: 1024px) and (orientation: landscape) {
+  :root {
+    --draw-btn-gap:10px;   /* fortuneLine/建議文字到按鈕距離 */
+    --fortune-gap:15px;    /* fortuneLine 到建議文字距離 */
+  }
 }
 
 /* 字體設定 */
