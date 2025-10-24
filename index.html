@@ -268,7 +268,7 @@ drawBtn.addEventListener('click', async ()=>{
 
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('./sw.js?v=8', {updateViaCache: 'none'})
+    navigator.serviceWorker.register('./sw.js?v=10', {updateViaCache: 'none'})
     .then(r=>console.log('✅ SW 註冊成功:',r.scope))
     .catch(e=>console.log('❌ SW 註冊失敗:',e));
   });
