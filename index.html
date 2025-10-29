@@ -200,6 +200,7 @@ footer{position:absolute; bottom:8px; font-size:.75rem; color:rgba(46,34,22,0.6)
 const apiUrl="https://carrot-bot-production.up.railway.app/api/web_fortune";
 const userId="657882539331158016";
 const username="湯姆瑞斗";
+
 const drawBtn=document.getElementById('drawBtn');
 const fortuneLine=document.getElementById('fortuneLine');
 const adviceText=document.getElementById('adviceText');
@@ -221,20 +222,37 @@ function transitionPage(cur,next){
 
 document.getElementById('startBtn').onclick = ()=>transitionPage('page1','page2');
 document.getElementById('joinedBtn').onclick = ()=>transitionPage('page2','page3');
+
 document.getElementById('backBtn').onclick = ()=>{
+  // 🧭 重置 page3 狀態
   page3.classList.remove('left-align');
-  carrotThumb.style.display='block';
+
+  // ✅ 修正胡蘿蔔偏移問題：強制重排並重設樣式
+  carrotThumb.style.display = 'none';
   carrotThumb.classList.remove('fade-out');
+  void carrotThumb.offsetWidth; // ← 強制 reflow
+  carrotThumb.style.display = 'block';
+  carrotThumb.style.transform = 'scale(1)';
+  carrotThumb.style.opacity = '1';
+
+  // 🧾 重設占卜文字
   fortuneLine.innerHTML='按下 <strong>占卜運勢</strong> 挖取你的命運之蔔';
   fortuneResult.innerHTML='';
   adviceText.style.display='none';
   drawBtn.classList.remove('btn--retry');
   drawBtn.classList.add('btn--draw');
+
+  // 🖼️ 回到初始背景
   document.body.style.backgroundImage="url('./images/medieval-carrot-placeholder.webp')";
+
   transitionPage('page3','page1');
 };
 
-function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function escapeHtml(s){
+  return String(s||'').replace(/[&<>"']/g,c=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
 
 drawBtn.addEventListener('click', async ()=>{
   drawBtn.disabled=true;
@@ -255,6 +273,7 @@ drawBtn.addEventListener('click', async ()=>{
 
     document.body.style.background=`url('${bg}') no-repeat center center/cover`;
     page3.classList.add('left-align');
+
     carrotThumb.classList.add('fade-out');
     setTimeout(()=>carrotThumb.style.display='none',600);
 
@@ -267,9 +286,12 @@ drawBtn.addEventListener('click', async ()=>{
     fortuneLine.innerHTML='⚠️ 占卜失敗，請稍後重試';
     adviceText.style.display='block';
     adviceText.innerHTML='<p>魔力干擾過強，無法從祭壇讀取命運。</p>';
-  }finally{drawBtn.disabled=false;}
+  }finally{
+    drawBtn.disabled=false;
+  }
 });
 
+// ✅ Service Worker 註冊
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/join-dc-Divination/sw.js?v=10', { updateViaCache: 'none' })
