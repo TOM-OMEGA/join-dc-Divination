@@ -116,17 +116,16 @@ html, body{
 }
 
 .advice {
-  position: relative;
-  left: var(--advice-left-offset);
-  margin-top: 0;
-  margin-bottom: 0;
+  position: relative;                  /* 允許左偏移 */
+  margin-top: var(--fortune-gap);      /* 與運勢文字的距離 */
+  left: var(--advice-left-offset);     /* 控制建議文字左右位移 */
   font-size: clamp(1.2rem, 2rem, 2.0rem);
-  line-height: 1.6; 
+  line-height: 1.6;
   max-width: 600px;
   color: #4b2d0a;
   font-family: 'MyChineseFont';
-  text-align: left;
-  transition: left 0.4s ease;
+  text-align: left;                    /* 讓文字靠左對齊 */
+  transition: margin-top .3s ease, left .3s ease;
 }
 
 /* 按鈕 */
