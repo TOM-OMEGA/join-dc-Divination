@@ -17,7 +17,7 @@
   /* 第三頁文字與間距 */
   --fortune-offset:5vh;       /* 大吉文字垂直位移 */
   --fortune-left-offset:110px;  /* 大吉文字距左邊偏移 */
-  --fortune-gap:500px;         /* 大吉文字與建議文字間距 */
+  --fortune-gap:100px;         /* 大吉文字與建議文字間距 */
   --draw-btn-gap:10px;         /* fortune/advice 到按鈕距離 */
 
   /* 胡蘿蔔圖片大小 */
@@ -115,12 +115,15 @@ html, body{
 }
 
 .advice{
-  margin:0;
+  margin-top: var(--fortune-gap);
+  margin-bottom: 0;
   font-size: clamp(1.2rem, 2rem, 2.0rem);
-  line-height: 1.6; max-width:600px;
+  line-height: 1.6; 
+  max-width:600px;
   color: #4b2d0a;
   font-family:'MyChineseFont';
   text-align:center;
+  transition: margin-top 0.4s ease;
 }
 
 /* 按鈕 */
