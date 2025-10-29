@@ -15,11 +15,11 @@
   --gold:#b9872b;
 
   /* 第三頁文字與間距 */
-  --fortune-offset:7vh;       /* 大吉文字垂直位移 */
-  --fortune-left-offset:110px;  /* 大吉文字距左邊偏移 */
-  --advice-left-offset: 50px;    /* 小建議文字距左邊偏移（可分開調整） */
-  --fortune-gap:120px;         /* 大吉文字與建議文字間距 */
-  --draw-btn-gap:10px;         /* fortune/advice 到按鈕距離 */
+  --fortune-offset:5vh;
+  --fortune-left-offset:110px;
+  --advice-left-offset:50px;
+  --fortune-gap:150px;
+  --draw-btn-gap:10px;
 
   /* 胡蘿蔔圖片大小 */
   --carrot-size-min:150px;
@@ -36,7 +36,6 @@
   src: url('/join-dc-Divination/fonts/MyChineseFont.woff') format('woff');
   font-display: swap;
 }
-
 @font-face {
   font-family: 'HanyiSentyPagoda';
   src: url('/join-dc-Divination/fonts/HanyiSentyPagoda-fixed.woff') format('woff'),
@@ -83,6 +82,7 @@ html, body{
 #page3.left-align{
   align-items:flex-start; text-align:left; padding-left:40px; transition:padding-left 0.4s ease;
 }
+#page3:not(.left-align){transition:padding-left 0s !important;}
 @media screen and (max-width:1024px) and (orientation:landscape){#page3.left-align{padding-left:80px !important;}}
 @media screen and (max-width:768px) and (orientation:portrait){#page3.left-align{align-items:center!important;text-align:center!important;padding-left:0!important;}}
 
@@ -106,25 +106,24 @@ html, body{
 
 .fortune{font-size:clamp(1.2rem,4vw,1.8rem); z-index:1;}
 
-/* 新容器: fortune-block 管理文字與間距 */
 .fortune-block{
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap: var(--draw-btn-gap); /* fortune/advice 到按鈕距離 */
+  gap: var(--draw-btn-gap);
   margin-bottom:0;
 }
 
 .advice {
-  position: relative;                  /* 允許左偏移 */
-  margin-top: var(--fortune-gap);      /* 與運勢文字的距離 */
-  left: var(--advice-left-offset);     /* 控制建議文字左右位移 */
+  position: relative;
+  margin-top: var(--fortune-gap);
+  left: var(--advice-left-offset);
   font-size: clamp(1.2rem, 2rem, 2.0rem);
   line-height: 1.6;
   max-width: 600px;
   color: #4b2d0a;
   font-family: 'MyChineseFont';
-  text-align: left;                    /* 讓文字靠左對齊 */
+  text-align: left;
   transition: margin-top .3s ease, left .3s ease;
 }
 
@@ -134,7 +133,6 @@ html, body{
   gap:10px;
   min-height:64px;
 }
-
 .btn{
   width:var(--btn-width); height:var(--btn-height);
   display:inline-block; background-repeat:no-repeat; background-position:center; background-size:contain;
@@ -180,15 +178,11 @@ footer{position:absolute; bottom:8px; font-size:.75rem; color:rgba(46,34,22,0.6)
 <div id="page3" class="page">
   <div class="divination">
     <img id="carrotThumb" class="carrot-thumb" src="./images/carrot-thumb.png">
-
     <div class="fortune-block">
-      <div class="fortune" id="fortuneLine">
-        按下 <strong>占卜運勢</strong> 挖取你的命運之蔔
-      </div>
+      <div class="fortune" id="fortuneLine">按下 <strong>占卜運勢</strong> 挖取你的命運之蔔</div>
       <div class="fortune-text-container" id="fortuneResult"></div>
       <div class="advice" id="adviceText" style="display:none"></div>
     </div>
-
     <div class="button-row">
       <button id="drawBtn" class="btn btn--draw"></button>
       <button id="backBtn" class="btn btn--back"></button>
@@ -200,7 +194,6 @@ footer{position:absolute; bottom:8px; font-size:.75rem; color:rgba(46,34,22,0.6)
 const apiUrl="https://carrot-bot-production.up.railway.app/api/web_fortune";
 const userId="657882539331158016";
 const username="湯姆瑞斗";
-
 const drawBtn=document.getElementById('drawBtn');
 const fortuneLine=document.getElementById('fortuneLine');
 const adviceText=document.getElementById('adviceText');
@@ -220,40 +213,34 @@ function transitionPage(cur,next){
   },500);
 }
 
-document.getElementById('startBtn').onclick = ()=>transitionPage('page1','page2');
-document.getElementById('joinedBtn').onclick = ()=>transitionPage('page2','page3');
-
-document.getElementById('backBtn').onclick = ()=>{
-  // 🧭 重置 page3 狀態
+// ✅ 統一重設第三頁狀態
+function resetPage3(){
   page3.classList.remove('left-align');
-
-  // ✅ 修正胡蘿蔔偏移問題：強制重排並重設樣式
-  carrotThumb.style.display = 'none';
+  carrotThumb.style.display='block';
   carrotThumb.classList.remove('fade-out');
-  void carrotThumb.offsetWidth; // ← 強制 reflow
-  carrotThumb.style.display = 'block';
-  carrotThumb.style.transform = 'scale(1)';
-  carrotThumb.style.opacity = '1';
-
-  // 🧾 重設占卜文字
   fortuneLine.innerHTML='按下 <strong>占卜運勢</strong> 挖取你的命運之蔔';
   fortuneResult.innerHTML='';
   adviceText.style.display='none';
   drawBtn.classList.remove('btn--retry');
   drawBtn.classList.add('btn--draw');
-
-  // 🖼️ 回到初始背景
   document.body.style.backgroundImage="url('./images/medieval-carrot-placeholder.webp')";
+}
 
+// 導頁按鈕
+document.getElementById('startBtn').onclick = ()=>transitionPage('page1','page2');
+document.getElementById('joinedBtn').onclick = ()=>{
+  resetPage3();
+  transitionPage('page2','page3');
+};
+document.getElementById('backBtn').onclick = ()=>{
+  resetPage3();
   transitionPage('page3','page1');
 };
 
-function escapeHtml(s){
-  return String(s||'').replace(/[&<>"']/g,c=>({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-  }[c]));
-}
+// Escape HTML
+function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
+// 抽籤按鈕
 drawBtn.addEventListener('click', async ()=>{
   drawBtn.disabled=true;
   fortuneLine.innerHTML='🥕 挖取中... 正在拔出你的命運之蔔...';
@@ -273,7 +260,6 @@ drawBtn.addEventListener('click', async ()=>{
 
     document.body.style.background=`url('${bg}') no-repeat center center/cover`;
     page3.classList.add('left-align');
-
     carrotThumb.classList.add('fade-out');
     setTimeout(()=>carrotThumb.style.display='none',600);
 
@@ -291,7 +277,7 @@ drawBtn.addEventListener('click', async ()=>{
   }
 });
 
-// ✅ Service Worker 註冊
+// Service Worker
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/join-dc-Divination/sw.js?v=10', { updateViaCache: 'none' })
