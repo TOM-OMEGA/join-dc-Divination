@@ -3,7 +3,6 @@ const CACHE_NAME = 'divination-v11';
 
 // 📦 要快取的資源清單
 const urlsToCache = [
-  '/join-dc-Divination/',
   '/join-dc-Divination/index.html',
   '/join-dc-Divination/manifest.json',
 
