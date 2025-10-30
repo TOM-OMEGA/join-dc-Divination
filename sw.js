@@ -1,5 +1,5 @@
 // ⚡ 版本號（每次修改要 +1 才會強制更新快取）
-const CACHE_NAME = 'divination-v10';
+const CACHE_NAME = 'divination-v11';
 
 // 📦 要快取的資源清單
 const urlsToCache = [
