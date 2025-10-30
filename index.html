@@ -314,7 +314,11 @@ drawBtn.addEventListener('click', async ()=>{
 });
 
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
+  window.addEventListener('load', async () => {
+    const registrations = await navigator.serviceWorker.getRegistrations();
+    for (const reg of registrations) {
+      await reg.unregister(); // 先解除所有舊 SW
+    }
     navigator.serviceWorker.register('/join-dc-Divination/sw.js?v=11', { updateViaCache: 'none' })
       .then(r => console.log('✅ SW 註冊成功:', r.scope))
       .catch(e => console.log('❌ SW 註冊失敗:', e));
