@@ -245,37 +245,72 @@ document.getElementById('backBtn').onclick = ()=>{
 function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
 drawBtn.addEventListener('click', async ()=>{
-  drawBtn.disabled=true;
-  fortuneLine.innerHTML='🥕 挖取中... 正在拔出你的命運之蔔...';
-  adviceText.style.display='none';
-  fortuneResult.innerHTML='';
+  drawBtn.disabled = true;
+  fortuneLine.innerHTML = "🥕 挖取中... 正在拔出你的命運之蔔...";
+  adviceText.style.display = 'none';
+  fortuneResult.innerHTML = '';
 
-  try{
-    const res = await fetch(`${apiUrl}?user_id=${userId}&username=${username}&force_random=true&t=${Date.now()}`, {cache:'no-store'});
+  // 🌀 讓胡蘿蔔動畫啟動（上下抖動）
+  carrotThumb.style.display = 'block';
+  carrotThumb.classList.remove('fade-out');
+  carrotThumb.animate(
+    [
+      { transform: 'translateY(0)' },
+      { transform: 'translateY(-15px)' },
+      { transform: 'translateY(0)' }
+    ],
+    { duration: 800, iterations: Infinity, easing: 'ease-in-out' }
+  );
+  const carrotAnimation = carrotThumb.getAnimations()[0];
+
+  // 🕓 顯示文字動態「...」
+  let dots = 0;
+  const loading = setInterval(() => {
+    dots = (dots + 1) % 4;
+    fortuneLine.innerHTML = "🥕 挖取中" + ".".repeat(dots) + " 正在拔出你的命運之蔔...";
+  }, 500);
+
+  try {
+    // 🔮 取得占卜結果
+    const res = await fetch(`${apiUrl}?user_id=${userId}&username=${username}&force_random=true&t=${Date.now()}`, { cache: 'no-store' });
     const data = await res.json();
-    const fortune = data.fortune||"";
-    let fText="", bg="./images/fortune_default.png", className="";
-    if(fortune.includes("大吉")){fText="大吉"; bg="./images/大吉.webp"; className="大吉";}
-    else if(fortune.includes("中吉")){fText="中吉"; bg="./images/中吉.webp"; className="中吉";}
-    else if(fortune.includes("小吉")){fText="小吉"; bg="./images/小吉.webp"; className="小吉";}
-    else if(fortune.includes("吉")){fText="吉"; bg="./images/吉.webp"; className="吉";}
-    else if(fortune.includes("凶")){fText="凶"; bg="./images/凶.webp"; className="凶";}
+    const fortune = data.fortune || "";
+    let fText = "", bg = "./images/fortune_default.png", className = "";
 
-    document.body.style.background=`url('${bg}') no-repeat center center/cover`;
-    page3.classList.add('left-align');
-    carrotThumb.classList.add('fade-out');
-    setTimeout(()=>carrotThumb.style.display='none',600);
+    if (fortune.includes("大吉")) { fText = "大吉"; bg = "./images/大吉.webp"; className = "大吉"; }
+    else if (fortune.includes("中吉")) { fText = "中吉"; bg = "./images/中吉.webp"; className = "中吉"; }
+    else if (fortune.includes("小吉")) { fText = "小吉"; bg = "./images/小吉.webp"; className = "小吉"; }
+    else if (fortune.includes("吉")) { fText = "吉"; bg = "./images/吉.webp"; className = "吉"; }
+    else if (fortune.includes("凶")) { fText = "凶"; bg = "./images/凶.webp"; className = "凶"; }
 
-    fortuneLine.innerHTML='';
-    fortuneResult.innerHTML=fText;
-    fortuneResult.className=`fortune-text-container ${className}`;
-    adviceText.style.display='block';
-    adviceText.innerHTML=`<p><span>${escapeHtml(data.advice)}</span></p>`;
-  }catch(e){
-    fortuneLine.innerHTML='⚠️ 占卜失敗，請稍後重試';
-    adviceText.style.display='block';
-    adviceText.innerHTML='<p>魔力干擾過強，無法從祭壇讀取命運。</p>';
-  }finally{drawBtn.disabled=false;}
+    // ✅ 延遲顯示結果（例如 4000ms = 4 秒）
+    setTimeout(() => {
+      clearInterval(loading);
+      carrotAnimation.cancel(); // 停止胡蘿蔔晃動
+
+      // 🎨 切換背景與畫面
+      document.body.style.background = `url('${bg}') no-repeat center center/cover`;
+      page3.classList.add('left-align');
+      carrotThumb.classList.add('fade-out');
+      setTimeout(() => carrotThumb.style.display = 'none', 600);
+
+      fortuneLine.innerHTML = '';
+      fortuneResult.innerHTML = fText;
+      fortuneResult.className = `fortune-text-container ${className}`;
+      adviceText.style.display = 'block';
+      adviceText.innerHTML = `<p><span>${escapeHtml(data.advice)}</span></p>`;
+
+      drawBtn.disabled = false;
+    }, 4000); // ⏱ 這裡改等待秒數（4000 = 4秒）
+
+  } catch (e) {
+    clearInterval(loading);
+    carrotThumb.getAnimations().forEach(anim => anim.cancel());
+    fortuneLine.innerHTML = '⚠️ 占卜失敗，請稍後重試';
+    adviceText.style.display = 'block';
+    adviceText.innerHTML = '<p>魔力干擾過強，無法從祭壇讀取命運。</p>';
+    drawBtn.disabled = false;
+  }
 });
 
 if ('serviceWorker' in navigator) {
