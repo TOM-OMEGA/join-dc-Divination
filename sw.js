@@ -61,18 +61,25 @@ self.addEventListener('activate', event => {
   );
 });
 
-// 🌐 攔截請求：✅「網路優先、離線 fallback」策略（加快載入速度）
+// 🌐 攔截請求：改為「快取優先，有網路就更新」
 self.addEventListener('fetch', event => {
-  const url = event.request.url;
+  const req = event.request;
+  if (req.method !== 'GET') return;
 
-  // 🚫 跳過不該攔截的請求
-  if (
-    url.includes('api') ||
-    url.includes('manifest.json') ||
-    event.request.method !== 'GET'
-  ) {
-    return;
-  }
+  event.respondWith(
+    caches.match(req, { ignoreSearch: true }).then(cached => {
+      const fetchPromise = fetch(req)
+        .then(networkResponse => {
+          if (networkResponse && networkResponse.status === 200) {
+            caches.open(CACHE_NAME).then(cache => cache.put(req, networkResponse.clone()));
+          }
+          return networkResponse;
+        })
+        .catch(() => cached); // 若網路失敗 → 用快取
+      return cached || fetchPromise;
+    })
+  );
+});
 
   // 🛰️ 網路優先，離線時回退快取
   event.respondWith(
