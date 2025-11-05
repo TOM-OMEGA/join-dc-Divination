@@ -3,7 +3,16 @@ import axios from "axios";
 import cors from "cors";
 
 const app = express();
-app.use(cors());
+
+// ✅ 修正版：允許 GitHub Pages 呼叫你的 API
+app.use(cors({
+  origin: [
+    "https://tom-omega.github.io", // GitHub Pages 網址
+    "https://carrot-bot.onrender.com" // 自身伺服器允許自取
+  ],
+  methods: ["GET", "POST"],
+  allowedHeaders: ["Content-Type"],
+}));
 
 // === 你的 Discord 資訊 ===
 const CLIENT_ID = "1421159483995979796";
