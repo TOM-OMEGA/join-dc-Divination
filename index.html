@@ -17,9 +17,9 @@
   /* 第三頁文字與間距 */
   --fortune-offset:5vh;       /* 大吉文字垂直位移 */
   --fortune-left-offset:110px;  /* 大吉文字距左邊偏移 */
-  --advice-left-offset: 50px;    /* 小建議文字距左邊偏移（可分開調整） */
-  --fortune-gap:150px;         /* 大吉文字與建議文字間距 */
-  --draw-btn-gap:10px;         /* fortune/advice 到按鈕距離 */
+  --advice-left-offset: 50px;    /* 小建議文字距左邊偏移 */
+  --fortune-gap:150px;           /* 大吉文字與建議文字間距 */
+  --draw-btn-gap:10px;           /* fortune/advice 到按鈕距離 */
 
   /* 胡蘿蔔圖片大小 */
   --carrot-size-min:150px;
@@ -67,24 +67,34 @@ html, body{
 
 /* 第1頁 */
 #page1 h1{font-size:clamp(3rem,12vw,3.8rem); color:#4d2b0a; margin-bottom:1rem; text-align:center;}
-#page1 .subtitle{font-size:35pt; color:#333; text-align:center;}
+#page1 .subtitle{font-size:clamp(1.2rem, 5vw, 1.8rem); color:#333; text-align:center;}
 
-/* 第2頁 */
-#page2 h1{font-size:clamp(2.8rem,10vw,3.6rem); color:#4d2b0a; text-align:center; margin-bottom:1rem;}
-.qr{width:130px; height:130px; border-radius:8px; overflow:hidden; margin-bottom:10px; box-shadow:0 3px 8px rgba(0,0,0,0.4);}
-.qr img{width:100%; height:100%; object-fit:cover;}
+/* 第2頁：祭壇儀式頁面優化 */
+#page2 h1{font-size:clamp(2.4rem,8vw,3rem); color:#4d2b0a; text-align:center; margin-bottom:1.5rem;}
+.ritual-symbol {
+  width: 160px; height: 160px; 
+  border-radius: 50%; 
+  border: 2px double var(--gold);
+  background: radial-gradient(circle, rgba(185,135,43,0.15) 0%, transparent 70%);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 20px;
+  box-shadow: 0 0 25px rgba(185,135,43,0.2);
+  font-size: 3.5rem;
+  animation: breathe 3s infinite ease-in-out;
+}
+.ritual-text {
+  font-size: clamp(1.1rem, 4vw, 1.4rem);
+  line-height: 1.8;
+  color: #4b2d0a;
+  text-align: center;
+  margin-bottom: 25px;
+  max-width: 85%;
+}
 
-/* 第3頁 */
-#page3{
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  text-align:center; width:100%; height:100%; box-sizing:border-box;
-  transition:all 0.6s ease;
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.05); opacity: 1; }
 }
-#page3.left-align{
-  align-items:flex-start; text-align:left; padding-left:40px; transition:padding-left 0.4s ease;
-}
-@media screen and (max-width:1024px) and (orientation:landscape){#page3.left-align{padding-left:80px !important;}}
-@media screen and (max-width:768px) and (orientation:portrait){#page3.left-align{align-items:center!important;text-align:center!important;padding-left:0!important;}}
 
 /* 第3頁內容 */
 .fortune-container{position:relative; min-height:120px;}
@@ -106,25 +116,24 @@ html, body{
 
 .fortune{font-size:clamp(1.2rem,4vw,1.8rem); z-index:1;}
 
-/* 新容器: fortune-block 管理文字與間距 */
 .fortune-block{
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap: var(--draw-btn-gap); /* fortune/advice 到按鈕距離 */
+  gap: var(--draw-btn-gap);
   margin-bottom:0;
 }
 
 .advice {
-  position: relative;                  /* 允許左偏移 */
-  margin-top: var(--fortune-gap);      /* 與運勢文字的距離 */
-  left: var(--advice-left-offset);     /* 控制建議文字左右位移 */
+  position: relative;
+  margin-top: var(--fortune-gap);
+  left: var(--advice-left-offset);
   font-size: clamp(1.2rem, 2rem, 1.8rem);
   line-height: 1.6;
   max-width: 600px;
   color: #4b2d0a;
   font-family: 'MyChineseFont';
-  text-align: left;                    /* 讓文字靠左對齊 */
+  text-align: left;
   transition: margin-top .3s ease, left .3s ease;
 }
 
@@ -143,12 +152,11 @@ html, body{
 .btn:hover{transform:translateY(-3px) scale(1.02); filter:brightness(1.06);}
 .btn:active{transform:translateY(-1px) scale(.98);}
 .btn--start{background-image:url('./images/btn-start.png');}
-.btn--next{background-image:url('./images/btn-next.png');}
+.btn--next{background-image:url('./images/btn-next.png');} /* 建議這張圖改為「步入祭壇」文字卷軸 */
 .btn--draw{background-image:url('./images/btn-draw.png');}
 .btn--back{background-image:url('./images/btn-back.png');}
 .btn--retry{background-image:url('./images/btn-retry.png');}
 
-/* 胡蘿蔔圖片 */
 .carrot-thumb{
   width:clamp(var(--carrot-size-min),25vw,var(--carrot-size-max));
   height:clamp(var(--carrot-size-min),25vw,var(--carrot-size-max));
@@ -172,8 +180,12 @@ footer{position:absolute; bottom:8px; font-size:.75rem; color:rgba(46,34,22,0.6)
 </div>
 
 <div id="page2" class="page">
-  <h1>掃描 QRCODE 加入 Discord</h1>
-  <div class="qr"><img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=https://discord.gg/mar4qT9XYn"></div>
+  <h1>閉上雙眼，與祭壇共鳴</h1>
+  <div class="ritual-symbol">✨</div>
+  <div class="ritual-text">
+    在指尖觸碰靈魂之前，<br>
+    請先聽見森林的呼吸。
+  </div>
   <button id="joinedBtn" class="btn btn--next"></button>
 </div>
 
@@ -220,15 +232,16 @@ function transitionPage(cur,next){
 }
 
 document.getElementById('startBtn').onclick = ()=>transitionPage('page1','page2');
+
 document.getElementById('joinedBtn').onclick = () => {
   transitionPage('page2','page3');
-  // ✅ 修正位移問題
   const carrotThumb = document.getElementById('carrotThumb');
   carrotThumb.style.transform = 'translate(0, 0)';
   carrotThumb.style.margin = '0 auto';
   carrotThumb.style.position = 'relative';
   carrotThumb.style.top = '0';
 };
+
 document.getElementById('backBtn').onclick = ()=>{
   page3.classList.remove('left-align');
   carrotThumb.style.display='block';
@@ -250,7 +263,6 @@ drawBtn.addEventListener('click', async ()=>{
   adviceText.style.display = 'none';
   fortuneResult.innerHTML = '';
 
-  // 🌀 讓胡蘿蔔動畫啟動（上下抖動）
   carrotThumb.style.display = 'block';
   carrotThumb.classList.remove('fade-out');
   carrotThumb.animate(
@@ -263,7 +275,6 @@ drawBtn.addEventListener('click', async ()=>{
   );
   const carrotAnimation = carrotThumb.getAnimations()[0];
 
-  // 🕓 顯示文字動態「...」
   let dots = 0;
   const loading = setInterval(() => {
     dots = (dots + 1) % 4;
@@ -271,7 +282,6 @@ drawBtn.addEventListener('click', async ()=>{
   }, 500);
 
   try {
-    // 🔮 取得占卜結果
     const res = await fetch(`${apiUrl}?user_id=${userId}&username=${username}&force_random=true&t=${Date.now()}`, { cache: 'no-store' });
     const data = await res.json();
     const fortune = data.fortune || "";
@@ -283,12 +293,10 @@ drawBtn.addEventListener('click', async ()=>{
     else if (fortune.includes("吉")) { fText = "吉"; bg = "./images/吉.webp"; className = "吉"; }
     else if (fortune.includes("凶")) { fText = "凶"; bg = "./images/凶.webp"; className = "凶"; }
 
-    // ✅ 延遲顯示結果（例如 4000ms = 4 秒）
     setTimeout(() => {
       clearInterval(loading);
-      carrotAnimation.cancel(); // 停止胡蘿蔔晃動
+      carrotAnimation.cancel(); 
 
-      // 🎨 切換背景與畫面
       document.body.style.background = `url('${bg}') no-repeat center center/cover`;
       page3.classList.add('left-align');
       carrotThumb.classList.add('fade-out');
@@ -301,7 +309,7 @@ drawBtn.addEventListener('click', async ()=>{
       adviceText.innerHTML = `<p><span>${escapeHtml(data.advice)}</span></p>`;
 
       drawBtn.disabled = false;
-    }, 4000); // ⏱ 這裡改等待秒數（4000 = 4秒）
+    }, 4000); 
 
   } catch (e) {
     clearInterval(loading);
@@ -312,18 +320,6 @@ drawBtn.addEventListener('click', async ()=>{
     drawBtn.disabled = false;
   }
 });
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', async () => {
-    const registrations = await navigator.serviceWorker.getRegistrations();
-    for (const reg of registrations) {
-      await reg.unregister(); // 先解除所有舊 SW
-    }
-    navigator.serviceWorker.register('/join-dc-Divination/sw.js?v=13', { updateViaCache: 'none' })
-      .then(r => console.log('✅ SW 註冊成功:', r.scope))
-      .catch(e => console.log('❌ SW 註冊失敗:', e));
-  });
-}
 </script>
 </body>
 </html>
