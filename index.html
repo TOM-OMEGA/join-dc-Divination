@@ -13,21 +13,23 @@
   --ink:#2e2316;
   --gold:#b9872b;
 
-  /* 第三頁位置微調 */
-  --fortune-offset: 5vh;
-  --fortune-left-offset: 110px;
+  /* 第三頁文字與間距控制 */
+  --fortune-offset:5vh;
+  --fortune-left-offset:110px;
   --advice-left-offset: 50px;
-  --fortune-gap: 130px; /* 稍微縮小運勢與建議的間距 */
-  --draw-btn-gap: 8px;  /* 縮小文字到按鈕的距離 */
+  --fortune-gap:150px;
+  --draw-btn-gap:10px;
 
-  /* 圖示大小優化 */
-  --carrot-size-min: 160px;
-  --carrot-size-max: 220px;
+  /* 圖示大小 */
+  --carrot-size-min:150px;
+  --carrot-size-max:220px;
 
-  --btn-width: 200px;
-  --btn-height: 64px;
+  /* 按鈕大小 */
+  --btn-width:200px;
+  --btn-height:64px;
 }
 
+/* 字體設定 */
 @font-face {
   font-family: 'MyChineseFont';
   src: url('/join-dc-Divination/fonts/MyChineseFont.woff') format('woff');
@@ -41,33 +43,37 @@
   font-display: swap;
 }
 
+/* 全域樣式 */
 html, body{
   width:100%; height:100%; margin:0; padding:0;
-  font-family:'MyChineseFont', serif;
+  font-family:'MyChineseFont','Uncial Antiqua',serif;
   background:url('./images/medieval-carrot-placeholder.webp') no-repeat center center;
   background-size:contain; background-color:#000;
   color:var(--ink);
   overflow:hidden;
   display:flex; align-items:center; justify-content:center;
+  transition:background-image 1s ease-in-out;
 }
 
+/* 頁面共通 */
 .page{
   position:absolute; top:0; left:0; width:100%; height:100%;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
-  opacity:0; pointer-events:none; transform:scale(0.98);
-  transition:opacity .6s ease, transform .6s ease;
+  opacity:0; pointer-events:none; transform:scale(0.97);
+  transition:opacity .8s ease, transform .8s ease;
 }
 .page.active{opacity:1; pointer-events:all; transform:scale(1);}
 
 /* 第1頁 */
-#page1 h1{font-size:clamp(3rem, 10vw, 3.8rem); color:#4d2b0a; margin-bottom:1rem;}
-#page1 .subtitle{font-size:clamp(1.2rem, 4vw, 1.8rem); color:#333;}
+#page1 h1{font-size:clamp(3rem,12vw,3.8rem); color:#4d2b0a; margin-bottom:1rem; text-align:center;}
+#page1 .subtitle{font-size:35pt; color:#333; text-align:center;}
 
 /* 第2頁：儀式導引 */
-#page2 h1{font-size:clamp(2.8rem, 9vw, 3.5rem); color:#4d2b0a; margin-bottom:1.5rem;}
+#page2 h1{font-size:clamp(2.8rem,10vw,3.6rem); color:#4d2b0a; text-align:center; margin-bottom:1.5rem;}
 .ritual-text {
   font-size: clamp(1.4rem, 4.5vw, 1.8rem); 
-  line-height: 1.6;
+  line-height: 2;
+  color: #4b2d0a;
   text-align:center;
   margin-bottom: 30px;
   max-width: 85%;
@@ -76,36 +82,38 @@ html, body{
 /* 第3頁：占卜主體 */
 #page3{
   display:flex; flex-direction:column; align-items:center; justify-content:center;
-  width:100%; height:100%;
+  text-align:center; width:100%; height:100%; box-sizing:border-box;
+  transition: all 0.6s ease;
 }
 
 #page3.left-align{
-  align-items:flex-start; padding-left:60px;
+  align-items:flex-start; text-align:left; padding-left:40px;
 }
 
 @media screen and (max-width:768px) and (orientation:portrait){
-  #page3.left-align{align-items:center!important; padding-left:0!important;}
+  #page3.left-align{align-items:center!important;text-align:center!important;padding-left:0!important;}
 }
 
-/* 圖示間距縮小修正 */
+/* ✅ 修正間距：縮小圖示下邊距 */
 .carrot-thumb{
-  width:clamp(var(--carrot-size-min), 28vw, var(--carrot-size-max));
-  height:auto;
+  width:clamp(var(--carrot-size-min),25vw,var(--carrot-size-max));
+  height:clamp(var(--carrot-size-min),25vw,var(--carrot-size-max));
   object-fit:contain; 
-  margin-bottom: 10px; /* 💡 從 30px 縮小到 10px，拉近圖與字的距離 */
-  transition: opacity .6s ease;
+  transition:opacity .6s ease, transform .4s ease;
+  margin-bottom: 5px; /* 原本 20-30px 改為 5px */
 }
 
 .fortune-block{
   display:flex; flex-direction:column; align-items:center;
-  gap: var(--draw-btn-gap);
-  width: 100%;
+  gap: 5px; /* 文字與按鈕的垂直間距縮小 */
+  margin-bottom:0;
 }
 
+/* ✅ 修正文字排版 */
 .fortune {
   font-size: clamp(1.6rem, 5vw, 2.2rem); 
   color: #4d2b0a;
-  margin: 0; /* 移除額外外距 */
+  margin: 0;
 }
 
 .fortune-text-container{
@@ -113,7 +121,8 @@ html, body{
   top: var(--fortune-offset);
   left: var(--fortune-left-offset);
   font-family:'HanyiSentyPagoda', serif;
-  font-size: clamp(8rem, 14vw, 12rem);
+  font-size: clamp(8rem,12vw,12rem);
+  pointer-events:none; white-space:nowrap;
   color:#4d2b0a;
 }
 
@@ -121,25 +130,33 @@ html, body{
   position: relative;
   margin-top: var(--fortune-gap);
   left: var(--advice-left-offset);
-  font-size: clamp(1.3rem, 1.8rem, 1.6rem);
-  line-height: 1.5;
+  font-size: clamp(1.2rem, 2rem, 1.8rem);
+  line-height: 1.6;
   max-width: 600px;
+  color: #4b2d0a;
   text-align: left;
 }
 
-/* 按鈕位置優化 */
-.button-row{ display:flex; gap:15px; margin-top: 15px;}
+/* 🛠 恢復按鈕圖標路徑 */
+.button-row{ display:flex; flex-direction:row; align-items:center; justify-content:center; gap:10px; margin-top: 10px;}
+
 .btn{
   width:var(--btn-width); height:var(--btn-height);
-  background-repeat:no-repeat; background-position:center; background-size:contain;
-  background-color:transparent; border:0; cursor:pointer;
+  display:inline-block; background-repeat:no-repeat; background-position:center; background-size:contain;
+  background-color:transparent; border:0; padding:0; margin:10px 6px; cursor:pointer; z-index:10;
 }
-.btn:hover{transform:scale(1.05); filter:brightness(1.1);}
+.btn:hover{transform:translateY(-3px) scale(1.02); filter:brightness(1.06);}
 
-.fade-out{opacity:0!important; transition:opacity .5s;}
-.fade-in{opacity:1!important; transition:opacity .5s;}
+.btn--start{background-image:url('./images/btn-start.png');}
+.btn--next{background-image:url('./images/btn-next.png');}
+.btn--draw{background-image:url('./images/btn-draw.png');}
+.btn--back{background-image:url('./images/btn-back.png');}
+.btn--retry{background-image:url('./images/btn-retry.png');}
 
-footer{position:absolute; bottom:8px; font-size:.7rem; color:rgba(46,34,22,0.5);}
+.fade-out{opacity:0!important; transform:scale(.95); transition:opacity .6s,transform .6s;}
+.fade-in{opacity:1!important; transform:scale(1); transition:opacity .6s,transform .6s;}
+
+footer{position:absolute; bottom:8px; font-size:.75rem; color:rgba(46,34,22,0.6);}
 </style>
 </head>
 <body>
@@ -182,8 +199,8 @@ function transitionPage(cur,next){
   setTimeout(()=>{
     curPage.classList.remove('active','fade-out');
     nextPage.classList.add('active','fade-in');
-    setTimeout(()=>nextPage.classList.remove('fade-in'),500);
-  },400);
+    setTimeout(()=>nextPage.classList.remove('fade-in'),600);
+  },500);
 }
 
 document.getElementById('startBtn').onclick = ()=>transitionPage('page1','page2');
