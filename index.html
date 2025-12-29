@@ -9,28 +9,23 @@
 
 <style>
 :root{
-  /* 🪄 全局調整區 */
   --paper:#f3ead5;
   --ink:#2e2316;
   --gold:#b9872b;
 
-  /* 第三頁文字與間距 */
-  --fortune-offset:5vh;       /* 大吉文字垂直位移 */
-  --fortune-left-offset:110px;  /* 大吉文字距左邊偏移 */
-  --advice-left-offset: 50px;    /* 小建議文字距左邊偏移 */
-  --fortune-gap:150px;           /* 大吉文字與建議文字間距 */
-  --draw-btn-gap:10px;           /* fortune/advice 到按鈕距離 */
+  --fortune-offset:5vh;
+  --fortune-left-offset:110px;
+  --advice-left-offset: 50px;
+  --fortune-gap:150px;
+  --draw-btn-gap:10px;
 
-  /* 胡蘿蔔圖片大小 */
   --carrot-size-min:150px;
   --carrot-size-max:220px;
 
-  /* 按鈕大小 */
   --btn-width:200px;
   --btn-height:64px;
 }
 
-/* 字體設定 */
 @font-face {
   font-family: 'MyChineseFont';
   src: url('/join-dc-Divination/fonts/MyChineseFont.woff') format('woff');
@@ -44,7 +39,6 @@
   font-display: swap;
 }
 
-/* 全域樣式 */
 html, body{
   width:100%; height:100%; margin:0; padding:0;
   font-family:'MyChineseFont','Uncial Antiqua',serif;
@@ -56,7 +50,6 @@ html, body{
   transition:background-image 1s ease-in-out;
 }
 
-/* 頁面共通 */
 .page{
   position:absolute; top:0; left:0; width:100%; height:100%;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -69,31 +62,23 @@ html, body{
 #page1 h1{font-size:clamp(3rem,12vw,3.8rem); color:#4d2b0a; margin-bottom:1rem; text-align:center;}
 #page1 .subtitle{font-size:clamp(1.2rem, 5vw, 1.8rem); color:#333; text-align:center;}
 
-/* 第2頁：祭壇儀式頁面優化 */
-#page2 h1{font-size:clamp(2.4rem,8vw,3rem); color:#4d2b0a; text-align:center; margin-bottom:1.5rem;}
-.ritual-symbol {
-  width: 160px; height: 160px; 
-  border-radius: 50%; 
-  border: 2px double var(--gold);
-  background: radial-gradient(circle, rgba(185,135,43,0.15) 0%, transparent 70%);
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 20px;
-  box-shadow: 0 0 25px rgba(185,135,43,0.2);
-  font-size: 3.5rem;
-  animation: breathe 3s infinite ease-in-out;
+/* 第2頁：純文字優化版 */
+#page2 h1{
+  font-size:clamp(2.4rem,8vw,3.2rem); 
+  color:#4d2b0a; 
+  text-align:center; 
+  margin-bottom:2rem;
+  letter-spacing: 2px;
 }
 .ritual-text {
-  font-size: clamp(1.1rem, 4vw, 1.4rem);
-  line-height: 1.8;
+  font-size: clamp(1.3rem, 4.5vw, 1.6rem);
+  line-height: 2.2;
   color: #4b2d0a;
-  text-align: center;
-  margin-bottom: 25px;
-  max-width: 85%;
-}
-
-@keyframes breathe {
-  0%, 100% { transform: scale(1); opacity: 0.7; }
-  50% { transform: scale(1.05); opacity: 1; }
+  text-align:center;
+  margin-bottom: 40px;
+  max-width: 80%;
+  font-style: italic;
+  opacity: 0.9;
 }
 
 /* 第3頁內容 */
@@ -152,7 +137,7 @@ html, body{
 .btn:hover{transform:translateY(-3px) scale(1.02); filter:brightness(1.06);}
 .btn:active{transform:translateY(-1px) scale(.98);}
 .btn--start{background-image:url('./images/btn-start.png');}
-.btn--next{background-image:url('./images/btn-next.png');} /* 建議這張圖改為「步入祭壇」文字卷軸 */
+.btn--next{background-image:url('./images/btn-next.png');} 
 .btn--draw{background-image:url('./images/btn-draw.png');}
 .btn--back{background-image:url('./images/btn-back.png');}
 .btn--retry{background-image:url('./images/btn-retry.png');}
@@ -181,7 +166,6 @@ footer{position:absolute; bottom:8px; font-size:.75rem; color:rgba(46,34,22,0.6)
 
 <div id="page2" class="page">
   <h1>閉上雙眼，與祭壇共鳴</h1>
-  <div class="ritual-symbol">✨</div>
   <div class="ritual-text">
     在指尖觸碰靈魂之前，<br>
     請先聽見森林的呼吸。
