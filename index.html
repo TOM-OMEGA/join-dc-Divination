@@ -66,16 +66,22 @@ html, body{
 
 /* 第1頁 */
 #page1 h1{font-size:clamp(3rem,12vw,3.8rem); color:#4d2b0a; margin-bottom:1rem; text-align:center;}
-#page1 .subtitle{font-size:35pt; color:#333; text-align:center;}
+#page1 .subtitle{font-size:clamp(1.2rem, 5vw, 1.8rem); color:#333; text-align:center;}
 
-/* 第2頁：儀式導引 */
-#page2 h1{font-size:clamp(2.8rem,10vw,3.6rem); color:#4d2b0a; text-align:center; margin-bottom:1.5rem;}
+/* 第2頁：兔兔插畫頁面 */
+#page2 h1{font-size:clamp(2.5rem,8vw,3.2rem); color:#4d2b0a; text-align:center; margin-bottom:1rem;}
+.rabbit-illustration {
+  width: clamp(200px, 45vw, 350px);
+  height: auto;
+  margin-bottom: 20px;
+  filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.1));
+}
 .ritual-text {
-  font-size: clamp(1.4rem, 4.5vw, 1.8rem); 
-  line-height: 2;
+  font-size: clamp(1.3rem, 4vw, 1.6rem); 
+  line-height: 1.8;
   color: #4b2d0a;
   text-align:center;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
   max-width: 85%;
 }
 
@@ -83,38 +89,27 @@ html, body{
 #page3{
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   text-align:center; width:100%; height:100%; box-sizing:border-box;
-  transition: all 0.6s ease;
 }
-
-#page3.left-align{
-  align-items:flex-start; text-align:left; padding-left:40px;
-}
+#page3.left-align{ align-items:flex-start; text-align:left; padding-left:40px; }
 
 @media screen and (max-width:768px) and (orientation:portrait){
   #page3.left-align{align-items:center!important;text-align:center!important;padding-left:0!important;}
 }
 
-/* ✅ 修正間距：縮小圖示下邊距 */
 .carrot-thumb{
   width:clamp(var(--carrot-size-min),25vw,var(--carrot-size-max));
-  height:clamp(var(--carrot-size-min),25vw,var(--carrot-size-max));
+  height:auto;
   object-fit:contain; 
-  transition:opacity .6s ease, transform .4s ease;
-  margin-bottom: 5px; /* 原本 20-30px 改為 5px */
+  margin-bottom: 5px;
+  transition:opacity .6s ease;
 }
 
 .fortune-block{
   display:flex; flex-direction:column; align-items:center;
-  gap: 5px; /* 文字與按鈕的垂直間距縮小 */
-  margin-bottom:0;
+  gap: 5px; margin-bottom:0;
 }
 
-/* ✅ 修正文字排版 */
-.fortune {
-  font-size: clamp(1.6rem, 5vw, 2.2rem); 
-  color: #4d2b0a;
-  margin: 0;
-}
+.fortune { font-size: clamp(1.6rem, 5vw, 2.2rem); color: #4d2b0a; margin: 0; }
 
 .fortune-text-container{
   position:absolute;
@@ -122,7 +117,6 @@ html, body{
   left: var(--fortune-left-offset);
   font-family:'HanyiSentyPagoda', serif;
   font-size: clamp(8rem,12vw,12rem);
-  pointer-events:none; white-space:nowrap;
   color:#4d2b0a;
 }
 
@@ -133,17 +127,15 @@ html, body{
   font-size: clamp(1.2rem, 2rem, 1.8rem);
   line-height: 1.6;
   max-width: 600px;
-  color: #4b2d0a;
   text-align: left;
 }
 
-/* 🛠 恢復按鈕圖標路徑 */
-.button-row{ display:flex; flex-direction:row; align-items:center; justify-content:center; gap:10px; margin-top: 10px;}
-
+/* 按鈕樣式 */
+.button-row{ display:flex; gap:10px; margin-top: 10px;}
 .btn{
   width:var(--btn-width); height:var(--btn-height);
-  display:inline-block; background-repeat:no-repeat; background-position:center; background-size:contain;
-  background-color:transparent; border:0; padding:0; margin:10px 6px; cursor:pointer; z-index:10;
+  background-repeat:no-repeat; background-position:center; background-size:contain;
+  background-color:transparent; border:0; cursor:pointer;
 }
 .btn:hover{transform:translateY(-3px) scale(1.02); filter:brightness(1.06);}
 
@@ -151,10 +143,9 @@ html, body{
 .btn--next{background-image:url('./images/btn-next.png');}
 .btn--draw{background-image:url('./images/btn-draw.png');}
 .btn--back{background-image:url('./images/btn-back.png');}
-.btn--retry{background-image:url('./images/btn-retry.png');}
 
-.fade-out{opacity:0!important; transform:scale(.95); transition:opacity .6s,transform .6s;}
-.fade-in{opacity:1!important; transform:scale(1); transition:opacity .6s,transform .6s;}
+.fade-out{opacity:0!important; transition:opacity .5s;}
+.fade-in{opacity:1!important; transition:opacity .5s;}
 
 footer{position:absolute; bottom:8px; font-size:.75rem; color:rgba(46,34,22,0.6);}
 </style>
@@ -170,6 +161,7 @@ footer{position:absolute; bottom:8px; font-size:.75rem; color:rgba(46,34,22,0.6)
 
 <div id="page2" class="page">
   <h1>閉上雙眼，與祭壇共鳴</h1>
+  <img src="images/兔兔.png" alt="中世紀兔兔" class="rabbit-illustration">
   <div class="ritual-text">在指尖觸碰靈魂之前，<br>請先聽見森林的呼吸。</div>
   <button id="joinedBtn" class="btn btn--next"></button>
 </div>
@@ -199,8 +191,8 @@ function transitionPage(cur,next){
   setTimeout(()=>{
     curPage.classList.remove('active','fade-out');
     nextPage.classList.add('active','fade-in');
-    setTimeout(()=>nextPage.classList.remove('fade-in'),600);
-  },500);
+    setTimeout(()=>nextPage.classList.remove('fade-in'),500);
+  },400);
 }
 
 document.getElementById('startBtn').onclick = ()=>transitionPage('page1','page2');
