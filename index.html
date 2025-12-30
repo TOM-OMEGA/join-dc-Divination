@@ -3,129 +3,95 @@
 <head>
 <meta charset="utf-8">
 <title>命運之蔔 · 森林占卜祭壇</title>
-
-<link rel="icon" href="images/favicon.ico" type="image/x-icon">
-<meta name="theme-color" content="#000000">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <style>
-:root{
-  --paper:#f3ead5;
-  --ink:#2e2316;
-  --gold:#b9872b;
-
-  /* 運勢顯示偏移量 */
-  --fortune-offset: 5vh;
-  --fortune-left-offset: 110px;
-  --advice-left-offset: 50px;
-  --fortune-gap: 130px;
-
-  /* 按鈕大小 */
-  --btn-width: 180px;
-  --btn-height: 58px;
+:root {
+  --ink: #4d2b0a;
+  --btn-width: clamp(140px, 40vw, 180px);
+  --btn-height: auto;
 }
 
-@font-face {
-  font-family: 'MyChineseFont';
-  src: url('/join-dc-Divination/fonts/MyChineseFont.woff') format('woff');
-  font-display: swap;
+/* 全域防止捲動與基本設定 */
+html, body {
+  width: 100%; height: 100%; margin: 0; padding: 0;
+  background-color: #000;
+  color: var(--ink);
+  overflow: hidden; /* 徹底禁止捲動 */
+  font-family: 'MyChineseFont', serif;
 }
 
-@font-face {
-  font-family: 'HanyiSentyPagoda';
-  src: url('/join-dc-Divination/fonts/HanyiSentyPagoda-fixed.woff') format('woff'),
-       url('/join-dc-Divination/fonts/HanyiSentyPagoda-fixed.ttf') format('truetype');
-  font-display: swap;
+body {
+  background: url('./images/medieval-carrot-placeholder.webp') no-repeat center center;
+  background-size: cover;
+  display: flex; align-items: center; justify-content: center;
 }
 
-html, body{
-  width:100%; height:100%; margin:0; padding:0;
-  font-family:'MyChineseFont', serif;
-  background:url('./images/medieval-carrot-placeholder.webp') no-repeat center center;
-  background-size:contain; background-color:#000;
-  color:var(--ink);
-  overflow:hidden;
-  display:flex; align-items:center; justify-content:center;
+/* 頁面容器優化 */
+.page {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  display: flex; flex-direction: column; 
+  align-items: center; justify-content: center; /* 內容置中 */
+  box-sizing: border-box;
+  padding: 5vh 5vw; /* 使用視窗比例內距，確保不貼邊 */
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+.page.active { opacity: 1; pointer-events: all; }
+
+/* 標題與文字：縮小字級並限制外距 */
+h1 {
+  font-size: clamp(1.4rem, 5vh, 2.2rem);
+  margin: 0 0 2vh 0;
+  flex-shrink: 0; /* 標題不縮小 */
 }
 
-.page{
-  position:absolute; top:0; left:0; width:100%; height:100%;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  opacity:0; pointer-events:none; box-sizing: border-box;
-  padding: 15px;
-  transition: opacity .6s ease, transform .6s ease;
-  transform: scale(0.98);
-}
-.page.active{opacity:1; pointer-events:all; transform: scale(1);}
-
-/* 標題與文字縮放 */
-h1 { font-size: clamp(1.8rem, 6vw, 3rem); color:#4d2b0a; margin: 0 0 10px 0; text-align: center; }
-.subtitle, .ritual-text {
-  font-size: clamp(1rem, 3.5vw, 1.4rem); 
-  line-height: 1.5;
+.ritual-text, .subtitle {
+  font-size: clamp(0.9rem, 2.5vh, 1.2rem);
+  line-height: 1.4;
+  margin: 1.5vh 0;
   text-align: center;
-  margin-bottom: 15px;
+  flex-shrink: 0; /* 文字不縮小 */
 }
 
-/* 第2頁：兔兔插畫 (原本 QRcode 位置) */
-.rabbit-illustration {
-  max-width: 320px;
-  max-height: 30vh; /* 💡 關鍵：限制高度防止擠壓文字 */
-  width: auto;
-  height: auto;
-  margin-bottom: 15px;
-  filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
+/* 圖片優化：這是解決擠出問題的關鍵 */
+.rabbit-illustration, .carrot-thumb {
+  max-width: 80%;
+  max-height: 25vh; /* 限制高度在螢幕的 1/4 左右 */
+  object-fit: contain;
+  flex-shrink: 1; /* 空間不足時，圖片優先縮小 */
+  margin: 1vh 0;
 }
 
-/* 第3頁：占卜畫面 */
-.carrot-thumb {
-  max-width: 200px;
-  max-height: 25vh;
-  width: auto;
-  height: auto;
-  margin-bottom: 10px;
-  transition: transform 0.4s;
+/* 按鈕區塊：確保始終在下方且可見 */
+.button-row {
+  display: flex; gap: 10px;
+  margin-top: auto; /* 將按鈕推至底部安全區域 */
+  margin-bottom: 2vh;
+  flex-shrink: 0;
 }
 
-.fortune-block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
+.btn {
+  width: var(--btn-width);
+  aspect-ratio: 180 / 58; /* 保持按鈕比例 */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  background-color: transparent;
+  border: 0; cursor: pointer;
 }
 
-.fortune { font-size: clamp(1.3rem, 4vw, 1.8rem); margin: 0 0 5px 0; }
+.btn--start { background-image: url('./images/btn-start.png'); }
+.btn--next { background-image: url('./images/btn-next.png'); }
+.btn--draw { background-image: url('./images/btn-draw.png'); }
+.btn--back { background-image: url('./images/btn-back.png'); }
 
+/* 占卜結果字體調整 */
 #fortuneResult {
   font-family: 'HanyiSentyPagoda', serif;
-  font-size: clamp(6rem, 15vw, 10rem);
-  color: #4d2b0a;
-  margin: 10px 0;
+  font-size: clamp(4rem, 15vh, 8rem);
+  margin: 1vh 0;
 }
-
-.advice {
-  font-size: clamp(1rem, 1.3rem, 1.2rem);
-  line-height: 1.4;
-  max-width: 85%;
-  text-align: left;
-  border-left: 2px solid var(--gold);
-  padding-left: 10px;
-}
-
-/* 按鈕 row */
-.button-row { display: flex; gap: 10px; margin-top: 10px; }
-.btn {
-  width: var(--btn-width); height: var(--btn-height);
-  background-repeat: no-repeat; background-position: center; background-size: contain;
-  background-color: transparent; border: 0; cursor: pointer;
-  transition: transform 0.2s;
-}
-.btn:hover { transform: scale(1.05); }
-
-/* 路徑對應 */
-.btn--start{background-image:url('./images/btn-start.png');}
-.btn--next{background-image:url('./images/btn-next.png');}
-.btn--draw{background-image:url('./images/btn-draw.png');}
-.btn--back{background-image:url('./images/btn-back.png');}
 
 footer { position: absolute; bottom: 5px; font-size: 0.6rem; opacity: 0.5; }
 </style>
@@ -135,23 +101,25 @@ footer { position: absolute; bottom: 5px; font-size: 0.6rem; opacity: 0.5; }
 <div id="page1" class="page active">
   <h1>命運之蔔 · 森林占卜祭壇</h1>
   <div class="subtitle">探索命運的儀式，從加入開始</div>
-  <button id="startBtn" class="btn btn--start"></button>
+  <div class="button-row">
+    <button id="startBtn" class="btn btn--start"></button>
+  </div>
 </div>
 
 <div id="page2" class="page">
   <h1>閉上雙眼，與祭壇共鳴</h1>
-  <img src="images/兔兔.png" class="rabbit-illustration" alt="命運之兔">
+  <img src="images/兔兔.png" class="rabbit-illustration">
   <div class="ritual-text">在指尖觸碰靈魂之前，<br>請先聽見森林的呼吸。</div>
-  <button id="joinedBtn" class="btn btn--next"></button>
+  <div class="button-row">
+    <button id="joinedBtn" class="btn btn--next"></button>
+  </div>
 </div>
 
 <div id="page3" class="page">
   <img id="carrotThumb" class="carrot-thumb" src="./images/carrot-thumb.png">
-  <div class="fortune-block">
-    <div class="fortune" id="fortuneLine">按下 <strong>占卜運勢</strong> 挖取你的命運之蔔</div>
-    <div id="fortuneResult"></div>
-    <div class="advice" id="adviceText" style="display:none"></div>
-  </div>
+  <div class="fortune" id="fortuneLine">按下 占卜運勢 挖取你的命運之蔔</div>
+  <div id="fortuneResult"></div>
+  <div class="advice" id="adviceText" style="display:none"></div>
   <div class="button-row">
     <button id="drawBtn" class="btn btn--draw"></button>
     <button id="backBtn" class="btn btn--back"></button>
@@ -163,15 +131,10 @@ const apiUrl="https://carrot-bot.onrender.com/api/web_fortune";
 const userId="657882539331158016";
 const username="湯姆瑞斗";
 
-function transitionPage(cur, next) {
-  const curPage = document.getElementById(cur);
-  const nextPage = document.getElementById(next);
-  curPage.classList.remove('active');
-  setTimeout(() => {
-    nextPage.classList.add('active');
-  }, 300);
-}
-
+const transitionPage = (cur, next) => {
+  document.getElementById(cur).classList.remove('active');
+  document.getElementById(next).classList.add('active');
+};
 document.getElementById('startBtn').onclick = () => transitionPage('page1', 'page2');
 document.getElementById('joinedBtn').onclick = () => transitionPage('page2', 'page3');
 document.getElementById('backBtn').onclick = () => location.reload();
