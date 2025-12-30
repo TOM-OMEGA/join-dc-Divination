@@ -70,12 +70,12 @@ html, body{
 #page1 h1{font-size:clamp(3rem,12vw,3.8rem); color:#4d2b0a; margin-bottom:1rem; text-align:center;}
 #page1 .subtitle{font-size:35pt; color:#333; text-align:center;}
 
-/* 第2頁：儀式導引 + 兔兔修正 */
+/* 第2頁：修正兔兔大小與文字 */
 #page2 h1{font-size:clamp(2.8rem,10vw,3.6rem); color:#4d2b0a; text-align:center; margin-bottom:0.5rem;}
 
 .rabbit-illustration {
-  max-width: 320px;
-  max-height: 30vh; /* 💡 關鍵：限制圖片高度，防止字被擠出去 */
+  max-width: 250px; /* 縮小寬度限制 */
+  max-height: 20vh; /* 💡 修改：從 30vh 縮小至 20vh */
   width: auto;
   height: auto;
   margin-bottom: 15px;
@@ -83,8 +83,8 @@ html, body{
 }
 
 .ritual-text {
-  font-size: clamp(1.4rem, 4.5vw, 1.8rem); 
-  line-height: 1.6;
+  font-size: clamp(1.1rem, 3.5vw, 1.4rem); /* 💡 修改：縮小字體級距 */
+  line-height: 1.4;
   color: #4b2d0a;
   text-align:center;
   margin-bottom: 20px;
@@ -180,7 +180,7 @@ footer{position:absolute; bottom:8px; font-size:.75rem; color:rgba(46,34,22,0.6)
 <div id="page2" class="page">
   <h1>閉上雙眼，與祭壇共鳴</h1>
   <img src="images/兔兔.png" class="rabbit-illustration">
-  <div class="ritual-text">在指尖觸碰靈魂之前，<br>請先聽見森林的呼吸。</div>
+  <div class="ritual-text">在指尖觸碰靈魂之前，請先聽見森林的呼吸。</div>
   <button id="joinedBtn" class="btn btn--next"></button>
 </div>
 
@@ -198,7 +198,6 @@ footer{position:absolute; bottom:8px; font-size:.75rem; color:rgba(46,34,22,0.6)
 </div>
 
 <script>
-// ✅ 保持你原本的 API 參數完全不變
 const apiUrl="https://carrot-bot.onrender.com/api/web_fortune";
 const userId="657882539331158016";
 const username="湯姆瑞斗";
