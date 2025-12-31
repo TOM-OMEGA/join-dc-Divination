@@ -14,19 +14,19 @@
   --gold:#b9872b;
 
   /* 第三頁文字與間距控制 */
-  --fortune-offset:5vh;
-  --fortune-left-offset:110px;
-  --advice-left-offset: 50px;
-  --fortune-gap:150px;
-  --draw-btn-gap:10px;
+  --fortune-offset: 8vh;       /* 稍微下移，避免壓到頂部邊框 */
+  --fortune-left-offset: 12vw; /* 改用百分比，更適應不同螢幕 */
+  --advice-left-offset: 0px;   /* 基準改為與容器對齊 */
+  --fortune-gap: 160px;
+  --draw-btn-gap: 10px;
 
   /* 圖示大小 */
-  --carrot-size-min:150px;
-  --carrot-size-max:220px;
+  --carrot-size-min: 150px;
+  --carrot-size-max: 220px;
 
   /* 按鈕大小 */
-  --btn-width:200px;
-  --btn-height:64px;
+  --btn-width: clamp(140px, 18vw, 200px); /* 讓按鈕寬度有彈性 */
+  --btn-height: 64px;
 }
 
 /* 字體設定 */
@@ -70,45 +70,42 @@ html, body{
 #page1 h1{font-size:clamp(3rem,12vw,3.8rem); color:#4d2b0a; margin-bottom:1rem; text-align:center;}
 #page1 .subtitle{font-size:35pt; color:#333; text-align:center;}
 
-/* 第2頁：最終微調間距與字體 */
+/* 第2頁：保持你的設定 */
 #page2 h1{
-  font-size:clamp(1.5rem, 5vw, 2.5rem); /* 💡 稍微縮小標題最大值 */
+  font-size:clamp(1.5rem, 5vw, 2.5rem); 
   color:#4d2b0a; 
   text-align:center; 
-  margin-bottom:0.2rem; /* 💡 縮減標題下方間距 */
+  margin-bottom:0.2rem;
 }
-
 .rabbit-illustration {
   max-width: 250px; 
-  max-height: 50vh; /* 💡 縮小兔兔比例 */
+  max-height: 50vh;
   width: auto;
   height: auto;
-  margin-bottom: 1px; /* 💡 縮減兔兔下方間距 */
+  margin-bottom: 1px;
   object-fit: contain;
 }
 
-.ritual-text {
-  font-size: clamp(1.1rem, 3.2vw, 1.3rem); /* 💡 再次微調文字大小 */
-  line-height: 1.3;
-  color: #4b2d0a;
-  text-align:center;
-  margin-bottom: 15px; /* 💡 縮減按鈕上方間距 */
-  max-width: 90%;
-}
-
-/* 第3頁：保持原樣不動 */
+/* 第3頁：修正結果顯示時的對齊與按鈕邊界 */
 #page3{
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   text-align:center; width:100%; height:100%; box-sizing:border-box;
   transition: all 0.6s ease;
 }
 
+/* 💡 修正：結果頁面的內縮，防止按鈕壓邊 */
 #page3.left-align{
-  align-items:flex-start; text-align:left; padding-left:40px;
+  align-items: flex-start; 
+  text-align: left; 
+  padding: 5vh 10vw; /* 增加左右內縮，確保不壓邊 */
 }
 
 @media screen and (max-width:768px) and (orientation:portrait){
-  #page3.left-align{align-items:center!important;text-align:center!important;padding-left:0!important;}
+  #page3.left-align{
+    align-items:center!important;
+    text-align:center!important;
+    padding: 20px!important;
+  }
 }
 
 .carrot-thumb{
@@ -125,6 +122,11 @@ html, body{
   margin-bottom:0;
 }
 
+/* 當結果出來後，讓 block 靠左對齊 */
+#page3.left-align .fortune-block {
+  align-items: flex-start;
+}
+
 .fortune {
   font-size: clamp(1.6rem, 5vw, 2.2rem); 
   color: #4d2b0a;
@@ -136,7 +138,7 @@ html, body{
   top: var(--fortune-offset);
   left: var(--fortune-left-offset);
   font-family:'HanyiSentyPagoda', serif;
-  font-size: clamp(8rem,12vw,12rem);
+  font-size: clamp(7rem, 11vw, 11rem); /* 稍微縮小防止壓框 */
   pointer-events:none; white-space:nowrap;
   color:#4d2b0a;
 }
@@ -145,19 +147,33 @@ html, body{
   position: relative;
   margin-top: var(--fortune-gap);
   left: var(--advice-left-offset);
-  font-size: clamp(1.2rem, 2rem, 1.8rem);
-  line-height: 1.6;
-  max-width: 600px;
+  font-size: clamp(1.1rem, 1.8rem, 1.6rem);
+  line-height: 1.5;
+  max-width: 550px;
   color: #4b2d0a;
   text-align: left;
 }
 
-.button-row{ display:flex; flex-direction:row; align-items:center; justify-content:center; gap:10px; margin-top: 10px;}
+/* 💡 修正：按鈕列對齊設定 */
+.button-row{ 
+  display:flex; 
+  flex-direction:row; 
+  align-items:center; 
+  justify-content:center; 
+  gap:10px; 
+  margin-top: 15px;
+  width: auto;
+}
+
+#page3.left-align .button-row {
+  justify-content: flex-start; /* 結果頁面時靠左對齊 */
+  padding-left: 0;
+}
 
 .btn{
   width:var(--btn-width); height:var(--btn-height);
   display:inline-block; background-repeat:no-repeat; background-position:center; background-size:contain;
-  background-color:transparent; border:0; padding:0; margin:10px 6px; cursor:pointer; z-index:10;
+  background-color:transparent; border:0; padding:0; margin:5px; cursor:pointer; z-index:10;
 }
 .btn:hover{transform:translateY(-3px) scale(1.02); filter:brightness(1.06);}
 
